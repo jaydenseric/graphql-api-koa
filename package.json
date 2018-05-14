@@ -1,0 +1,178 @@
+{
+  "name": "graphql-api-koa",
+  "version": "0.1.0",
+  "description": "Koa middleware for a GraphQL API.",
+  "license": "MIT",
+  "author": {
+    "name": "Jayden Seric",
+    "email": "me@jaydenseric.com",
+    "url": "https://jaydenseric.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jaydenseric/graphql-api-koa.git"
+  },
+  "homepage": "https://github.com/jaydenseric/graphql-api-koa#readme",
+  "bugs": "https://github.com/jaydenseric/graphql-api-koa/issues",
+  "keywords": [
+    "graphql",
+    "api",
+    "koa"
+  ],
+  "files": [
+    "lib"
+  ],
+  "main": "lib",
+  "module": "lib/index.mjs",
+  "engines": {
+    "node": ">=8.6"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "@babel/cli": "7.0.0-beta.44",
+    "@babel/core": "7.0.0-beta.44",
+    "@babel/preset-env": "7.0.0-beta.44",
+    "ava": "^1.0.0-beta.4",
+    "babel-eslint": "^8.2.3",
+    "cross-env": "^5.1.4",
+    "documentation": "^6.3.2",
+    "eslint": "^4.19.1",
+    "eslint-config-prettier": "^2.9.0",
+    "eslint-plugin-ava": "^4.5.1",
+    "eslint-plugin-import": "^2.11.0",
+    "eslint-plugin-node": "^6.0.1",
+    "eslint-plugin-prettier": "^2.5.0",
+    "graphql": "^0.13.2",
+    "husky": "^0.14.3",
+    "lint-staged": "^7.0.5",
+    "npm-run-all": "^4.1.2",
+    "prettier": "^1.12.1",
+    "rimraf": "^2.6.2",
+    "size-limit": "^0.18.0"
+  },
+  "scripts": {
+    "clean": "rimraf lib",
+    "prebuild": "npm run clean",
+    "build": "run-p build:*",
+    "build:js": "babel src -d lib",
+    "build:mjs": "cross-env ESM=true babel src -d lib --keep-file-extension",
+    "postbuild": "prettier 'lib/**/*.{mjs,js}' --write",
+    "jsdoc": "documentation readme src -s API -c documentation.json --sort-order alpha -q",
+    "postjsdoc": "prettier readme.md --write",
+    "prewatch": "npm run build",
+    "watch": "run-p watch:*",
+    "watch:build": "run-p 'build:* -- --skip-initial-build --watch'",
+    "watch:test": "ava -vw",
+    "lint": "run-p lint:*",
+    "lint:eslint": "eslint . --ext mjs,js",
+    "lint:prettier": "prettier '**/*.{json,md}' -l",
+    "lint:jsdoc": "documentation lint src",
+    "fix": "run-p fix:*",
+    "fix:eslint": "eslint . --ext mjs,js --fix",
+    "fix:prettier": "prettier '**/*.{json,md}' --write",
+    "presize": "npm run build",
+    "size": "size-limit",
+    "pretest": "npm run build",
+    "test": "ava",
+    "precommit": "lint-staged",
+    "prepublishOnly": "run-s jsdoc lint size test"
+  },
+  "lint-staged": {
+    "*.{mjs,js}": "eslint",
+    "*.{json,md}": "prettier -l"
+  },
+  "eslintIgnore": [
+    "!.*",
+    "node_modules",
+    "lib"
+  ],
+  "eslintConfig": {
+    "parser": "babel-eslint",
+    "env": {
+      "es6": true,
+      "node": true
+    },
+    "plugins": [
+      "import",
+      "node",
+      "ava",
+      "prettier"
+    ],
+    "extends": [
+      "eslint:recommended",
+      "plugin:import/recommended",
+      "plugin:node/recommended",
+      "plugin:ava/recommended",
+      "prettier"
+    ],
+    "rules": {
+      "require-jsdoc": "warn",
+      "valid-jsdoc": [
+        "error",
+        {
+          "requireReturn": false
+        }
+      ],
+      "require-await": "error",
+      "no-return-await": "error",
+      "arrow-body-style": "error",
+      "prefer-arrow-callback": "error",
+      "curly": [
+        "error",
+        "multi"
+      ],
+      "prefer-destructuring": "error",
+      "import/first": "error",
+      "import/newline-after-import": "error",
+      "import/no-useless-path-segments": "error",
+      "import/order": "error",
+      "node/no-unsupported-features": "error",
+      "prettier/prettier": "error"
+    },
+    "overrides": [
+      {
+        "files": ["*.mjs"],
+        "rules": {
+          "node/no-unsupported-features": [
+            "error",
+            {
+              "ignores": [
+                "modules"
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "files": [".*.js", "*.js"],
+        "parserOptions": {
+          "sourceType": "script"
+        }
+      }
+    ]
+  },
+  "prettier": {
+    "proseWrap": "never",
+    "singleQuote": true,
+    "semi": false
+  },
+  "size-limit": [
+    {
+      "name": "CJS",
+      "path": "lib/index.js",
+      "limit": "4 KB"
+    },
+    {
+      "name": "ESM",
+      "path": "lib/index.mjs",
+      "limit": "4 KB"
+    }
+  ],
+  "ava": {
+    "cache": false,
+    "sources": [
+      "src/**/*.mjs",
+      "!lib"
+    ]
+  }
+}
