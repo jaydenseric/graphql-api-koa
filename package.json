@@ -20,7 +20,8 @@
     "koa"
   ],
   "files": [
-    "lib"
+    "lib",
+    "!lib/test.*"
   ],
   "main": "lib",
   "module": "lib/index.mjs",
@@ -29,65 +30,61 @@
   },
   "dependencies": {},
   "devDependencies": {
-    "@babel/cli": "7.0.0-beta.44",
-    "@babel/core": "7.0.0-beta.44",
-    "@babel/preset-env": "7.0.0-beta.44",
-    "ava": "^1.0.0-beta.4",
-    "babel-eslint": "^8.2.3",
+    "@babel/cli": "^7.0.0-beta.47",
+    "@babel/core": "^7.0.0-beta.47",
+    "@babel/preset-env": "^7.0.0-beta.47",
     "cross-env": "^5.1.4",
-    "documentation": "^6.3.2",
+    "documentation": "^6.3.3",
     "eslint": "^4.19.1",
     "eslint-config-prettier": "^2.9.0",
-    "eslint-plugin-ava": "^4.5.1",
     "eslint-plugin-import": "^2.11.0",
     "eslint-plugin-node": "^6.0.1",
     "eslint-plugin-prettier": "^2.5.0",
     "graphql": "^0.13.2",
     "husky": "^0.14.3",
+    "koa": "^2.5.1",
     "lint-staged": "^7.0.5",
     "npm-run-all": "^4.1.2",
     "prettier": "^1.12.1",
     "rimraf": "^2.6.2",
-    "size-limit": "^0.18.0"
+    "size-limit": "^0.18.0",
+    "tap-difflet": "^0.7.1",
+    "watch": "^1.0.2",
+    "zora": "^2.0.1"
   },
   "scripts": {
-    "clean": "rimraf lib",
-    "prebuild": "npm run clean",
-    "build": "run-p build:*",
-    "build:js": "babel src -d lib",
-    "build:mjs": "cross-env ESM=true babel src -d lib --keep-file-extension",
-    "postbuild": "prettier 'lib/**/*.{mjs,js}' --write",
-    "jsdoc": "documentation readme src -s API -c documentation.json --sort-order alpha -q",
-    "postjsdoc": "prettier readme.md --write",
-    "prewatch": "npm run build",
-    "watch": "run-p watch:*",
-    "watch:build": "run-p 'build:* -- --skip-initial-build --watch'",
-    "watch:test": "ava -vw",
-    "lint": "run-p lint:*",
+    "lint": "cross-env FORCE_COLOR=1 run-p lint:* -c --aggregate-output",
     "lint:eslint": "eslint . --ext mjs,js",
     "lint:prettier": "prettier '**/*.{json,md}' -l",
     "lint:jsdoc": "documentation lint src",
-    "fix": "run-p fix:*",
-    "fix:eslint": "eslint . --ext mjs,js --fix",
-    "fix:prettier": "prettier '**/*.{json,md}' --write",
-    "presize": "npm run build",
-    "size": "size-limit",
+    "prebuild": "rimraf lib",
+    "build": "cross-env FORCE_COLOR=1 run-p build:* -c --aggregate-output",
+    "build:mjs": "cross-env BABEL_ESM=1 babel src -d lib --keep-file-extension",
+    "build:js": "babel src -d lib",
+    "build:jsdoc": "documentation readme src -s API -c documentation.json --sort-order alpha -q",
+    "postbuild": "prettier 'lib/**/*.{mjs,js}' readme.md --write",
     "pretest": "npm run build",
-    "test": "ava",
+    "test": "cross-env FORCE_COLOR=1 run-p test:* -c --aggregate-output",
+    "test:lint": "npm run lint",
+    "test:size": "size-limit",
+    "test:mjs": "node --experimental-modules --no-warnings lib/test | tap-difflet -p",
+    "test:js": "node lib/test | tap-difflet -p",
+    "watch": "watch 'npm test --silent' src --interval=1",
     "precommit": "lint-staged",
-    "prepublishOnly": "run-s jsdoc lint size test"
+    "prepublishOnly": "npm run test"
   },
   "lint-staged": {
     "*.{mjs,js}": "eslint",
     "*.{json,md}": "prettier -l"
   },
   "eslintIgnore": [
-    "!.*",
-    "node_modules",
     "lib"
   ],
   "eslintConfig": {
-    "parser": "babel-eslint",
+    "parserOptions": {
+      "sourceType": "script",
+      "ecmaVersion": 2018
+    },
     "env": {
       "es6": true,
       "node": true
@@ -95,14 +92,12 @@
     "plugins": [
       "import",
       "node",
-      "ava",
       "prettier"
     ],
     "extends": [
       "eslint:recommended",
       "plugin:import/recommended",
       "plugin:node/recommended",
-      "plugin:ava/recommended",
       "prettier"
     ],
     "rules": {
@@ -131,7 +126,12 @@
     },
     "overrides": [
       {
-        "files": ["*.mjs"],
+        "files": [
+          "*.mjs"
+        ],
+        "parserOptions": {
+          "sourceType": "module"
+        },
         "rules": {
           "node/no-unsupported-features": [
             "error",
@@ -141,12 +141,6 @@
               ]
             }
           ]
-        }
-      },
-      {
-        "files": [".*.js", "*.js"],
-        "parserOptions": {
-          "sourceType": "script"
         }
       }
     ]
@@ -167,12 +161,5 @@
       "path": "lib/index.mjs",
       "limit": "4 KB"
     }
-  ],
-  "ava": {
-    "cache": false,
-    "sources": [
-      "src/**/*.mjs",
-      "!lib"
-    ]
-  }
+  ]
 }
