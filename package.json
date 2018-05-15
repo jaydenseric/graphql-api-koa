@@ -53,23 +53,22 @@
     "zora": "^2.0.1"
   },
   "scripts": {
+    "clean": "rimraf lib",
+    "build": "cross-env FORCE_COLOR=1 npm-run-all clean -p build:mjs build:js build:jsdoc -s build:prettier -c --aggregate-output",
+    "build:mjs": "cross-env BABEL_ESM=1 babel src -d lib --keep-file-extension",
+    "build:js": "babel src -d lib",
+    "build:jsdoc": "documentation readme src -s API -c documentation.json --sort-order alpha -q",
+    "build:prettier": "prettier 'lib/**/*.{mjs,js}' readme.md --write",
     "lint": "cross-env FORCE_COLOR=1 run-p lint:* -c --aggregate-output",
     "lint:eslint": "eslint . --ext mjs,js",
     "lint:prettier": "prettier '**/*.{json,md}' -l",
     "lint:jsdoc": "documentation lint src",
-    "prebuild": "rimraf lib",
-    "build": "cross-env FORCE_COLOR=1 run-p build:* -c --aggregate-output",
-    "build:mjs": "cross-env BABEL_ESM=1 babel src -d lib --keep-file-extension",
-    "build:js": "babel src -d lib",
-    "build:jsdoc": "documentation readme src -s API -c documentation.json --sort-order alpha -q",
-    "postbuild": "prettier 'lib/**/*.{mjs,js}' readme.md --write",
-    "pretest": "npm run build",
-    "test": "cross-env FORCE_COLOR=1 run-p test:* -c --aggregate-output",
-    "test:lint": "npm run lint",
-    "test:size": "size-limit",
-    "test:mjs": "node --experimental-modules --no-warnings lib/test | tap-difflet -p",
-    "test:js": "node lib/test | tap-difflet -p",
-    "watch": "watch 'npm test --silent' src --interval=1",
+    "tap": "cross-env FORCE_COLOR=1 run-p tap:* -c --aggregate-output | tap-difflet -p",
+    "tap:mjs": "node --experimental-modules --no-warnings lib/test",
+    "tap:js": "node lib/test",
+    "size": "size-limit",
+    "test": "cross-env FORCE_COLOR=1 npm-run-all build -p lint tap size --aggregate-output",
+    "watch": "watch 'run-s build tap -s' src --interval=1",
     "precommit": "lint-staged",
     "prepublishOnly": "npm run test"
   },
@@ -154,12 +153,12 @@
     {
       "name": "CJS",
       "path": "lib/index.js",
-      "limit": "4 KB"
+      "limit": "200 KB"
     },
     {
       "name": "ESM",
       "path": "lib/index.mjs",
-      "limit": "4 KB"
+      "limit": "200 KB"
     }
   ]
 }
