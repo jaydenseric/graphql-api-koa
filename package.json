@@ -48,9 +48,8 @@
     "prettier": "^1.12.1",
     "rimraf": "^2.6.2",
     "size-limit": "^0.18.0",
-    "tap-difflet": "^0.7.1",
-    "watch": "^1.0.2",
-    "zora": "^2.0.1"
+    "tap": "^11.1.5",
+    "watch": "^1.0.2"
   },
   "scripts": {
     "clean": "rimraf lib",
@@ -63,12 +62,12 @@
     "lint:eslint": "eslint . --ext mjs,js",
     "lint:prettier": "prettier '**/*.{json,md}' -l",
     "lint:jsdoc": "documentation lint src",
-    "tap": "cross-env FORCE_COLOR=1 run-p tap:* -c --aggregate-output | tap-difflet -p",
-    "tap:mjs": "node --experimental-modules --no-warnings lib/test",
-    "tap:js": "node lib/test",
+    "tap": "cross-env FORCE_COLOR=1 TAP_COLORS=1 run-p tap:* -c --aggregate-output",
+    "tap:mjs": "node --experimental-modules --no-warnings lib/test | tap-mocha-reporter spec",
+    "tap:js": "node lib/test | tap-mocha-reporter spec",
     "size": "size-limit",
     "test": "cross-env FORCE_COLOR=1 npm-run-all build -p lint tap size --aggregate-output",
-    "watch": "watch 'run-s build tap -s' src --interval=1",
+    "watch": "watch 'run-s build tap:js -s' src --interval=1",
     "precommit": "lint-staged",
     "prepublishOnly": "npm run test"
   },
