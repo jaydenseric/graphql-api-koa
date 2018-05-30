@@ -28,12 +28,17 @@
   "engines": {
     "node": ">=8.6"
   },
-  "dependencies": {},
+  "dependencies": {
+    "apollo-upload-server": "^5.0.0",
+    "http-errors": "^1.6.3",
+    "koa-bodyparser": "^4.2.1",
+    "koa-compose": "^4.1.0"
+  },
   "devDependencies": {
-    "@babel/cli": "^7.0.0-beta.47",
-    "@babel/core": "^7.0.0-beta.47",
-    "@babel/preset-env": "^7.0.0-beta.47",
-    "documentation": "^6.3.3",
+    "@babel/cli": "^7.0.0-beta.49",
+    "@babel/core": "^7.0.0-beta.49",
+    "@babel/preset-env": "^7.0.0-beta.49",
+    "documentation": "^7.1.0",
     "eslint": "^4.19.1",
     "eslint-config-prettier": "^2.9.0",
     "eslint-plugin-import": "^2.12.0",
@@ -45,9 +50,8 @@
     "lint-staged": "^7.1.2",
     "node-fetch": "^2.1.2",
     "npm-run-all": "^4.1.2",
-    "prettier": "^1.12.1",
+    "prettier": "^1.13.0",
     "rimraf": "^2.6.2",
-    "size-limit": "^0.18.1",
     "tap": "^12.0.1",
     "watch": "^1.0.2"
   },
@@ -55,16 +59,15 @@
     "build:clean": "rimraf lib",
     "build:mjs": "BABEL_ESM=1 babel src -d lib --keep-file-extension",
     "build:js": "babel src -d lib",
-    "build:jsdoc": "documentation readme src -s API -c documentation.json --sort-order alpha -q",
+    "build:jsdoc": "documentation readme src --readme-file readme.md -s API -c documentation.json --sort-order alpha -q",
     "build:prettier": "prettier 'lib/**/*.{mjs,js}' readme.md --write",
     "lint:eslint": "eslint . --ext mjs,js",
     "lint:prettier": "prettier '**/*.{json,md}' -l",
     "lint:jsdoc": "documentation lint src",
-    "lint:size": "size-limit",
     "tap:mjs": "node --experimental-modules --no-warnings lib/test | tap-mocha-reporter spec",
     "tap:js": "node lib/test | tap-mocha-reporter spec",
     "watch": "watch 'npm test --silent' src --interval 1",
-    "test": "FORCE_COLOR=1 TAP_COLORS=1 npm-run-all build:clean -p build:js build:mjs build:jsdoc -s build:prettier -p lint:* tap:* -c --aggregate-output --silent",
+    "test": "FORCE_COLOR=1 TAP_COLORS=1 npm-run-all build:clean -p build:js build:mjs build:jsdoc -s build:prettier -p lint:* tap:js -c --aggregate-output --silent",
     "prepublishOnly": "npm test",
     "precommit": "lint-staged"
   },
@@ -73,7 +76,8 @@
     "*.{json,md}": "prettier -l"
   },
   "eslintIgnore": [
-    "lib"
+    "lib",
+    "tap-snapshots"
   ],
   "eslintConfig": {
     "parserOptions": {
@@ -96,7 +100,17 @@
       "prettier"
     ],
     "rules": {
-      "require-jsdoc": "warn",
+      "require-jsdoc": [
+        "error",
+        {
+          "require": {
+            "FunctionDeclaration": true,
+            "MethodDefinition": true,
+            "ClassDeclaration": true,
+            "ArrowFunctionExpression": true
+          }
+        }
+      ],
       "valid-jsdoc": [
         "error",
         {
@@ -107,6 +121,13 @@
       "no-return-await": "error",
       "arrow-body-style": "error",
       "prefer-arrow-callback": "error",
+      "object-shorthand": [
+        "error",
+        "always",
+        { 
+          "avoidExplicitReturnArrows": true
+        }
+      ],
       "curly": [
         "error",
         "multi"
@@ -144,17 +165,5 @@
     "proseWrap": "never",
     "singleQuote": true,
     "semi": false
-  },
-  "size-limit": [
-    {
-      "name": "CJS",
-      "path": "lib/index.js",
-      "limit": "200 KB"
-    },
-    {
-      "name": "ESM",
-      "path": "lib/index.mjs",
-      "limit": "200 KB"
-    }
-  ]
+  }
 }
