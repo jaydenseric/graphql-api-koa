@@ -1,7 +1,7 @@
 {
   "name": "graphql-api-koa",
   "version": "0.1.0",
-  "description": "Koa middleware for a GraphQL API.",
+  "description": "GraphQL API Koa middleware.",
   "license": "MIT",
   "author": {
     "name": "Jayden Seric",
