@@ -5,6 +5,10 @@
  * Make sure to inspect the output below.  Do not ignore changes!
  */
 'use strict'
+exports[`lib/test TAP Execute middleware options as an object. > Response body. 1`] = `
+{ data: { ok: true } }
+`
+
 exports[`lib/test TAP Execute middleware options as a function. > Response body. 1`] = `
 { data: { ok: true } }
 `

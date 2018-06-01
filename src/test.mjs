@@ -86,6 +86,21 @@ const errorSnapshot = error => {
   return stackless
 }
 
+t.test('Execute middleware options as an object.', async t => {
+  t.plan(2)
+
+  const app = new Koa().use(bodyParser()).use(execute({ schema }))
+  const port = await startServer(t, app)
+  const response = await testFetch(port, {
+    body: JSON.stringify({
+      query: '{ ok }'
+    })
+  })
+
+  t.equal(response.status, 200, 'Response status.')
+  t.matchSnapshot(await response.json(), 'Response body.')
+})
+
 t.test('Execute middleware options as a function.', async t => {
   t.plan(3)
 
