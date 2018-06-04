@@ -1,5 +1,3 @@
-import compose from 'koa-compose'
-import bodyParser from 'koa-bodyparser'
 import createError from 'http-errors'
 import {
   GraphQLSchema,
@@ -12,36 +10,14 @@ import {
 } from 'graphql'
 
 /**
- * Composes Koa middleware for a basic GraphQL API. Includes
- * {@link errorHandler}, {@link bodyParser} and {@link execute}.
- * @param {Object} options Options.
- * @param {ExecuteOptions} options.execute Execute middleware options.
- * @returns {Function} Koa middleware.
- * @example <caption>A basic GraphQL API.</caption>
- * import Koa from 'koa'
- * import { graphqlApi } from 'graphql-api-koa'
- * import schema from './schema'
- *
- * const app = new Koa().use(
- *   graphqlApi({
- *     execute: {
- *       schema
- *     }
- *   })
- * )
- */
-export const graphqlApi = ({ execute: executeOptions } = {}) =>
-  compose([errorHandler(), bodyParser(), execute(executeOptions)])
-
-/**
- * Creates Koa middleware to handle errors. Included in {@link graphqlApi} first
- * to catch all errors for a correctly formated GraphQL response. For security,
- * errors thrown outside resolvers without an `expose` property and `true` value
- * are masked by a generic 500 error.
+ * Creates Koa middleware to handle errors. Use this middleware first to catch
+ * all errors for a correctly formated GraphQL response. For security, errors
+ * thrown outside resolvers without an `expose` property and `true` value are
+ * masked by a generic 500 error.
  * @see {@link http://facebook.github.io/graphql/October2016/#sec-Errors GraphQL Draft RFC Specification October 2016 § 7.2.2}.
  * @see {@link https://npm.im/http-errors http-errors on npm}.
  * @returns {Function} Koa middleware.
- * @example <caption>A basic GraphQL API without using {@link graphqlApi}.</caption>
+ * @example <caption>A basic GraphQL API.</caption>
  * import Koa from 'koa'
  * import bodyParser from 'koa-bodyparser'
  * import { errorHandler, execute } from 'graphql-api-koa'
@@ -83,16 +59,8 @@ export const errorHandler = () => async (ctx, next) => {
 }
 
 /**
- * Creates Koa middleware to parse the request body as JSON to
- * `ctx.request.body`. Included in {@link graphqlApi} after {@link errorHandler}
- * and before {@link execute}.
- * @see {@link https://npm.im/koa-bodyparser koa-bodyparser on npm}.
- */
-export { bodyParser }
-
-/**
- * Creates Koa middleware to execute GraphQL. Included in {@link graphqlApi}
- * after {@link errorHandler} and {@link bodyParser}.
+ * Creates Koa middleware to execute GraphQL. Use after the {@link errorHandler}
+ * and {@link https://npm.im/koa-bodyparser body parser} middleware.
  * @param {ExecuteOptions} options Options.
  * @returns {Function} Koa middleware.
  */

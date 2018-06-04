@@ -1,5 +1,6 @@
 import t from 'tap'
 import Koa from 'koa'
+import bodyParser from 'koa-bodyparser'
 import fetch from 'node-fetch'
 import {
   GraphQLSchema,
@@ -7,7 +8,7 @@ import {
   GraphQLObjectType,
   GraphQLString
 } from 'graphql'
-import { errorHandler, execute, graphqlApi } from '.'
+import { errorHandler, execute } from '.'
 
 /**
  * Asynchronously starts a given Koa app server that automatically closes when
@@ -83,7 +84,7 @@ t.test(
   // eslint-disable-next-line require-await
   async t => {
     try {
-      graphqlApi()
+      execute()
       t.fail('Expected an error.')
     } catch (error) {
       t.matchSnapshot(errorSnapshot(error), 'Creation error.')
@@ -96,7 +97,7 @@ t.test(
   // eslint-disable-next-line require-await
   async t => {
     try {
-      graphqlApi({ execute: true })
+      execute(true)
       t.fail('Expected an error.')
     } catch (error) {
       t.matchSnapshot(errorSnapshot(error), 'Creation error.')
@@ -109,13 +110,10 @@ t.test(
   // eslint-disable-next-line require-await
   async t => {
     try {
-      graphqlApi({
-        execute: {
-          schema,
-          override: true
-        }
+      execute({
+        schema,
+        override: true
       })
-
       t.fail('Expected an error.')
     } catch (error) {
       t.matchSnapshot(errorSnapshot(error), 'Creation error.')
@@ -129,14 +127,14 @@ t.test(
     t.plan(3)
 
     const app = new Koa()
+      .use(errorHandler())
+      .use(bodyParser())
       .use(
-        graphqlApi({
-          execute: {
-            schema,
-            override:
-              // eslint-disable-next-line require-await
-              async () => true
-          }
+        execute({
+          schema,
+          override:
+            // eslint-disable-next-line require-await
+            async () => true
         })
       )
       .on('error', error =>
@@ -156,9 +154,11 @@ t.test(
 )
 
 t.test('GraphQL execute middleware option `rootValue`.', async t => {
-  const app = new Koa().use(
-    graphqlApi({
-      execute: {
+  const app = new Koa()
+    .use(errorHandler())
+    .use(bodyParser())
+    .use(
+      execute({
         schema: new GraphQLSchema({
           query: new GraphQLObjectType({
             name: 'Query',
@@ -171,9 +171,8 @@ t.test('GraphQL execute middleware option `rootValue`.', async t => {
           })
         }),
         rootValue: 'rootValue'
-      }
-    })
-  )
+      })
+    )
 
   const port = await startServer(t, app)
   const response = await testFetch(port, {
@@ -190,31 +189,31 @@ t.test(
   'GraphQL execute middleware option `rootValue` override using Koa ctx.',
   async t => {
     const app = new Koa()
+      .use(errorHandler())
+      .use(bodyParser())
       .use(async (ctx, next) => {
         ctx.state.test = 'rootValueOverridden'
         await next()
       })
       .use(
-        graphqlApi({
-          execute: {
-            schema: new GraphQLSchema({
-              query: new GraphQLObjectType({
-                name: 'Query',
-                fields: {
-                  test: {
-                    type: GraphQLString,
-                    resolve: value => value
-                  }
+        execute({
+          schema: new GraphQLSchema({
+            query: new GraphQLObjectType({
+              name: 'Query',
+              fields: {
+                test: {
+                  type: GraphQLString,
+                  resolve: value => value
                 }
-              })
-            }),
-            rootValue: 'rootValue',
-            override:
-              // eslint-disable-next-line require-await
-              async ctx => ({
-                rootValue: ctx.state.test
-              })
-          }
+              }
+            })
+          }),
+          rootValue: 'rootValue',
+          override:
+            // eslint-disable-next-line require-await
+            async ctx => ({
+              rootValue: ctx.state.test
+            })
         })
       )
 
@@ -231,9 +230,11 @@ t.test(
 )
 
 t.test('GraphQL execute middleware option `contextValue`.', async t => {
-  const app = new Koa().use(
-    graphqlApi({
-      execute: {
+  const app = new Koa()
+    .use(errorHandler())
+    .use(bodyParser())
+    .use(
+      execute({
         schema: new GraphQLSchema({
           query: new GraphQLObjectType({
             name: 'Query',
@@ -246,9 +247,8 @@ t.test('GraphQL execute middleware option `contextValue`.', async t => {
           })
         }),
         contextValue: 'contextValue'
-      }
-    })
-  )
+      })
+    )
 
   const port = await startServer(t, app)
   const response = await testFetch(port, {
@@ -265,31 +265,31 @@ t.test(
   'GraphQL execute middleware option `contextValue` override using Koa ctx.',
   async t => {
     const app = new Koa()
+      .use(errorHandler())
+      .use(bodyParser())
       .use(async (ctx, next) => {
         ctx.state.test = 'contextValueOverridden'
         await next()
       })
       .use(
-        graphqlApi({
-          execute: {
-            schema: new GraphQLSchema({
-              query: new GraphQLObjectType({
-                name: 'Query',
-                fields: {
-                  test: {
-                    type: GraphQLString,
-                    resolve: (value, args, context) => context
-                  }
+        execute({
+          schema: new GraphQLSchema({
+            query: new GraphQLObjectType({
+              name: 'Query',
+              fields: {
+                test: {
+                  type: GraphQLString,
+                  resolve: (value, args, context) => context
                 }
-              })
-            }),
-            contextValue: 'contextValue',
-            override:
-              // eslint-disable-next-line require-await
-              async ctx => ({
-                contextValue: ctx.state.test
-              })
-          }
+              }
+            })
+          }),
+          contextValue: 'contextValue',
+          override:
+            // eslint-disable-next-line require-await
+            async ctx => ({
+              contextValue: ctx.state.test
+            })
         })
       )
 
@@ -306,14 +306,15 @@ t.test(
 )
 
 t.test('GraphQL execute middleware option `fieldResolver`.', async t => {
-  const app = new Koa().use(
-    graphqlApi({
-      execute: {
+  const app = new Koa()
+    .use(errorHandler())
+    .use(bodyParser())
+    .use(
+      execute({
         schema,
         fieldResolver: () => 'fieldResolver'
-      }
-    })
-  )
+      })
+    )
 
   const port = await startServer(t, app)
   const response = await testFetch(port, {
@@ -330,21 +331,21 @@ t.test(
   'GraphQL execute middleware option `fieldResolver` override using Koa ctx.',
   async t => {
     const app = new Koa()
+      .use(errorHandler())
+      .use(bodyParser())
       .use(async (ctx, next) => {
         ctx.state.test = 'fieldResolverOverridden'
         await next()
       })
       .use(
-        graphqlApi({
-          execute: {
-            schema,
-            fieldResolver: () => 'fieldResolver',
-            override:
-              // eslint-disable-next-line require-await
-              async ctx => ({
-                fieldResolver: () => ctx.state.test
-              })
-          }
+        execute({
+          schema,
+          fieldResolver: () => 'fieldResolver',
+          override:
+            // eslint-disable-next-line require-await
+            async ctx => ({
+              fieldResolver: () => ctx.state.test
+            })
         })
       )
 
@@ -365,11 +366,7 @@ t.test(
   // eslint-disable-next-line require-await
   async t => {
     try {
-      graphqlApi({
-        execute: {
-          schema: true
-        }
-      })
+      execute({ schema: true })
       t.fail('Expected an error.')
     } catch (error) {
       t.matchSnapshot(errorSnapshot(error), 'Creation error.')
@@ -383,14 +380,14 @@ t.test(
     t.plan(3)
 
     const app = new Koa()
+      .use(errorHandler())
+      .use(bodyParser())
       .use(
-        graphqlApi({
-          execute: {
-            schema,
-            override: () => ({
-              schema: true
-            })
-          }
+        execute({
+          schema,
+          override: () => ({
+            schema: true
+          })
         })
       )
       .on('error', error =>
@@ -414,10 +411,8 @@ t.test(
   // eslint-disable-next-line require-await
   async t => {
     try {
-      graphqlApi({
-        execute: {
-          schema: new GraphQLSchema({})
-        }
+      execute({
+        schema: new GraphQLSchema({})
       })
       t.fail('Expected an error.')
     } catch (error) {
@@ -432,14 +427,14 @@ t.test(
     t.plan(3)
 
     const app = new Koa()
+      .use(errorHandler())
+      .use(bodyParser())
       .use(
-        graphqlApi({
-          execute: {
-            schema,
-            override: () => ({
-              schema: new GraphQLSchema({})
-            })
-          }
+        execute({
+          schema,
+          override: () => ({
+            schema: new GraphQLSchema({})
+          })
         })
       )
       .on('error', error =>
@@ -465,13 +460,7 @@ t.test(
 
     const app = new Koa()
       .use(errorHandler())
-      .use(
-        execute({
-          execute: {
-            schema
-          }
-        })
-      )
+      .use(execute({ schema }))
       .on('error', error =>
         t.matchSnapshot(errorSnapshot(error), 'Koa app error event.')
       )
@@ -488,13 +477,9 @@ t.test('Request body invalid.', async t => {
   t.plan(3)
 
   const app = new Koa()
-    .use(
-      graphqlApi({
-        execute: {
-          schema
-        }
-      })
-    )
+    .use(errorHandler())
+    .use(bodyParser())
+    .use(execute({ schema }))
     .on('error', error =>
       t.matchSnapshot(errorSnapshot(error), 'Koa app error event.')
     )
@@ -512,13 +497,9 @@ t.test('GraphQL operation field `query` missing.', async t => {
   t.plan(3)
 
   const app = new Koa()
-    .use(
-      graphqlApi({
-        execute: {
-          schema
-        }
-      })
-    )
+    .use(errorHandler())
+    .use(bodyParser())
+    .use(execute({ schema }))
     .on('error', error =>
       t.matchSnapshot(errorSnapshot(error), 'Koa app error event.')
     )
@@ -536,13 +517,9 @@ t.test('GraphQL operation field `query` invalid.', async t => {
   t.plan(3)
 
   const app = new Koa()
-    .use(
-      graphqlApi({
-        execute: {
-          schema
-        }
-      })
-    )
+    .use(errorHandler())
+    .use(bodyParser())
+    .use(execute({ schema }))
     .on('error', error =>
       t.matchSnapshot(errorSnapshot(error), 'Koa app error event.')
     )
@@ -562,13 +539,9 @@ t.test('GraphQL operation field `variables` invalid.', async t => {
   t.plan(3)
 
   const app = new Koa()
-    .use(
-      graphqlApi({
-        execute: {
-          schema
-        }
-      })
-    )
+    .use(errorHandler())
+    .use(bodyParser())
+    .use(execute({ schema }))
     .on('error', error =>
       t.matchSnapshot(errorSnapshot(error), 'Koa app error event.')
     )
@@ -589,13 +562,9 @@ t.test('GraphQL operation field `query` validation errors.', async t => {
   t.plan(3)
 
   const app = new Koa()
-    .use(
-      graphqlApi({
-        execute: {
-          schema
-        }
-      })
-    )
+    .use(errorHandler())
+    .use(bodyParser())
+    .use(execute({ schema }))
     .on('error', error =>
       t.matchSnapshot(errorSnapshot(error), 'Koa app error event.')
     )
@@ -615,23 +584,23 @@ t.test('GraphQL resolver error.', async t => {
   t.plan(3)
 
   const app = new Koa()
+    .use(errorHandler())
+    .use(bodyParser())
     .use(
-      graphqlApi({
-        execute: {
-          schema: new GraphQLSchema({
-            query: new GraphQLObjectType({
-              name: 'Query',
-              fields: {
-                test: {
-                  type: new GraphQLNonNull(GraphQLString),
-                  resolve() {
-                    throw new Error('Resolver error.')
-                  }
+      execute({
+        schema: new GraphQLSchema({
+          query: new GraphQLObjectType({
+            name: 'Query',
+            fields: {
+              test: {
+                type: new GraphQLNonNull(GraphQLString),
+                resolve() {
+                  throw new Error('Resolver error.')
                 }
               }
-            })
+            }
           })
-        }
+        })
       })
     )
     .on('error', error =>

@@ -3,9 +3,7 @@ access:
   - public
   - undefined
 toc:
-  - graphqlApi
   - errorHandler
-  - bodyParser
   - execute
   - name: Types
     description: |

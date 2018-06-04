@@ -18,53 +18,22 @@ npm install graphql-api-koa
 
 #### Table of Contents
 
-- [graphqlApi](#graphqlapi)
 - [errorHandler](#errorhandler)
-- [bodyParser](#bodyparser)
 - [execute](#execute)
 - [Types](#types)
   - [ExecuteOptions](#executeoptions)
   - [MiddlewareOptionsOverride](#middlewareoptionsoverride)
-
-### graphqlApi
-
-Composes Koa middleware for a basic GraphQL API. Includes [errorHandler](#errorhandler), [bodyParser](#bodyparser) and [execute](#execute).
-
-**Parameters**
-
-- `options` **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** Options. (optional, default `{}`)
-  - `options.execute` **[ExecuteOptions](#executeoptions)** Execute middleware options.
-
-**Examples**
-
-_A basic GraphQL API._
-
-```javascript
-import Koa from 'koa'
-import { graphqlApi } from 'graphql-api-koa'
-import schema from './schema'
-
-const app = new Koa().use(
-  graphqlApi({
-    execute: {
-      schema
-    }
-  })
-)
-```
-
-Returns **[Function](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/function)** Koa middleware.
 
 ### errorHandler
 
 - **See: [GraphQL Draft RFC Specification October 2016 § 7.2.2](http://facebook.github.io/graphql/October2016/#sec-Errors).**
 - **See: [http-errors on npm](https://npm.im/http-errors).**
 
-Creates Koa middleware to handle errors. Included in [graphqlApi](#graphqlapi) first to catch all errors for a correctly formated GraphQL response. For security, errors thrown outside resolvers without an `expose` property and `true` value are masked by a generic 500 error.
+Creates Koa middleware to handle errors. Use this middleware first to catch all errors for a correctly formated GraphQL response. For security, errors thrown outside resolvers without an `expose` property and `true` value are masked by a generic 500 error.
 
 **Examples**
 
-_A basic GraphQL API without using [graphqlApi](#graphqlapi)._
+_A basic GraphQL API._
 
 ```javascript
 import Koa from 'koa'
@@ -80,15 +49,9 @@ const app = new Koa()
 
 Returns **[Function](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/function)** Koa middleware.
 
-### bodyParser
-
-- **See: [koa-bodyparser on npm](https://npm.im/koa-bodyparser).**
-
-Creates Koa middleware to parse the request body as JSON to `ctx.request.body`. Included in [graphqlApi](#graphqlapi) after [errorHandler](#errorhandler) and before [execute](#execute).
-
 ### execute
 
-Creates Koa middleware to execute GraphQL. Included in [graphqlApi](#graphqlapi) after [errorHandler](#errorhandler) and [bodyParser](#bodyparser).
+Creates Koa middleware to execute GraphQL. Use after the [errorHandler](#errorhandler) and [body parser](https://npm.im/koa-bodyparser) middleware.
 
 **Parameters**
 
