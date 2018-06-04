@@ -138,9 +138,9 @@ export const execute = options => {
         checkSchema(optionsOverride.schema)
     }
 
-    const executeOptions = { ...options, ...optionsOverride }
+    const execute = { ...options, ...optionsOverride }
 
-    const queryValidationErrors = validate(executeOptions.schema, document)
+    const queryValidationErrors = validate(execute.schema, document)
     if (queryValidationErrors.length)
       throw createError(400, 'GraphQL query validation errors.', {
         graphqlErrors: queryValidationErrors
@@ -150,7 +150,7 @@ export const execute = options => {
 
     try {
       result = await executeGraphQL({
-        ...executeOptions,
+        ...execute,
         document,
         variableValues: ctx.request.body.variables,
         operationName: ctx.request.body.operationName
@@ -179,7 +179,7 @@ export const execute = options => {
  * Composes a Koa middleware GraphQL preset that includes request body parsing,
  * GraphQL execution and error handling.
  * @param {Options} options Options.
- * @param {ExecuteOptions} options.executeOptions Execute middleware options.
+ * @param {ExecuteOptions} options.execute Execute middleware options.
  * @returns {Function} Koa middleware.
  * @example <caption>A basic GraphQL API.</caption>
  * import { GraphQLSchema, GraphQLObjectType, GraphQLString } from 'graphql'
@@ -188,7 +188,7 @@ export const execute = options => {
  *
  * const app = new Koa().use(
  *   graphqlPreset({
- *     executeOptions: {
+ *     execute: {
  *       schema: new GraphQLSchema({
  *         query: new GraphQLObjectType({
  *           name: 'Query',
@@ -204,7 +204,7 @@ export const execute = options => {
  *   })
  * )
  */
-export const graphqlPreset = ({ executeOptions } = {}) =>
+export const graphqlPreset = ({ execute: executeOptions } = {}) =>
   compose([errorHandler(), bodyParser(), execute(executeOptions)])
 
 /**

@@ -96,7 +96,7 @@ t.test(
   // eslint-disable-next-line require-await
   async t => {
     try {
-      graphqlPreset({ executeOptions: true })
+      graphqlPreset({ execute: true })
       t.fail('Expected an error.')
     } catch (error) {
       t.matchSnapshot(errorSnapshot(error), 'Creation error.')
@@ -110,7 +110,7 @@ t.test(
   async t => {
     try {
       graphqlPreset({
-        executeOptions: {
+        execute: {
           schema,
           override: true
         }
@@ -129,7 +129,7 @@ t.test(`${LABELS.execute} option \`override\` not an object.`, async t => {
   const app = new Koa()
     .use(
       graphqlPreset({
-        executeOptions: {
+        execute: {
           schema,
           override:
             // eslint-disable-next-line require-await
@@ -155,7 +155,7 @@ t.test(`${LABELS.execute} option \`override\` not an object.`, async t => {
 t.test(`${LABELS.execute} option \`rootValue\`.`, async t => {
   const app = new Koa().use(
     graphqlPreset({
-      executeOptions: {
+      execute: {
         schema: new GraphQLSchema({
           query: new GraphQLObjectType({
             name: 'Query',
@@ -193,7 +193,7 @@ t.test(
       })
       .use(
         graphqlPreset({
-          executeOptions: {
+          execute: {
             schema: new GraphQLSchema({
               query: new GraphQLObjectType({
                 name: 'Query',
@@ -230,7 +230,7 @@ t.test(
 t.test(`${LABELS.execute} option \`contextValue\`.`, async t => {
   const app = new Koa().use(
     graphqlPreset({
-      executeOptions: {
+      execute: {
         schema: new GraphQLSchema({
           query: new GraphQLObjectType({
             name: 'Query',
@@ -268,7 +268,7 @@ t.test(
       })
       .use(
         graphqlPreset({
-          executeOptions: {
+          execute: {
             schema: new GraphQLSchema({
               query: new GraphQLObjectType({
                 name: 'Query',
@@ -305,7 +305,7 @@ t.test(
 t.test(`${LABELS.execute} option \`fieldResolver\`.`, async t => {
   const app = new Koa().use(
     graphqlPreset({
-      executeOptions: {
+      execute: {
         schema,
         fieldResolver: () => `fieldResolver`
       }
@@ -333,7 +333,7 @@ t.test(
       })
       .use(
         graphqlPreset({
-          executeOptions: {
+          execute: {
             schema,
             fieldResolver: () => `fieldResolver`,
             override:
@@ -363,7 +363,7 @@ t.test(
   async t => {
     try {
       graphqlPreset({
-        executeOptions: {
+        execute: {
           schema: true
         }
       })
@@ -382,7 +382,7 @@ t.test(
     const app = new Koa()
       .use(
         graphqlPreset({
-          executeOptions: {
+          execute: {
             schema,
             override: () => ({
               schema: true
@@ -412,7 +412,7 @@ t.test(
   async t => {
     try {
       graphqlPreset({
-        executeOptions: {
+        execute: {
           schema: new GraphQLSchema({})
         }
       })
@@ -431,7 +431,7 @@ t.test(
     const app = new Koa()
       .use(
         graphqlPreset({
-          executeOptions: {
+          execute: {
             schema,
             override: () => ({
               schema: new GraphQLSchema({})
@@ -464,7 +464,7 @@ t.test(
       .use(errorHandler())
       .use(
         execute({
-          executeOptions: {
+          execute: {
             schema
           }
         })
@@ -487,7 +487,7 @@ t.test('Request body invalid.', async t => {
   const app = new Koa()
     .use(
       graphqlPreset({
-        executeOptions: {
+        execute: {
           schema
         }
       })
@@ -511,7 +511,7 @@ t.test('GraphQL operation field `query` missing.', async t => {
   const app = new Koa()
     .use(
       graphqlPreset({
-        executeOptions: {
+        execute: {
           schema
         }
       })
@@ -535,7 +535,7 @@ t.test('GraphQL operation field `query` invalid.', async t => {
   const app = new Koa()
     .use(
       graphqlPreset({
-        executeOptions: {
+        execute: {
           schema
         }
       })
@@ -561,7 +561,7 @@ t.test('GraphQL operation field `variables` invalid.', async t => {
   const app = new Koa()
     .use(
       graphqlPreset({
-        executeOptions: {
+        execute: {
           schema
         }
       })
@@ -588,7 +588,7 @@ t.test('GraphQL operation field `query` validation errors.', async t => {
   const app = new Koa()
     .use(
       graphqlPreset({
-        executeOptions: {
+        execute: {
           schema
         }
       })
@@ -614,7 +614,7 @@ t.test('GraphQL resolver error.', async t => {
   const app = new Koa()
     .use(
       graphqlPreset({
-        executeOptions: {
+        execute: {
           schema: new GraphQLSchema({
             query: new GraphQLObjectType({
               name: 'Query',

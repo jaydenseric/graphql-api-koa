@@ -64,7 +64,7 @@ Composes a Koa middleware GraphQL preset that includes request body parsing, Gra
 **Parameters**
 
 - `options` **Options** Options. (optional, default `{}`)
-  - `options.executeOptions` **[ExecuteOptions](#executeoptions)** Execute middleware options.
+  - `options.execute` **[ExecuteOptions](#executeoptions)** Execute middleware options.
 
 **Examples**
 
@@ -77,7 +77,7 @@ import Koa from 'koa'
 
 const app = new Koa().use(
   graphqlPreset({
-    executeOptions: {
+    execute: {
       schema: new GraphQLSchema({
         query: new GraphQLObjectType({
           name: 'Query',
