@@ -12,14 +12,6 @@ import {
 } from 'graphql'
 
 /**
- * Labels for parts of the API for use in error messages.
- * @private
- */
-export const LABELS = {
-  execute: 'GraphQL execute middleware'
-}
-
-/**
  * Determines if a value is a plain object.
  * @param {*} value The value to check.
  * @returns {boolean} Is the value a plain object.
@@ -91,10 +83,10 @@ const checkSchema = schema => {
  */
 export const execute = options => {
   if (typeof options === 'undefined')
-    throw createError(`${LABELS.execute} options missing.`)
+    throw createError('GraphQL execute middleware options missing.')
 
   if (!isPlainObject(options))
-    throw createError(`${LABELS.execute} options must be an object.`)
+    throw createError('GraphQL execute middleware options must be an object.')
 
   if (typeof options.schema !== 'undefined') checkSchema(options.schema)
 
@@ -103,7 +95,7 @@ export const execute = options => {
     typeof options.override !== 'function'
   )
     throw createError(
-      `${LABELS.execute} \`override\` option must be a function.`
+      'GraphQL execute middleware `override` option must be a function.'
     )
 
   return async (ctx, next) => {
@@ -131,7 +123,7 @@ export const execute = options => {
 
       if (!isPlainObject(optionsOverride))
         throw createError(
-          `${LABELS.execute} options must be an object, or an object promise.`
+          'GraphQL execute middleware options must be an object, or an object promise.'
         )
 
       if (typeof optionsOverride.schema !== 'undefined')
