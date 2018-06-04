@@ -66,6 +66,34 @@ Composes a Koa middleware GraphQL preset that includes request body parsing, Gra
 - `options` **Options** Options. (optional, default `{}`)
   - `options.executeOptions` **[ExecuteOptions](#executeoptions)** Execute middleware options.
 
+**Examples**
+
+_A basic GraphQL API._
+
+```javascript
+import { GraphQLSchema, GraphQLObjectType, GraphQLString } from 'graphql'
+import { graphqlPreset } from 'graphql-api-koa'
+import Koa from 'koa'
+
+const app = new Koa().use(
+  graphqlPreset({
+    executeOptions: {
+      schema: new GraphQLSchema({
+        query: new GraphQLObjectType({
+          name: 'Query',
+          fields: {
+            hello: {
+              type: GraphQLString,
+              resolve: () => 'Hi.'
+            }
+          }
+        })
+      })
+    }
+  })
+)
+```
+
 Returns **[Function](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/function)** Koa middleware.
 
 ### Override

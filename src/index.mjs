@@ -181,6 +181,28 @@ export const execute = options => {
  * @param {Options} options Options.
  * @param {ExecuteOptions} options.executeOptions Execute middleware options.
  * @returns {Function} Koa middleware.
+ * @example <caption>A basic GraphQL API.</caption>
+ * import { GraphQLSchema, GraphQLObjectType, GraphQLString } from 'graphql'
+ * import { graphqlPreset } from 'graphql-api-koa'
+ * import Koa from 'koa'
+ *
+ * const app = new Koa().use(
+ *   graphqlPreset({
+ *     executeOptions: {
+ *       schema: new GraphQLSchema({
+ *         query: new GraphQLObjectType({
+ *           name: 'Query',
+ *           fields: {
+ *             hello: {
+ *               type: GraphQLString,
+ *               resolve: () => 'Hi.'
+ *             }
+ *           }
+ *         })
+ *       })
+ *     }
+ *   })
+ * )
  */
 export const graphqlPreset = ({ executeOptions } = {}) =>
   compose([errorHandler(), bodyParser(), execute(executeOptions)])
