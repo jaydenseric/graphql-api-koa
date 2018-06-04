@@ -12,25 +12,49 @@ import {
 } from 'graphql'
 
 /**
- * Determines if a value is a plain object.
- * @param {*} value The value to check.
- * @returns {boolean} Is the value a plain object.
- * @private
+ * Composes Koa middleware for a basic GraphQL API. Includes
+ * {@link errorHandler}, {@link bodyParser} and {@link execute}.
+ * @param {Object} options Options.
+ * @param {ExecuteOptions} options.execute Execute middleware options.
+ * @returns {Function} Koa middleware.
+ * @example <caption>A basic GraphQL API.</caption>
+ * import Koa from 'koa'
+ * import { graphqlApi } from 'graphql-api-koa'
+ * import schema from './schema'
+ *
+ * const app = new Koa().use(
+ *   graphqlApi({
+ *     execute: {
+ *       schema
+ *     }
+ *   })
+ * )
  */
-const isPlainObject = value =>
-  typeof value === 'object' && value !== null && !Array.isArray(value)
+export const graphqlApi = ({ execute: executeOptions } = {}) =>
+  compose([errorHandler(), bodyParser(), execute(executeOptions)])
 
 /**
- * GraphQL error handler Koa middleware. Use this middleware first to catch all
- * middleware errors and correctly format a GraphQL response. Errors thrown
- * outside resolvers without an `expose` property and `true` value are masked by
- * a generic 500 error.
- * @see {@link http://facebook.github.io/graphql/October2016/#sec-Errors GraphQL Draft RFC Specification October 2016 § 7.2.2}
- * @see {@link https://npm.im/http-errors http-errors on npm.}
+ * Creates Koa middleware to handle errors. Included in {@link graphqlApi} first
+ * to catch all errors for a correctly formated GraphQL response. For security,
+ * errors thrown outside resolvers without an `expose` property and `true` value
+ * are masked by a generic 500 error.
+ * @see {@link http://facebook.github.io/graphql/October2016/#sec-Errors GraphQL Draft RFC Specification October 2016 § 7.2.2}.
+ * @see {@link https://npm.im/http-errors http-errors on npm}.
  * @returns {Function} Koa middleware.
+ * @example <caption>A basic GraphQL API without using {@link graphqlApi}.</caption>
+ * import Koa from 'koa'
+ * import bodyParser from 'koa-bodyparser'
+ * import { errorHandler, execute } from 'graphql-api-koa'
+ * import schema from './schema'
+ *
+ * const app = new Koa()
+ *   .use(errorHandler())
+ *   .use(bodyParser())
+ *   .use(execute({ schema }))
  */
 export const errorHandler = () => async (ctx, next) => {
   try {
+    // Await all following middleware.
     await next()
   } catch (error) {
     // Use, or coerce to, a HttpError instance.
@@ -59,25 +83,16 @@ export const errorHandler = () => async (ctx, next) => {
 }
 
 /**
- * Validates a GraphQL schema.
- * @param {module:graphql.GraphQLSchema} schema GraphQL schema.
- * @private
+ * Creates Koa middleware to parse the request body as JSON to
+ * `ctx.request.body`. Included in {@link graphqlApi} after {@link errorHandler}
+ * and before {@link execute}.
+ * @see {@link https://npm.im/koa-bodyparser koa-bodyparser on npm}.
  */
-const checkSchema = schema => {
-  if (!(schema instanceof GraphQLSchema))
-    throw createError(
-      'GraphQL schema is required and must be a `GraphQLSchema` instance.'
-    )
-
-  const schemaValidationErrors = validateSchema(schema)
-  if (schemaValidationErrors.length)
-    throw createError('GraphQL schema validation errors.', {
-      graphqlErrors: schemaValidationErrors
-    })
-}
+export { bodyParser }
 
 /**
- * Creates GraphQL execution Koa middleware.
+ * Creates Koa middleware to execute GraphQL. Included in {@link graphqlApi}
+ * after {@link errorHandler} and {@link bodyParser}.
  * @param {ExecuteOptions} options Options.
  * @returns {Function} Koa middleware.
  */
@@ -168,50 +183,56 @@ export const execute = options => {
 }
 
 /**
- * Composes a Koa middleware GraphQL preset that includes request body parsing,
- * GraphQL execution and error handling.
- * @param {Options} options Options.
- * @param {ExecuteOptions} options.execute Execute middleware options.
- * @returns {Function} Koa middleware.
- * @example <caption>A basic GraphQL API.</caption>
- * import { GraphQLSchema, GraphQLObjectType, GraphQLString } from 'graphql'
- * import { graphqlPreset } from 'graphql-api-koa'
- * import Koa from 'koa'
- *
- * const app = new Koa().use(
- *   graphqlPreset({
- *     execute: {
- *       schema: new GraphQLSchema({
- *         query: new GraphQLObjectType({
- *           name: 'Query',
- *           fields: {
- *             hello: {
- *               type: GraphQLString,
- *               resolve: () => 'Hi.'
- *             }
- *           }
- *         })
- *       })
- *     }
- *   })
- * )
+ * Determines if a value is a plain object.
+ * @param {*} value The value to check.
+ * @returns {boolean} Is the value a plain object.
+ * @private
  */
-export const graphqlPreset = ({ execute: executeOptions } = {}) =>
-  compose([errorHandler(), bodyParser(), execute(executeOptions)])
+const isPlainObject = value =>
+  typeof value === 'object' && value !== null && !Array.isArray(value)
 
 /**
- * GraphQL execute Koa middleware options.
+ * Validates a GraphQL schema.
+ * @param {module:graphql.GraphQLSchema} schema GraphQL schema.
+ * @private
+ */
+const checkSchema = schema => {
+  if (!(schema instanceof GraphQLSchema))
+    throw createError(
+      'GraphQL schema is required and must be a `GraphQLSchema` instance.'
+    )
+
+  const schemaValidationErrors = validateSchema(schema)
+  if (schemaValidationErrors.length)
+    throw createError('GraphQL schema validation errors.', {
+      graphqlErrors: schemaValidationErrors
+    })
+}
+
+/**
+ * GraphQL {@link execute} Koa middleware options.
  * @typedef {Object} ExecuteOptions
  * @prop {module:graphql.GraphQLSchema} schema GraphQL schema.
  * @prop {*} [rootValue] Value passed to the first resolver.
  * @prop {*} [contextValue] Execution context (usually an object) passed to resolvers.
  * @prop {Function} [fieldResolver] Custom default field resolver.
- * @prop {Override} [override] Override options per request.
+ * @prop {MiddlewareOptionsOverride} [override] Override options per request.
  */
 
 /**
- * Overrides Koa middleware options per-request.
- * @callback Override
+ * Per-request Koa middleware options override.
+ * @callback MiddlewareOptionsOverride
  * @param {module:koa.Context} context Koa context.
  * @returns {Object} Options.
+ * @example <caption>{@link execute} middleware options setting the schema once at startup and user context per-request.</caption>
+ * import schema from './schema'
+ *
+ * const executeOptions = {
+ *   schema,
+ *   override: ctx => ({
+ *     contextValue: {
+ *       user: ctx.user
+ *     }
+ *   })
+ * }
  */
