@@ -132,6 +132,10 @@
         "multi"
       ],
       "prefer-destructuring": "error",
+      "quotes": [
+        "error",
+        "single"
+      ],
       "import/first": "error",
       "import/newline-after-import": "error",
       "import/no-useless-path-segments": "error",
