@@ -2,7 +2,7 @@
 
 [![npm version](https://img.shields.io/npm/v/graphql-api-koa.svg)](https://npm.im/graphql-api-koa) ![Licence](https://img.shields.io/npm/l/graphql-api-koa.svg) [![Github issues](https://img.shields.io/github/issues/jaydenseric/graphql-api-koa.svg)](https://github.com/jaydenseric/graphql-api-koa/issues) [![Github stars](https://img.shields.io/github/stars/jaydenseric/graphql-api-koa.svg)](https://github.com/jaydenseric/graphql-api-koa/stargazers) [![Travis status](https://img.shields.io/travis/jaydenseric/graphql-api-koa.svg)](https://travis-ci.org/jaydenseric/graphql-api-koa)
 
-Koa middleware for a GraphQL API.
+GraphQL API Koa middleware.
 
 ## Setup
 
@@ -20,8 +20,9 @@ npm install graphql-api-koa
 
 - [errorHandler](#errorhandler)
 - [execute](#execute)
-- [GraphqlExecuteOptions](#graphqlexecuteoptions)
+- [ExecuteOptions](#executeoptions)
 - [graphqlPreset](#graphqlpreset)
+- [Override](#override)
 
 ### errorHandler
 
@@ -38,11 +39,11 @@ Creates GraphQL execution Koa middleware.
 
 **Parameters**
 
-- `options` **([GraphqlExecuteOptions](#graphqlexecuteoptions) \| [Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[GraphqlExecuteOptions](#graphqlexecuteoptions)>)** GraphQL Koa middleware options.
+- `options` **[ExecuteOptions](#executeoptions)** Options.
 
 Returns **[Function](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/function)** Koa middleware.
 
-### GraphqlExecuteOptions
+### ExecuteOptions
 
 GraphQL execute Koa middleware options.
 
@@ -50,10 +51,11 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 
 **Properties**
 
-- `schema` **GraphQLSchema** GraphQL schema.
+- `schema` **module:graphql.GraphQLSchema** GraphQL schema.
 - `rootValue` **any?** Value passed to the first resolver.
-- `context` **any?** Execution context (usually an object) passed to resolvers.
+- `contextValue` **any?** Execution context (usually an object) passed to resolvers.
 - `fieldResolver` **[Function](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/function)?** Custom default field resolver.
+- `override` **[Override](#override)?** Override options per request.
 
 ### graphqlPreset
 
@@ -62,6 +64,18 @@ Composes a Koa middleware GraphQL preset that includes request body parsing, Gra
 **Parameters**
 
 - `options` **Options** Options. (optional, default `{}`)
-  - `options.executeOptions` **[GraphqlExecuteOptions](#graphqlexecuteoptions)** Execute middleware options.
+  - `options.executeOptions` **[ExecuteOptions](#executeoptions)** Execute middleware options.
 
 Returns **[Function](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/function)** Koa middleware.
+
+### Override
+
+Overrides Koa middleware options per-request.
+
+Type: [Function](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/function)
+
+**Parameters**
+
+- `context` **module:koa.Context** Koa context.
+
+Returns **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** Options.

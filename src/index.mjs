@@ -12,6 +12,14 @@ import {
 } from 'graphql'
 
 /**
+ * Labels for parts of the API for use in error messages.
+ * @private
+ */
+export const LABELS = {
+  execute: 'GraphQL execute middleware'
+}
+
+/**
  * Determines if a value is a plain object.
  * @param {*} value The value to check.
  * @returns {boolean} Is the value a plain object.
@@ -59,91 +67,119 @@ export const errorHandler = () => async (ctx, next) => {
 }
 
 /**
+ * Validates a GraphQL schema.
+ * @param {module:graphql.GraphQLSchema} schema GraphQL schema.
+ * @private
+ */
+const checkSchema = schema => {
+  if (!(schema instanceof GraphQLSchema))
+    throw createError(
+      'GraphQL schema is required and must be a `GraphQLSchema` instance.'
+    )
+
+  const schemaValidationErrors = validateSchema(schema)
+  if (schemaValidationErrors.length)
+    throw createError('GraphQL schema validation errors.', {
+      graphqlErrors: schemaValidationErrors
+    })
+}
+
+/**
  * Creates GraphQL execution Koa middleware.
- * @param {GraphqlExecuteOptions|Promise<GraphqlExecuteOptions>} options GraphQL Koa middleware options.
+ * @param {ExecuteOptions} options Options.
  * @returns {Function} Koa middleware.
  */
-export const execute = options => async (ctx, next) => {
+export const execute = options => {
   if (typeof options === 'undefined')
-    throw createError('GraphQL Koa middleware requires options.')
+    throw createError(`${LABELS.execute} options missing.`)
 
-  const resolvedOptions = await Promise.resolve(
-    typeof options === 'function' ? options(ctx) : options
+  if (!isPlainObject(options))
+    throw createError(`${LABELS.execute} options must be an object.`)
+
+  if (typeof options.schema !== 'undefined') checkSchema(options.schema)
+
+  if (
+    typeof options.override !== 'undefined' &&
+    typeof options.override !== 'function'
   )
-
-  if (!isPlainObject(resolvedOptions))
     throw createError(
-      'GraphQL Koa middleware options must be an object, or an object promise.'
+      `${LABELS.execute} \`override\` option must be a function.`
     )
 
-  if (!(resolvedOptions.schema instanceof GraphQLSchema))
-    throw createError(
-      'GraphQL Koa middleware `schema` option must be a `GraphQLSchema` instance.'
-    )
+  return async (ctx, next) => {
+    if (typeof ctx.request.body === 'undefined')
+      throw createError('Request body missing.')
 
-  const schemaValidationErrors = validateSchema(resolvedOptions.schema)
-  if (schemaValidationErrors.length)
-    throw createError(
-      'GraphQL Koa middleware `schema` option validation errors.',
-      { graphqlErrors: schemaValidationErrors }
-    )
+    if (!isPlainObject(ctx.request.body))
+      throw createError(400, 'Request body must be a JSON object.')
 
-  if (typeof ctx.request.body === 'undefined')
-    throw createError('Request body missing.')
+    if (!('query' in ctx.request.body))
+      throw createError(400, 'GraphQL operation field `query` missing.')
 
-  if (!isPlainObject(ctx.request.body))
-    throw createError(400, 'Request body must be a JSON object.')
+    let document
 
-  if (!('query' in ctx.request.body))
-    throw createError(400, 'GraphQL operation field `query` missing.')
+    try {
+      document = parse(new Source(ctx.request.body.query))
+    } catch (error) {
+      throw createError(400, `GraphQL query syntax error: ${error.message}`)
+    }
 
-  let queryAST
+    let optionsOverride = {}
 
-  try {
-    queryAST = parse(new Source(ctx.request.body.query))
-  } catch (error) {
-    throw createError(400, `GraphQL query syntax error: ${error.message}`)
+    if (options.override) {
+      optionsOverride = await options.override(ctx)
+
+      if (!isPlainObject(optionsOverride))
+        throw createError(
+          `${LABELS.execute} options must be an object, or an object promise.`
+        )
+
+      if (typeof optionsOverride.schema !== 'undefined')
+        checkSchema(optionsOverride.schema)
+    }
+
+    const executeOptions = { ...options, ...optionsOverride }
+
+    const queryValidationErrors = validate(executeOptions.schema, document)
+    if (queryValidationErrors.length)
+      throw createError(400, 'GraphQL query validation errors.', {
+        graphqlErrors: queryValidationErrors
+      })
+
+    let result
+
+    try {
+      result = await executeGraphQL({
+        ...executeOptions,
+        document,
+        variableValues: ctx.request.body.variables,
+        operationName: ctx.request.body.operationName
+      })
+    } catch (error) {
+      throw createError(
+        400,
+        `GraphQL operation field invalid: ${error.message}`
+      )
+    }
+
+    if (result.data) ctx.body = { data: result.data }
+
+    if (result.errors)
+      throw createError(200, 'GraphQL errors.', {
+        graphqlErrors: result.errors
+      })
+
+    ctx.response.status = 200
+
+    await next()
   }
-
-  const queryValidationErrors = validate(resolvedOptions.schema, queryAST)
-  if (queryValidationErrors.length)
-    throw createError(400, `GraphQL query validation errors.`, {
-      graphqlErrors: queryValidationErrors
-    })
-
-  let result
-
-  try {
-    result = await executeGraphQL(
-      resolvedOptions.schema,
-      queryAST,
-      resolvedOptions.rootValue,
-      resolvedOptions.context,
-      ctx.request.body.variables,
-      ctx.request.body.operationName,
-      resolvedOptions.fieldResolver
-    )
-  } catch (error) {
-    throw createError(400, `GraphQL operation field invalid: ${error.message}`)
-  }
-
-  if (result.data) ctx.body = { data: result.data }
-
-  if (result.errors)
-    throw createError(200, 'GraphQL errors.', {
-      graphqlErrors: result.errors
-    })
-
-  ctx.response.status = 200
-
-  await next()
 }
 
 /**
  * Composes a Koa middleware GraphQL preset that includes request body parsing,
  * GraphQL execution and error handling.
  * @param {Options} options Options.
- * @param {GraphqlExecuteOptions} options.executeOptions Execute middleware options.
+ * @param {ExecuteOptions} options.executeOptions Execute middleware options.
  * @returns {Function} Koa middleware.
  */
 export const graphqlPreset = ({ executeOptions } = {}) =>
@@ -151,9 +187,17 @@ export const graphqlPreset = ({ executeOptions } = {}) =>
 
 /**
  * GraphQL execute Koa middleware options.
- * @typedef {Object} GraphqlExecuteOptions
- * @prop {GraphQLSchema} schema GraphQL schema.
+ * @typedef {Object} ExecuteOptions
+ * @prop {module:graphql.GraphQLSchema} schema GraphQL schema.
  * @prop {*} [rootValue] Value passed to the first resolver.
- * @prop {*} [context] Execution context (usually an object) passed to resolvers.
+ * @prop {*} [contextValue] Execution context (usually an object) passed to resolvers.
  * @prop {Function} [fieldResolver] Custom default field resolver.
+ * @prop {Override} [override] Override options per request.
+ */
+
+/**
+ * Overrides Koa middleware options per-request.
+ * @callback Override
+ * @param {module:koa.Context} context Koa context.
+ * @returns {Object} Options.
  */

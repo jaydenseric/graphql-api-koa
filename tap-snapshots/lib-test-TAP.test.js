@@ -5,48 +5,80 @@
  * Make sure to inspect the output below.  Do not ignore changes!
  */
 'use strict'
-exports[`lib/test TAP Execute middleware options as an object. > Response body. 1`] = `
-{ data: { ok: true } }
-`
-
-exports[`lib/test TAP Execute middleware options as a function. > Response body. 1`] = `
-{ data: { ok: true } }
-`
-
-exports[`lib/test TAP Execute middleware options missing. > Koa app error event. 1`] = `
-{ message: 'GraphQL Koa middleware requires options.',
+exports[`lib/test TAP GraphQL execute middleware options missing. > Creation error. 1`] = `
+{ message: 'GraphQL execute middleware options missing.',
   status: 500,
   expose: false }
 `
 
-exports[`lib/test TAP Execute middleware options missing. > Response body. 1`] = `
-{ errors: [ { message: 'Internal Server Error' } ] }
+exports[`lib/test TAP GraphQL execute middleware options not an object. > Creation error. 1`] = `
+{ message: 'GraphQL execute middleware options must be an object.',
+  status: 500,
+  expose: false }
 `
 
-exports[`lib/test TAP Execute middleware options invalid. > Koa app error event. 1`] = `
+exports[`lib/test TAP GraphQL execute middleware option \`override\` not a function. > Creation error. 1`] = `
 { message:
-   'GraphQL Koa middleware options must be an object, or an object promise.',
+   'GraphQL execute middleware \`override\` option must be a function.',
   status: 500,
   expose: false }
 `
 
-exports[`lib/test TAP Execute middleware options invalid. > Response body. 1`] = `
-{ errors: [ { message: 'Internal Server Error' } ] }
-`
-
-exports[`lib/test TAP Execute middleware options.schema invalid type. > Koa app error event. 1`] = `
+exports[`lib/test TAP GraphQL execute middleware option \`override\` not an object. > Koa app error event. 1`] = `
 { message:
-   'GraphQL Koa middleware \`schema\` option must be a \`GraphQLSchema\` instance.',
+   'GraphQL execute middleware options must be an object, or an object promise.',
   status: 500,
   expose: false }
 `
 
-exports[`lib/test TAP Execute middleware options.schema invalid type. > Response body. 1`] = `
+exports[`lib/test TAP GraphQL execute middleware option \`override\` not an object. > Response body. 1`] = `
 { errors: [ { message: 'Internal Server Error' } ] }
 `
 
-exports[`lib/test TAP Execute middleware options.schema invalid GraphQL. > Koa app error event. 1`] = `
-{ message: 'GraphQL Koa middleware \`schema\` option validation errors.',
+exports[`lib/test TAP GraphQL execute middleware option \`rootValue\`. > Response body. 1`] = `
+{ data: { test: 'rootValue' } }
+`
+
+exports[`lib/test TAP GraphQL execute middleware option \`rootValue\` override using Koa ctx. > Response body. 1`] = `
+{ data: { test: 'rootValueOverridden' } }
+`
+
+exports[`lib/test TAP GraphQL execute middleware option \`contextValue\`. > Response body. 1`] = `
+{ data: { test: 'contextValue' } }
+`
+
+exports[`lib/test TAP GraphQL execute middleware option \`contextValue\` override using Koa ctx. > Response body. 1`] = `
+{ data: { test: 'contextValueOverridden' } }
+`
+
+exports[`lib/test TAP GraphQL execute middleware option \`fieldResolver\`. > Response body. 1`] = `
+{ data: { test: 'fieldResolver' } }
+`
+
+exports[`lib/test TAP GraphQL execute middleware option \`fieldResolver\` override using Koa ctx. > Response body. 1`] = `
+{ data: { test: 'fieldResolverOverridden' } }
+`
+
+exports[`lib/test TAP GraphQL execute middleware option \`schema\` not a GraphQLSchema instance. > Creation error. 1`] = `
+{ message:
+   'GraphQL schema is required and must be a \`GraphQLSchema\` instance.',
+  status: 500,
+  expose: false }
+`
+
+exports[`lib/test TAP GraphQL execute middleware option \`schema\` override not a GraphQLSchema instance. > Koa app error event. 1`] = `
+{ message:
+   'GraphQL schema is required and must be a \`GraphQLSchema\` instance.',
+  status: 500,
+  expose: false }
+`
+
+exports[`lib/test TAP GraphQL execute middleware option \`schema\` override not a GraphQLSchema instance. > Response body. 1`] = `
+{ errors: [ { message: 'Internal Server Error' } ] }
+`
+
+exports[`lib/test TAP GraphQL execute middleware option \`schema\` GraphQL invalid. > Creation error. 1`] = `
+{ message: 'GraphQL schema validation errors.',
   graphqlErrors:
    [ { message: 'Query root type must be provided.',
        locations: undefined,
@@ -55,15 +87,22 @@ exports[`lib/test TAP Execute middleware options.schema invalid GraphQL. > Koa a
   expose: false }
 `
 
-exports[`lib/test TAP Execute middleware options.schema invalid GraphQL. > Response body. 1`] = `
+exports[`lib/test TAP GraphQL execute middleware option \`schema\` override GraphQL invalid. > Koa app error event. 1`] = `
+{ message: 'GraphQL schema validation errors.',
+  graphqlErrors:
+   [ { message: 'Query root type must be provided.',
+       locations: undefined,
+       path: undefined } ],
+  status: 500,
+  expose: false }
+`
+
+exports[`lib/test TAP GraphQL execute middleware option \`schema\` override GraphQL invalid. > Response body. 1`] = `
 { errors: [ { message: 'Internal Server Error' } ] }
 `
 
 exports[`lib/test TAP Request body missing due to absent body parser middleware. > Koa app error event. 1`] = `
-{ message:
-   'GraphQL Koa middleware \`schema\` option must be a \`GraphQLSchema\` instance.',
-  status: 500,
-  expose: false }
+{ message: 'Request body missing.', status: 500, expose: false }
 `
 
 exports[`lib/test TAP Request body missing due to absent body parser middleware. > Response body. 1`] = `
@@ -118,10 +157,10 @@ exports[`lib/test TAP GraphQL operation field \`query\` validation errors. > Koa
 { message: 'GraphQL query validation errors.',
   graphqlErrors:
    [ { message: 'Cannot query field "wrongOne" on type "Query".',
-       locations: [ { line: 1, column: 7 } ],
+       locations: [ { line: 1, column: 9 } ],
        path: undefined },
      { message: 'Cannot query field "wrongTwo" on type "Query".',
-       locations: [ { line: 1, column: 17 } ],
+       locations: [ { line: 1, column: 19 } ],
        path: undefined } ],
   status: 400,
   expose: true }
@@ -130,9 +169,9 @@ exports[`lib/test TAP GraphQL operation field \`query\` validation errors. > Koa
 exports[`lib/test TAP GraphQL operation field \`query\` validation errors. > Response body. 1`] = `
 { errors:
    [ { message: 'Cannot query field "wrongOne" on type "Query".',
-       locations: [ { line: 1, column: 7 } ] },
+       locations: [ { line: 1, column: 9 } ] },
      { message: 'Cannot query field "wrongTwo" on type "Query".',
-       locations: [ { line: 1, column: 17 } ] } ] }
+       locations: [ { line: 1, column: 19 } ] } ] }
 `
 
 exports[`lib/test TAP GraphQL resolver error. > Koa app error event. 1`] = `
@@ -142,12 +181,12 @@ exports[`lib/test TAP GraphQL resolver error. > Koa app error event. 1`] = `
   graphqlErrors:
    [ { message: 'Resolver error.',
        locations: [ { line: 1, column: 3 } ],
-       path: [ 'throws' ] } ] }
+       path: [ 'test' ] } ] }
 `
 
 exports[`lib/test TAP GraphQL resolver error. > Response body. 1`] = `
 { errors:
    [ { message: 'Resolver error.',
        locations: [ { line: 1, column: 3 } ],
-       path: [ 'throws' ] } ] }
+       path: [ 'test' ] } ] }
 `
