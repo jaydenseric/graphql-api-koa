@@ -80,7 +80,7 @@ const schema = new GraphQLSchema({
 })
 
 t.test(
-  'GraphQL execute middleware options missing.',
+  '`execute` middleware options missing.',
   // eslint-disable-next-line require-await
   async t => {
     try {
@@ -93,7 +93,7 @@ t.test(
 )
 
 t.test(
-  'GraphQL execute middleware options not an object.',
+  '`execute` middleware options not an object.',
   // eslint-disable-next-line require-await
   async t => {
     try {
@@ -106,7 +106,7 @@ t.test(
 )
 
 t.test(
-  'GraphQL execute middleware option `override` not a function.',
+  '`execute` middleware option `override` not a function.',
   // eslint-disable-next-line require-await
   async t => {
     try {
@@ -121,39 +121,36 @@ t.test(
   }
 )
 
-t.test(
-  'GraphQL execute middleware option `override` not an object.',
-  async t => {
-    t.plan(3)
+t.test('`execute` middleware option `override` not an object.', async t => {
+  t.plan(3)
 
-    const app = new Koa()
-      .use(errorHandler())
-      .use(bodyParser())
-      .use(
-        execute({
-          schema,
-          override:
-            // eslint-disable-next-line require-await
-            async () => true
-        })
-      )
-      .on('error', error =>
-        t.matchSnapshot(errorSnapshot(error), 'Koa app error event.')
-      )
-
-    const port = await startServer(t, app)
-    const response = await testFetch(port, {
-      body: JSON.stringify({
-        query: '{ test }'
+  const app = new Koa()
+    .use(errorHandler())
+    .use(bodyParser())
+    .use(
+      execute({
+        schema,
+        override:
+          // eslint-disable-next-line require-await
+          async () => true
       })
+    )
+    .on('error', error =>
+      t.matchSnapshot(errorSnapshot(error), 'Koa app error event.')
+    )
+
+  const port = await startServer(t, app)
+  const response = await testFetch(port, {
+    body: JSON.stringify({
+      query: '{ test }'
     })
+  })
 
-    t.equal(response.status, 500, 'Response status.')
-    t.matchSnapshot(await response.json(), 'Response body.')
-  }
-)
+  t.equal(response.status, 500, 'Response status.')
+  t.matchSnapshot(await response.json(), 'Response body.')
+})
 
-t.test('GraphQL execute middleware option `rootValue`.', async t => {
+t.test('`execute` middleware option `rootValue`.', async t => {
   const app = new Koa()
     .use(errorHandler())
     .use(bodyParser())
@@ -186,7 +183,7 @@ t.test('GraphQL execute middleware option `rootValue`.', async t => {
 })
 
 t.test(
-  'GraphQL execute middleware option `rootValue` override using Koa ctx.',
+  '`execute` middleware option `rootValue` override using Koa ctx.',
   async t => {
     const app = new Koa()
       .use(errorHandler())
@@ -229,7 +226,7 @@ t.test(
   }
 )
 
-t.test('GraphQL execute middleware option `contextValue`.', async t => {
+t.test('`execute` middleware option `contextValue`.', async t => {
   const app = new Koa()
     .use(errorHandler())
     .use(bodyParser())
@@ -262,7 +259,7 @@ t.test('GraphQL execute middleware option `contextValue`.', async t => {
 })
 
 t.test(
-  'GraphQL execute middleware option `contextValue` override using Koa ctx.',
+  '`execute` middleware option `contextValue` override using Koa ctx.',
   async t => {
     const app = new Koa()
       .use(errorHandler())
@@ -305,7 +302,7 @@ t.test(
   }
 )
 
-t.test('GraphQL execute middleware option `fieldResolver`.', async t => {
+t.test('`execute` middleware option `fieldResolver`.', async t => {
   const app = new Koa()
     .use(errorHandler())
     .use(bodyParser())
@@ -328,7 +325,7 @@ t.test('GraphQL execute middleware option `fieldResolver`.', async t => {
 })
 
 t.test(
-  'GraphQL execute middleware option `fieldResolver` override using Koa ctx.',
+  '`execute` middleware option `fieldResolver` override using Koa ctx.',
   async t => {
     const app = new Koa()
       .use(errorHandler())
@@ -362,7 +359,7 @@ t.test(
 )
 
 t.test(
-  'GraphQL execute middleware option `schema` not a GraphQLSchema instance.',
+  '`execute` middleware option `schema` not a GraphQLSchema instance.',
   // eslint-disable-next-line require-await
   async t => {
     try {
@@ -375,7 +372,7 @@ t.test(
 )
 
 t.test(
-  'GraphQL execute middleware option `schema` override not a GraphQLSchema instance.',
+  '`execute` middleware option `schema` not a GraphQLSchema instance override.',
   async t => {
     t.plan(3)
 
@@ -407,7 +404,7 @@ t.test(
 )
 
 t.test(
-  'GraphQL execute middleware option `schema` GraphQL invalid.',
+  '`execute` middleware option `schema` invalid GraphQL.',
   // eslint-disable-next-line require-await
   async t => {
     try {
@@ -422,7 +419,7 @@ t.test(
 )
 
 t.test(
-  'GraphQL execute middleware option `schema` override GraphQL invalid.',
+  '`execute` middleware option `schema` invalid GraphQL override.',
   async t => {
     t.plan(3)
 
@@ -493,7 +490,7 @@ t.test('Request body invalid.', async t => {
   t.matchSnapshot(await response.json(), 'Response body.')
 })
 
-t.test('GraphQL operation field `query` missing.', async t => {
+t.test('Operation field `query` missing.', async t => {
   t.plan(3)
 
   const app = new Koa()
@@ -513,7 +510,7 @@ t.test('GraphQL operation field `query` missing.', async t => {
   t.matchSnapshot(await response.json(), 'Response body.')
 })
 
-t.test('GraphQL operation field `query` invalid.', async t => {
+t.test('Operation field `query` invalid.', async t => {
   t.plan(3)
 
   const app = new Koa()
@@ -535,7 +532,7 @@ t.test('GraphQL operation field `query` invalid.', async t => {
   t.matchSnapshot(await response.json(), 'Response body.')
 })
 
-t.test('GraphQL operation field `variables` invalid.', async t => {
+t.test('Operation field `variables` invalid.', async t => {
   t.plan(3)
 
   const app = new Koa()
@@ -558,7 +555,7 @@ t.test('GraphQL operation field `variables` invalid.', async t => {
   t.matchSnapshot(await response.json(), 'Response body.')
 })
 
-t.test('GraphQL operation field `query` validation errors.', async t => {
+t.test('Operation field `query` validation errors.', async t => {
   t.plan(3)
 
   const app = new Koa()
