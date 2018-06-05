@@ -101,6 +101,51 @@ t.test('`execute` middleware options not an object.', t => {
   t.end()
 })
 
+t.test('`execute` middleware options invalid.', t => {
+  try {
+    execute({
+      schema,
+      invalid1: true,
+      invalid2: true
+    })
+    t.fail('Expected an error.')
+  } catch (error) {
+    t.matchSnapshot(errorSnapshot(error), 'Creation error.')
+  }
+
+  t.end()
+})
+
+t.test('`execute` middleware option `override` options invalid.', async t => {
+  t.plan(3)
+
+  const app = new Koa()
+    .use(errorHandler())
+    .use(bodyParser())
+    .use(
+      execute({
+        schema,
+        override: () => ({
+          invalid: true,
+          override: true
+        })
+      })
+    )
+    .on('error', error =>
+      t.matchSnapshot(errorSnapshot(error), 'Koa app error event.')
+    )
+
+  const port = await startServer(t, app)
+  const response = await testFetch(port, {
+    body: JSON.stringify({
+      query: '{ test }'
+    })
+  })
+
+  t.equal(response.status, 500, 'Response status.')
+  t.matchSnapshot(await response.json(), 'Response body.')
+})
+
 t.test('`execute` middleware option `override` not a function.', t => {
   try {
     execute({

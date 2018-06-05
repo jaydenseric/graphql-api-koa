@@ -80,7 +80,7 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 - `rootValue` **any?** Value passed to the first resolver.
 - `contextValue` **any?** Execution context (usually an object) passed to resolvers.
 - `fieldResolver` **[Function](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/function)?** Custom default field resolver.
-- `override` **[MiddlewareOptionsOverride](#middlewareoptionsoverride)?** Override options per request.
+- `override` **[MiddlewareOptionsOverride](#middlewareoptionsoverride)?** Override any [ExecuteOptions](#executeoptions) (except `override`) per request.
 
 #### MiddlewareOptionsOverride
 

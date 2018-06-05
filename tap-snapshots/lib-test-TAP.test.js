@@ -17,6 +17,24 @@ exports[`lib/test TAP \`execute\` middleware options not an object. > Creation e
   expose: false }
 `
 
+exports[`lib/test TAP \`execute\` middleware options invalid. > Creation error. 1`] = `
+{ message:
+   'GraphQL execute middleware options invalid: \`invalid1\`, \`invalid2\`.',
+  status: 500,
+  expose: false }
+`
+
+exports[`lib/test TAP \`execute\` middleware option \`override\` options invalid. > Koa app error event. 1`] = `
+{ message:
+   'GraphQL execute middleware \`override\` option return options invalid: \`invalid\`, \`override\`.',
+  status: 500,
+  expose: false }
+`
+
+exports[`lib/test TAP \`execute\` middleware option \`override\` options invalid. > Response body. 1`] = `
+{ errors: [ { message: 'Internal Server Error' } ] }
+`
+
 exports[`lib/test TAP \`execute\` middleware option \`override\` not a function. > Creation error. 1`] = `
 { message:
    'GraphQL execute middleware \`override\` option must be a function.',

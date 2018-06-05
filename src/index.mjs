@@ -71,6 +71,16 @@ export const execute = options => {
   if (!isPlainObject(options))
     throw createError('GraphQL execute middleware options must be an object.')
 
+  const ALLOWED_OPTIONS = [
+    'schema',
+    'rootValue',
+    'contextValue',
+    'fieldResolver',
+    'override'
+  ]
+
+  checkOptions(options, ALLOWED_OPTIONS, 'GraphQL execute middleware')
+
   if (typeof options.schema !== 'undefined') checkSchema(options.schema)
 
   if (
@@ -108,6 +118,12 @@ export const execute = options => {
         throw createError(
           'GraphQL execute middleware options must be an object, or an object promise.'
         )
+
+      checkOptions(
+        optionsOverride,
+        ALLOWED_OPTIONS.filter(option => option !== 'override'),
+        'GraphQL execute middleware `override` option return'
+      )
 
       if (typeof optionsOverride.schema !== 'undefined')
         checkSchema(optionsOverride.schema)
@@ -160,6 +176,24 @@ const isPlainObject = value =>
   typeof value === 'object' && value !== null && !Array.isArray(value)
 
 /**
+ * Validates options conform to a whitelist.
+ * @param {Object} options Options to validate.
+ * @param {string[]} allowed Allowed option keys.
+ * @param {string} description The start of the error message.
+ * @private
+ */
+const checkOptions = (options, allowed, description) => {
+  const invalid = Object.keys(options).filter(
+    option => !allowed.includes(option)
+  )
+
+  if (invalid.length)
+    throw createError(
+      `${description} options invalid: \`${invalid.join('`, `')}\`.`
+    )
+}
+
+/**
  * Validates a GraphQL schema.
  * @param {module:graphql.GraphQLSchema} schema GraphQL schema.
  * @private
@@ -184,7 +218,7 @@ const checkSchema = schema => {
  * @prop {*} [rootValue] Value passed to the first resolver.
  * @prop {*} [contextValue] Execution context (usually an object) passed to resolvers.
  * @prop {Function} [fieldResolver] Custom default field resolver.
- * @prop {MiddlewareOptionsOverride} [override] Override options per request.
+ * @prop {MiddlewareOptionsOverride} [override] Override any {@link ExecuteOptions} (except `override`) per request.
  */
 
 /**
