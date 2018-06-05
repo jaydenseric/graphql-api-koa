@@ -19,10 +19,15 @@ npm install graphql-api-koa
 #### Table of Contents
 
 - [errorHandler](#errorhandler)
+  - [Examples](#examples)
 - [execute](#execute)
+  - [Parameters](#parameters)
 - [Types](#types)
   - [ExecuteOptions](#executeoptions)
+    - [Properties](#properties)
   - [MiddlewareOptionsOverride](#middlewareoptionsoverride)
+    - [Parameters](#parameters-1)
+    - [Examples](#examples-1)
 
 ### errorHandler
 
@@ -31,7 +36,7 @@ npm install graphql-api-koa
 
 Creates Koa middleware to handle errors. Use this middleware first to catch all errors for a correctly formated GraphQL response. For security, errors thrown outside resolvers without an `expose` property and `true` value are masked by a generic 500 error.
 
-**Examples**
+#### Examples
 
 _A basic GraphQL API._
 
@@ -53,7 +58,7 @@ Returns **[Function](https://developer.mozilla.org/docs/Web/JavaScript/Reference
 
 Creates Koa middleware to execute GraphQL. Use after the [errorHandler](#errorhandler) and [body parser](https://npm.im/koa-bodyparser) middleware.
 
-**Parameters**
+#### Parameters
 
 - `options` **[ExecuteOptions](#executeoptions)** Options.
 
@@ -69,7 +74,7 @@ GraphQL [execute](#execute) Koa middleware options.
 
 Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)
 
-**Properties**
+##### Properties
 
 - `schema` **module:graphql.GraphQLSchema** GraphQL schema.
 - `rootValue` **any?** Value passed to the first resolver.
@@ -83,11 +88,11 @@ Per-request Koa middleware options override.
 
 Type: [Function](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/function)
 
-**Parameters**
+##### Parameters
 
 - `context` **module:koa.Context** Koa context.
 
-**Examples**
+##### Examples
 
 _[execute](#execute) middleware options setting the schema once at startup and user context per-request._
 
