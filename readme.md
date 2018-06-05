@@ -6,10 +6,10 @@ GraphQL API Koa middleware.
 
 ## Setup
 
-Install with [npm](https://npmjs.com):
+Install with peer dependencies using [npm](https://npmjs.com):
 
 ```sh
-npm install graphql-api-koa
+npm install graphql-api-koa graphql
 ```
 
 ## API

@@ -28,6 +28,9 @@
   "engines": {
     "node": ">=8.6"
   },
+  "peerDependencies": {
+    "graphql": "^0.13.1"
+  },
   "dependencies": {
     "http-errors": "^1.6.3"
   },
