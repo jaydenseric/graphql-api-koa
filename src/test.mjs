@@ -79,47 +79,41 @@ const schema = new GraphQLSchema({
   })
 })
 
-t.test(
-  '`execute` middleware options missing.',
-  // eslint-disable-next-line require-await
-  async t => {
-    try {
-      execute()
-      t.fail('Expected an error.')
-    } catch (error) {
-      t.matchSnapshot(errorSnapshot(error), 'Creation error.')
-    }
+t.test('`execute` middleware options missing.', t => {
+  try {
+    execute()
+    t.fail('Expected an error.')
+  } catch (error) {
+    t.matchSnapshot(errorSnapshot(error), 'Creation error.')
   }
-)
 
-t.test(
-  '`execute` middleware options not an object.',
-  // eslint-disable-next-line require-await
-  async t => {
-    try {
-      execute(true)
-      t.fail('Expected an error.')
-    } catch (error) {
-      t.matchSnapshot(errorSnapshot(error), 'Creation error.')
-    }
-  }
-)
+  t.end()
+})
 
-t.test(
-  '`execute` middleware option `override` not a function.',
-  // eslint-disable-next-line require-await
-  async t => {
-    try {
-      execute({
-        schema,
-        override: true
-      })
-      t.fail('Expected an error.')
-    } catch (error) {
-      t.matchSnapshot(errorSnapshot(error), 'Creation error.')
-    }
+t.test('`execute` middleware options not an object.', t => {
+  try {
+    execute(true)
+    t.fail('Expected an error.')
+  } catch (error) {
+    t.matchSnapshot(errorSnapshot(error), 'Creation error.')
   }
-)
+
+  t.end()
+})
+
+t.test('`execute` middleware option `override` not a function.', t => {
+  try {
+    execute({
+      schema,
+      override: true
+    })
+    t.fail('Expected an error.')
+  } catch (error) {
+    t.matchSnapshot(errorSnapshot(error), 'Creation error.')
+  }
+
+  t.end()
+})
 
 t.test('`execute` middleware option `override` not an object.', async t => {
   t.plan(3)
@@ -130,9 +124,7 @@ t.test('`execute` middleware option `override` not an object.', async t => {
     .use(
       execute({
         schema,
-        override:
-          // eslint-disable-next-line require-await
-          async () => true
+        override: () => true
       })
     )
     .on('error', error =>
@@ -206,11 +198,9 @@ t.test(
             })
           }),
           rootValue: 'rootValue',
-          override:
-            // eslint-disable-next-line require-await
-            async ctx => ({
-              rootValue: ctx.state.test
-            })
+          override: ctx => ({
+            rootValue: ctx.state.test
+          })
         })
       )
 
@@ -260,6 +250,48 @@ t.test('`execute` middleware option `contextValue`.', async t => {
 
 t.test(
   '`execute` middleware option `contextValue` override using Koa ctx.',
+  async t => {
+    const app = new Koa()
+      .use(errorHandler())
+      .use(bodyParser())
+      .use(async (ctx, next) => {
+        ctx.state.test = 'contextValueOverridden'
+        await next()
+      })
+      .use(
+        execute({
+          schema: new GraphQLSchema({
+            query: new GraphQLObjectType({
+              name: 'Query',
+              fields: {
+                test: {
+                  type: GraphQLString,
+                  resolve: (value, args, context) => context
+                }
+              }
+            })
+          }),
+          contextValue: 'contextValue',
+          override: ctx => ({
+            contextValue: ctx.state.test
+          })
+        })
+      )
+
+    const port = await startServer(t, app)
+    const response = await testFetch(port, {
+      body: JSON.stringify({
+        query: '{ test }'
+      })
+    })
+
+    t.equal(response.status, 200, 'Response status.')
+    t.matchSnapshot(await response.json(), 'Response body.')
+  }
+)
+
+t.test(
+  '`execute` middleware option `contextValue` override using Koa ctx async.',
   async t => {
     const app = new Koa()
       .use(errorHandler())
@@ -338,11 +370,9 @@ t.test(
         execute({
           schema,
           fieldResolver: () => 'fieldResolver',
-          override:
-            // eslint-disable-next-line require-await
-            async ctx => ({
-              fieldResolver: () => ctx.state.test
-            })
+          override: ctx => ({
+            fieldResolver: () => ctx.state.test
+          })
         })
       )
 
@@ -360,14 +390,15 @@ t.test(
 
 t.test(
   '`execute` middleware option `schema` not a GraphQLSchema instance.',
-  // eslint-disable-next-line require-await
-  async t => {
+  t => {
     try {
       execute({ schema: true })
       t.fail('Expected an error.')
     } catch (error) {
       t.matchSnapshot(errorSnapshot(error), 'Creation error.')
     }
+
+    t.end()
   }
 )
 
@@ -403,20 +434,18 @@ t.test(
   }
 )
 
-t.test(
-  '`execute` middleware option `schema` invalid GraphQL.',
-  // eslint-disable-next-line require-await
-  async t => {
-    try {
-      execute({
-        schema: new GraphQLSchema({})
-      })
-      t.fail('Expected an error.')
-    } catch (error) {
-      t.matchSnapshot(errorSnapshot(error), 'Creation error.')
-    }
+t.test('`execute` middleware option `schema` invalid GraphQL.', t => {
+  try {
+    execute({
+      schema: new GraphQLSchema({})
+    })
+    t.fail('Expected an error.')
+  } catch (error) {
+    t.matchSnapshot(errorSnapshot(error), 'Creation error.')
   }
-)
+
+  t.end()
+})
 
 t.test(
   '`execute` middleware option `schema` invalid GraphQL override.',

@@ -51,6 +51,10 @@ exports[`lib/test TAP \`execute\` middleware option \`contextValue\` override us
 { data: { test: 'contextValueOverridden' } }
 `
 
+exports[`lib/test TAP \`execute\` middleware option \`contextValue\` override using Koa ctx async. > Response body. 1`] = `
+{ data: { test: 'contextValueOverridden' } }
+`
+
 exports[`lib/test TAP \`execute\` middleware option \`fieldResolver\`. > Response body. 1`] = `
 { data: { test: 'fieldResolver' } }
 `
