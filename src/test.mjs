@@ -134,7 +134,7 @@ t.test('`execute` middleware option `override` options invalid.', async t => {
   })
 
   t.equal(response.status, 500, 'Response status.')
-  t.matchSnapshot(await response.json(), 'Response body.')
+  t.matchSnapshot(await response.text(), 'Response body.')
 })
 
 t.test('`execute` middleware option `override` not a function.', t => {
@@ -175,7 +175,7 @@ t.test('`execute` middleware option `override` not an object.', async t => {
   })
 
   t.equal(response.status, 500, 'Response status.')
-  t.matchSnapshot(await response.json(), 'Response body.')
+  t.matchSnapshot(await response.text(), 'Response body.')
 })
 
 t.test('`execute` middleware option `rootValue`.', async t => {
@@ -207,7 +207,7 @@ t.test('`execute` middleware option `rootValue`.', async t => {
   })
 
   t.equal(response.status, 200, 'Response status.')
-  t.matchSnapshot(await response.json(), 'Response body.')
+  t.matchSnapshot(await response.text(), 'Response body.')
 })
 
 t.test(
@@ -248,7 +248,7 @@ t.test(
     })
 
     t.equal(response.status, 200, 'Response status.')
-    t.matchSnapshot(await response.json(), 'Response body.')
+    t.matchSnapshot(await response.text(), 'Response body.')
   }
 )
 
@@ -281,7 +281,7 @@ t.test('`execute` middleware option `contextValue`.', async t => {
   })
 
   t.equal(response.status, 200, 'Response status.')
-  t.matchSnapshot(await response.json(), 'Response body.')
+  t.matchSnapshot(await response.text(), 'Response body.')
 })
 
 t.test(
@@ -322,7 +322,7 @@ t.test(
     })
 
     t.equal(response.status, 200, 'Response status.')
-    t.matchSnapshot(await response.json(), 'Response body.')
+    t.matchSnapshot(await response.text(), 'Response body.')
   }
 )
 
@@ -366,7 +366,7 @@ t.test(
     })
 
     t.equal(response.status, 200, 'Response status.')
-    t.matchSnapshot(await response.json(), 'Response body.')
+    t.matchSnapshot(await response.text(), 'Response body.')
   }
 )
 
@@ -389,7 +389,7 @@ t.test('`execute` middleware option `fieldResolver`.', async t => {
   })
 
   t.equal(response.status, 200, 'Response status.')
-  t.matchSnapshot(await response.json(), 'Response body.')
+  t.matchSnapshot(await response.text(), 'Response body.')
 })
 
 t.test(
@@ -420,7 +420,7 @@ t.test(
     })
 
     t.equal(response.status, 200, 'Response status.')
-    t.matchSnapshot(await response.json(), 'Response body.')
+    t.matchSnapshot(await response.text(), 'Response body.')
   }
 )
 
@@ -466,7 +466,7 @@ t.test(
     })
 
     t.equal(response.status, 500, 'Response status.')
-    t.matchSnapshot(await response.json(), 'Response body.')
+    t.matchSnapshot(await response.text(), 'Response body.')
   }
 )
 
@@ -511,7 +511,7 @@ t.test(
     })
 
     t.equal(response.status, 500, 'Response status.')
-    t.matchSnapshot(await response.json(), 'Response body.')
+    t.matchSnapshot(await response.text(), 'Response body.')
   }
 )
 
@@ -531,7 +531,7 @@ t.test(
     const response = await testFetch(port)
 
     t.equal(response.status, 500, 'Response status.')
-    t.matchSnapshot(await response.json(), 'Response body.')
+    t.matchSnapshot(await response.text(), 'Response body.')
   }
 )
 
@@ -552,7 +552,7 @@ t.test('Request body invalid.', async t => {
   })
 
   t.equal(response.status, 400, 'Response status.')
-  t.matchSnapshot(await response.json(), 'Response body.')
+  t.matchSnapshot(await response.text(), 'Response body.')
 })
 
 t.test('Operation field `query` missing.', async t => {
@@ -572,7 +572,7 @@ t.test('Operation field `query` missing.', async t => {
   })
 
   t.equal(response.status, 400, 'Response status.')
-  t.matchSnapshot(await response.json(), 'Response body.')
+  t.matchSnapshot(await response.text(), 'Response body.')
 })
 
 t.test('Operation field `query` invalid.', async t => {
@@ -594,7 +594,7 @@ t.test('Operation field `query` invalid.', async t => {
   })
 
   t.equal(response.status, 400, 'Response status.')
-  t.matchSnapshot(await response.json(), 'Response body.')
+  t.matchSnapshot(await response.text(), 'Response body.')
 })
 
 t.test('Operation field `variables` invalid.', async t => {
@@ -617,7 +617,7 @@ t.test('Operation field `variables` invalid.', async t => {
   })
 
   t.equal(response.status, 400, 'Response status.')
-  t.matchSnapshot(await response.json(), 'Response body.')
+  t.matchSnapshot(await response.text(), 'Response body.')
 })
 
 t.test('Operation field `query` validation errors.', async t => {
@@ -639,7 +639,7 @@ t.test('Operation field `query` validation errors.', async t => {
   })
 
   t.equal(response.status, 400, 'Response status.')
-  t.matchSnapshot(await response.json(), 'Response body.')
+  t.matchSnapshot(await response.text(), 'Response body.')
 })
 
 t.test('GraphQL resolver error.', async t => {
@@ -677,5 +677,5 @@ t.test('GraphQL resolver error.', async t => {
   })
 
   t.equal(response.status, 200, 'Response status.')
-  t.matchSnapshot(await response.json(), 'Response body.')
+  t.matchSnapshot(await response.text(), 'Response body.')
 })

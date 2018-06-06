@@ -30,7 +30,7 @@ InternalServerError {
 `
 
 exports[`lib/test TAP \`execute\` middleware option \`override\` options invalid. > Response body. 1`] = `
-{ errors: [ { message: 'Internal Server Error' } ] }
+{"errors":[{"message":"Internal Server Error"}]}
 `
 
 exports[`lib/test TAP \`execute\` middleware option \`override\` not a function. > Creation error. 1`] = `
@@ -46,35 +46,35 @@ InternalServerError {
 `
 
 exports[`lib/test TAP \`execute\` middleware option \`override\` not an object. > Response body. 1`] = `
-{ errors: [ { message: 'Internal Server Error' } ] }
+{"errors":[{"message":"Internal Server Error"}]}
 `
 
 exports[`lib/test TAP \`execute\` middleware option \`rootValue\`. > Response body. 1`] = `
-{ data: { test: 'rootValue' } }
+{"data":{"test":"rootValue"}}
 `
 
 exports[`lib/test TAP \`execute\` middleware option \`rootValue\` override using Koa ctx. > Response body. 1`] = `
-{ data: { test: 'rootValueOverridden' } }
+{"data":{"test":"rootValueOverridden"}}
 `
 
 exports[`lib/test TAP \`execute\` middleware option \`contextValue\`. > Response body. 1`] = `
-{ data: { test: 'contextValue' } }
+{"data":{"test":"contextValue"}}
 `
 
 exports[`lib/test TAP \`execute\` middleware option \`contextValue\` override using Koa ctx. > Response body. 1`] = `
-{ data: { test: 'contextValueOverridden' } }
+{"data":{"test":"contextValueOverridden"}}
 `
 
 exports[`lib/test TAP \`execute\` middleware option \`contextValue\` override using Koa ctx async. > Response body. 1`] = `
-{ data: { test: 'contextValueOverridden' } }
+{"data":{"test":"contextValueOverridden"}}
 `
 
 exports[`lib/test TAP \`execute\` middleware option \`fieldResolver\`. > Response body. 1`] = `
-{ data: { test: 'fieldResolver' } }
+{"data":{"test":"fieldResolver"}}
 `
 
 exports[`lib/test TAP \`execute\` middleware option \`fieldResolver\` override using Koa ctx. > Response body. 1`] = `
-{ data: { test: 'fieldResolverOverridden' } }
+{"data":{"test":"fieldResolverOverridden"}}
 `
 
 exports[`lib/test TAP \`execute\` middleware option \`schema\` not a GraphQLSchema instance. > Creation error. 1`] = `
@@ -90,7 +90,7 @@ InternalServerError {
 `
 
 exports[`lib/test TAP \`execute\` middleware option \`schema\` not a GraphQLSchema instance override. > Response body. 1`] = `
-{ errors: [ { message: 'Internal Server Error' } ] }
+{"errors":[{"message":"Internal Server Error"}]}
 `
 
 exports[`lib/test TAP \`execute\` middleware option \`schema\` invalid GraphQL. > Creation error. 1`] = `
@@ -116,7 +116,7 @@ InternalServerError {
 `
 
 exports[`lib/test TAP \`execute\` middleware option \`schema\` invalid GraphQL override. > Response body. 1`] = `
-{ errors: [ { message: 'Internal Server Error' } ] }
+{"errors":[{"message":"Internal Server Error"}]}
 `
 
 exports[`lib/test TAP Request body missing due to absent body parser middleware. > Koa app error event. 1`] = `
@@ -126,7 +126,7 @@ InternalServerError {
 `
 
 exports[`lib/test TAP Request body missing due to absent body parser middleware. > Response body. 1`] = `
-{ errors: [ { message: 'Internal Server Error' } ] }
+{"errors":[{"message":"Internal Server Error"}]}
 `
 
 exports[`lib/test TAP Request body invalid. > Koa app error event. 1`] = `
@@ -136,7 +136,7 @@ BadRequestError {
 `
 
 exports[`lib/test TAP Request body invalid. > Response body. 1`] = `
-{ errors: [ { message: 'Request body must be a JSON object.' } ] }
+{"errors":[{"message":"Request body must be a JSON object."}]}
 `
 
 exports[`lib/test TAP Operation field \`query\` missing. > Koa app error event. 1`] = `
@@ -146,7 +146,7 @@ BadRequestError {
 `
 
 exports[`lib/test TAP Operation field \`query\` missing. > Response body. 1`] = `
-{ errors: [ { message: 'GraphQL operation field \`query\` missing.' } ] }
+{"errors":[{"message":"GraphQL operation field \`query\` missing."}]}
 `
 
 exports[`lib/test TAP Operation field \`query\` invalid. > Koa app error event. 1`] = `
@@ -156,8 +156,7 @@ BadRequestError {
 `
 
 exports[`lib/test TAP Operation field \`query\` invalid. > Response body. 1`] = `
-{ errors:
-   [ { message: 'GraphQL query syntax error: Syntax Error: Unexpected [' } ] }
+{"errors":[{"message":"GraphQL query syntax error: Syntax Error: Unexpected ["}]}
 `
 
 exports[`lib/test TAP Operation field \`variables\` invalid. > Koa app error event. 1`] = `
@@ -167,9 +166,7 @@ BadRequestError {
 `
 
 exports[`lib/test TAP Operation field \`variables\` invalid. > Response body. 1`] = `
-{ errors:
-   [ { message:
-        'GraphQL operation field invalid: Variables must be provided as an Object where each property is a variable value. Perhaps look to see if an unparsed JSON string was provided.' } ] }
+{"errors":[{"message":"GraphQL operation field invalid: Variables must be provided as an Object where each property is a variable value. Perhaps look to see if an unparsed JSON string was provided."}]}
 `
 
 exports[`lib/test TAP Operation field \`query\` validation errors. > Koa app error event. 1`] = `
@@ -199,11 +196,7 @@ BadRequestError {
 `
 
 exports[`lib/test TAP Operation field \`query\` validation errors. > Response body. 1`] = `
-{ errors:
-   [ { message: 'Cannot query field "wrongOne" on type "Query".',
-       locations: [ { line: 1, column: 9 } ] },
-     { message: 'Cannot query field "wrongTwo" on type "Query".',
-       locations: [ { line: 1, column: 19 } ] } ] }
+{"errors":[{"message":"Cannot query field \\"wrongOne\\" on type \\"Query\\".","locations":[{"line":1,"column":9}]},{"message":"Cannot query field \\"wrongTwo\\" on type \\"Query\\".","locations":[{"line":1,"column":19}]}]}
 `
 
 exports[`lib/test TAP GraphQL resolver error. > Koa app error event. 1`] = `
@@ -229,8 +222,5 @@ Error {
 `
 
 exports[`lib/test TAP GraphQL resolver error. > Response body. 1`] = `
-{ errors:
-   [ { message: 'Resolver error.',
-       locations: [ { line: 1, column: 3 } ],
-       path: [ 'test' ] } ] }
+{"errors":[{"message":"Resolver error.","locations":[{"line":1,"column":3}],"path":["test"]}]}
 `
