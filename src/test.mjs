@@ -47,19 +47,6 @@ const testFetch = (port, options = {}) =>
     ...options
   })
 
-/**
- * Converts an error instance to a snapshot string.
- * @param {Object} error An error.
- * @returns {string} Snapshot string.
- * @ignore
- */
-const errorSnapshot = error =>
-  `${error.name} ${JSON.stringify(
-    error,
-    (key, value) => (key === 'trace' ? undefined : value),
-    2
-  )}`
-
 const schema = new GraphQLSchema({
   query: new GraphQLObjectType({
     name: 'Query',
@@ -72,16 +59,20 @@ const schema = new GraphQLSchema({
 })
 
 t.test('`errorHandler` middleware handles a standard error.', async t => {
-  t.plan(3)
+  t.plan(7)
 
   const app = new Koa()
     .use(errorHandler())
     .use(() => {
       throw new Error('Test.')
     })
-    .on('error', error =>
-      t.matchSnapshot(errorSnapshot(error), 'Koa app error event.')
-    )
+    .on('error', ({ name, message, status, statusCode, expose }) => {
+      t.equals(name, 'Error', 'Error name.')
+      t.equals(message, 'Test.', 'Error message.')
+      t.equals(status, 500, 'Error status.')
+      t.equals(statusCode, 500, 'Error statusCode.')
+      t.equals(expose, false, 'Error expose.')
+    })
 
   const port = await startServer(t, app)
   const response = await testFetch(port)
@@ -91,16 +82,20 @@ t.test('`errorHandler` middleware handles a standard error.', async t => {
 })
 
 t.test('`errorHandler` middleware handles a HTTP error.', async t => {
-  t.plan(3)
+  t.plan(7)
 
   const app = new Koa()
     .use(errorHandler())
     .use(() => {
       throw createError(403, 'Test.')
     })
-    .on('error', error =>
-      t.matchSnapshot(errorSnapshot(error), 'Koa app error event.')
-    )
+    .on('error', ({ name, message, status, statusCode, expose }) => {
+      t.equals(name, 'ForbiddenError', 'Error name.')
+      t.equals(message, 'Test.', 'Error message.')
+      t.equals(status, 403, 'Error status.')
+      t.equals(statusCode, 403, 'Error statusCode.')
+      t.equals(expose, true, 'Error expose.')
+    })
 
   const port = await startServer(t, app)
   const response = await testFetch(port)
@@ -113,8 +108,16 @@ t.test('`execute` middleware options missing.', t => {
   try {
     execute()
     t.fail('Expected an error.')
-  } catch (error) {
-    t.matchSnapshot(errorSnapshot(error), 'Creation error.')
+  } catch ({ name, message, status, statusCode, expose }) {
+    t.equals(name, 'InternalServerError', 'Error name.')
+    t.equals(
+      message,
+      'GraphQL execute middleware options missing.',
+      'Error message.'
+    )
+    t.equals(status, 500, 'Error status.')
+    t.equals(statusCode, 500, 'Error statusCode.')
+    t.equals(expose, false, 'Error expose.')
   }
 
   t.end()
@@ -124,8 +127,16 @@ t.test('`execute` middleware options not an object.', t => {
   try {
     execute(true)
     t.fail('Expected an error.')
-  } catch (error) {
-    t.matchSnapshot(errorSnapshot(error), 'Creation error.')
+  } catch ({ name, message, status, statusCode, expose }) {
+    t.equals(name, 'InternalServerError', 'Error name.')
+    t.equals(
+      message,
+      'GraphQL execute middleware options must be an object.',
+      'Error message.'
+    )
+    t.equals(status, 500, 'Error status.')
+    t.equals(statusCode, 500, 'Error statusCode.')
+    t.equals(expose, false, 'Error expose.')
   }
 
   t.end()
@@ -139,15 +150,23 @@ t.test('`execute` middleware options invalid.', t => {
       invalid2: true
     })
     t.fail('Expected an error.')
-  } catch (error) {
-    t.matchSnapshot(errorSnapshot(error), 'Creation error.')
+  } catch ({ name, message, status, statusCode, expose }) {
+    t.equals(name, 'InternalServerError', 'Error name.')
+    t.equals(
+      message,
+      'GraphQL execute middleware options invalid: `invalid1`, `invalid2`.',
+      'Error message.'
+    )
+    t.equals(status, 500, 'Error status.')
+    t.equals(statusCode, 500, 'Error statusCode.')
+    t.equals(expose, false, 'Error expose.')
   }
 
   t.end()
 })
 
 t.test('`execute` middleware option `override` options invalid.', async t => {
-  t.plan(3)
+  t.plan(7)
 
   const app = new Koa()
     .use(errorHandler())
@@ -161,9 +180,17 @@ t.test('`execute` middleware option `override` options invalid.', async t => {
         })
       })
     )
-    .on('error', error =>
-      t.matchSnapshot(errorSnapshot(error), 'Koa app error event.')
-    )
+    .on('error', ({ name, message, status, statusCode, expose }) => {
+      t.equals(name, 'InternalServerError', 'Error name.')
+      t.equals(
+        message,
+        'GraphQL execute middleware `override` option return options invalid: `invalid`, `override`.',
+        'Error message.'
+      )
+      t.equals(status, 500, 'Error status.')
+      t.equals(statusCode, 500, 'Error statusCode.')
+      t.equals(expose, false, 'Error expose.')
+    })
 
   const port = await startServer(t, app)
   const response = await testFetch(port, {
@@ -183,15 +210,23 @@ t.test('`execute` middleware option `override` not a function.', t => {
       override: true
     })
     t.fail('Expected an error.')
-  } catch (error) {
-    t.matchSnapshot(errorSnapshot(error), 'Creation error.')
+  } catch ({ name, message, status, statusCode, expose }) {
+    t.equals(name, 'InternalServerError', 'Error name.')
+    t.equals(
+      message,
+      'GraphQL execute middleware `override` option must be a function.',
+      'Error message.'
+    )
+    t.equals(status, 500, 'Error status.')
+    t.equals(statusCode, 500, 'Error statusCode.')
+    t.equals(expose, false, 'Error expose.')
   }
 
   t.end()
 })
 
 t.test('`execute` middleware option `override` not an object.', async t => {
-  t.plan(3)
+  t.plan(7)
 
   const app = new Koa()
     .use(errorHandler())
@@ -202,9 +237,17 @@ t.test('`execute` middleware option `override` not an object.', async t => {
         override: () => true
       })
     )
-    .on('error', error =>
-      t.matchSnapshot(errorSnapshot(error), 'Koa app error event.')
-    )
+    .on('error', ({ name, message, status, statusCode, expose }) => {
+      t.equals(name, 'InternalServerError', 'Error name.')
+      t.equals(
+        message,
+        'GraphQL execute middleware options must be an object, or an object promise.',
+        'Error message.'
+      )
+      t.equals(status, 500, 'Error status.')
+      t.equals(statusCode, 500, 'Error statusCode.')
+      t.equals(expose, false, 'Error expose.')
+    })
 
   const port = await startServer(t, app)
   const response = await testFetch(port, {
@@ -469,8 +512,16 @@ t.test(
     try {
       execute({ schema: true })
       t.fail('Expected an error.')
-    } catch (error) {
-      t.matchSnapshot(errorSnapshot(error), 'Creation error.')
+    } catch ({ name, message, status, statusCode, expose }) {
+      t.equals(name, 'InternalServerError', 'Error name.')
+      t.equals(
+        message,
+        'GraphQL schema is required and must be a `GraphQLSchema` instance.',
+        'Error message.'
+      )
+      t.equals(status, 500, 'Error status.')
+      t.equals(statusCode, 500, 'Error statusCode.')
+      t.equals(expose, false, 'Error expose.')
     }
 
     t.end()
@@ -480,7 +531,7 @@ t.test(
 t.test(
   '`execute` middleware option `schema` not a GraphQLSchema instance override.',
   async t => {
-    t.plan(3)
+    t.plan(7)
 
     const app = new Koa()
       .use(errorHandler())
@@ -493,9 +544,17 @@ t.test(
           })
         })
       )
-      .on('error', error =>
-        t.matchSnapshot(errorSnapshot(error), 'Koa app error event.')
-      )
+      .on('error', ({ name, message, status, statusCode, expose }) => {
+        t.equals(name, 'InternalServerError', 'Error name.')
+        t.equals(
+          message,
+          'GraphQL schema is required and must be a `GraphQLSchema` instance.',
+          'Error message.'
+        )
+        t.equals(status, 500, 'Error status.')
+        t.equals(statusCode, 500, 'Error statusCode.')
+        t.equals(expose, false, 'Error expose.')
+      })
 
     const port = await startServer(t, app)
     const response = await testFetch(port, {
@@ -515,8 +574,25 @@ t.test('`execute` middleware option `schema` invalid GraphQL.', t => {
       schema: new GraphQLSchema({})
     })
     t.fail('Expected an error.')
-  } catch (error) {
-    t.matchSnapshot(errorSnapshot(error), 'Creation error.')
+  } catch ({ name, message, status, statusCode, expose, graphqlErrors }) {
+    t.equals(name, 'InternalServerError', 'Error name.')
+    t.equals(message, 'GraphQL schema validation errors.', 'Error message.')
+    t.equals(status, 500, 'Error status.')
+    t.equals(statusCode, 500, 'Error statusCode.')
+    t.equals(expose, false, 'Error expose.')
+    if (t.equals(Array.isArray(graphqlErrors), true, 'Error graphqlErrors.')) {
+      t.equals(graphqlErrors.length, 1, 'Error graphqlErrors length.')
+      t.equals(
+        graphqlErrors[0].name,
+        'GraphQLError',
+        'Error graphqlErrors first error name.'
+      )
+      t.equals(
+        graphqlErrors[0].message,
+        'Query root type must be provided.',
+        'Error graphqlErrors first error message.'
+      )
+    }
   }
 
   t.end()
@@ -525,7 +601,7 @@ t.test('`execute` middleware option `schema` invalid GraphQL.', t => {
 t.test(
   '`execute` middleware option `schema` invalid GraphQL override.',
   async t => {
-    t.plan(3)
+    t.plan(7)
 
     const app = new Koa()
       .use(errorHandler())
@@ -538,9 +614,13 @@ t.test(
           })
         })
       )
-      .on('error', error =>
-        t.matchSnapshot(errorSnapshot(error), 'Koa app error event.')
-      )
+      .on('error', ({ name, message, status, statusCode, expose }) => {
+        t.equals(name, 'InternalServerError', 'Error name.')
+        t.equals(message, 'GraphQL schema validation errors.', 'Error message.')
+        t.equals(status, 500, 'Error status.')
+        t.equals(statusCode, 500, 'Error statusCode.')
+        t.equals(expose, false, 'Error expose.')
+      })
 
     const port = await startServer(t, app)
     const response = await testFetch(port, {
@@ -557,14 +637,18 @@ t.test(
 t.test(
   'Request body missing due to absent body parser middleware.',
   async t => {
-    t.plan(3)
+    t.plan(7)
 
     const app = new Koa()
       .use(errorHandler())
       .use(execute({ schema }))
-      .on('error', error =>
-        t.matchSnapshot(errorSnapshot(error), 'Koa app error event.')
-      )
+      .on('error', ({ name, message, status, statusCode, expose }) => {
+        t.equals(name, 'InternalServerError', 'Error name.')
+        t.equals(message, 'Request body missing.', 'Error message.')
+        t.equals(status, 500, 'Error status.')
+        t.equals(statusCode, 500, 'Error statusCode.')
+        t.equals(expose, false, 'Error expose.')
+      })
 
     const port = await startServer(t, app)
     const response = await testFetch(port)
@@ -575,15 +659,19 @@ t.test(
 )
 
 t.test('Request body invalid.', async t => {
-  t.plan(3)
+  t.plan(7)
 
   const app = new Koa()
     .use(errorHandler())
     .use(bodyParser())
     .use(execute({ schema }))
-    .on('error', error =>
-      t.matchSnapshot(errorSnapshot(error), 'Koa app error event.')
-    )
+    .on('error', ({ name, message, status, statusCode, expose }) => {
+      t.equals(name, 'BadRequestError', 'Error name.')
+      t.equals(message, 'Request body must be a JSON object.', 'Error message.')
+      t.equals(status, 400, 'Error status.')
+      t.equals(statusCode, 400, 'Error statusCode.')
+      t.equals(expose, true, 'Error expose.')
+    })
 
   const port = await startServer(t, app)
   const response = await testFetch(port, {
@@ -595,15 +683,23 @@ t.test('Request body invalid.', async t => {
 })
 
 t.test('Operation field `query` missing.', async t => {
-  t.plan(3)
+  t.plan(7)
 
   const app = new Koa()
     .use(errorHandler())
     .use(bodyParser())
     .use(execute({ schema }))
-    .on('error', error =>
-      t.matchSnapshot(errorSnapshot(error), 'Koa app error event.')
-    )
+    .on('error', ({ name, message, status, statusCode, expose }) => {
+      t.equals(name, 'BadRequestError', 'Error name.')
+      t.equals(
+        message,
+        'GraphQL operation field `query` missing.',
+        'Error message.'
+      )
+      t.equals(status, 400, 'Error status.')
+      t.equals(statusCode, 400, 'Error statusCode.')
+      t.equals(expose, true, 'Error expose.')
+    })
 
   const port = await startServer(t, app)
   const response = await testFetch(port, {
@@ -615,15 +711,23 @@ t.test('Operation field `query` missing.', async t => {
 })
 
 t.test('Operation field `query` invalid.', async t => {
-  t.plan(3)
+  t.plan(7)
 
   const app = new Koa()
     .use(errorHandler())
     .use(bodyParser())
     .use(execute({ schema }))
-    .on('error', error =>
-      t.matchSnapshot(errorSnapshot(error), 'Koa app error event.')
-    )
+    .on('error', ({ name, message, status, statusCode, expose }) => {
+      t.equals(name, 'BadRequestError', 'Error name.')
+      t.equals(
+        message,
+        'GraphQL query syntax error: Syntax Error: Unexpected [',
+        'Error message.'
+      )
+      t.equals(status, 400, 'Error status.')
+      t.equals(statusCode, 400, 'Error statusCode.')
+      t.equals(expose, true, 'Error expose.')
+    })
 
   const port = await startServer(t, app)
   const response = await testFetch(port, {
@@ -637,15 +741,23 @@ t.test('Operation field `query` invalid.', async t => {
 })
 
 t.test('Operation field `variables` invalid.', async t => {
-  t.plan(3)
+  t.plan(7)
 
   const app = new Koa()
     .use(errorHandler())
     .use(bodyParser())
     .use(execute({ schema }))
-    .on('error', error =>
-      t.matchSnapshot(errorSnapshot(error), 'Koa app error event.')
-    )
+    .on('error', ({ name, message, status, statusCode, expose }) => {
+      t.equals(name, 'BadRequestError', 'Error name.')
+      t.equals(
+        message,
+        'GraphQL operation field invalid: Variables must be provided as an Object where each property is a variable value. Perhaps look to see if an unparsed JSON string was provided.',
+        'Error message.'
+      )
+      t.equals(status, 400, 'Error status.')
+      t.equals(statusCode, 400, 'Error statusCode.')
+      t.equals(expose, true, 'Error expose.')
+    })
 
   const port = await startServer(t, app)
   const response = await testFetch(port, {
@@ -660,14 +772,66 @@ t.test('Operation field `variables` invalid.', async t => {
 })
 
 t.test('Operation field `query` validation errors.', async t => {
-  t.plan(3)
+  t.plan(15)
 
   const app = new Koa()
     .use(errorHandler())
     .use(bodyParser())
     .use(execute({ schema }))
-    .on('error', error =>
-      t.matchSnapshot(errorSnapshot(error), 'Koa app error event.')
+    .on(
+      'error',
+      ({ name, message, status, statusCode, expose, graphqlErrors }) => {
+        t.equals(name, 'BadRequestError', 'Error name.')
+        t.equals(message, 'GraphQL query validation errors.', 'Error message.')
+        t.equals(status, 400, 'Error status.')
+        t.equals(statusCode, 400, 'Error statusCode.')
+        t.equals(expose, true, 'Error expose.')
+        if (
+          t.equals(Array.isArray(graphqlErrors), true, 'Error graphqlErrors.')
+        ) {
+          t.equals(graphqlErrors.length, 2, 'Error graphqlErrors length.')
+          t.equals(
+            graphqlErrors[0].name,
+            'GraphQLError',
+            'Error graphqlErrors first error name.'
+          )
+          t.equals(
+            graphqlErrors[0].message,
+            'Cannot query field "wrongOne" on type "Query".',
+            'Error graphqlErrors first error message.'
+          )
+          t.same(
+            graphqlErrors[0].locations,
+            [
+              {
+                line: 1,
+                column: 9
+              }
+            ],
+            'Error graphqlErrors first error locations.'
+          )
+          t.equals(
+            graphqlErrors[1].name,
+            'GraphQLError',
+            'Error graphqlErrors second error name.'
+          )
+          t.equals(
+            graphqlErrors[1].message,
+            'Cannot query field "wrongTwo" on type "Query".',
+            'Error graphqlErrors second error message.'
+          )
+          t.same(
+            graphqlErrors[1].locations,
+            [
+              {
+                line: 1,
+                column: 19
+              }
+            ],
+            'Error graphqlErrors first error locations.'
+          )
+        }
+      }
     )
 
   const port = await startServer(t, app)
@@ -682,7 +846,7 @@ t.test('Operation field `query` validation errors.', async t => {
 })
 
 t.test('GraphQL resolver error.', async t => {
-  t.plan(3)
+  t.plan(12)
 
   const app = new Koa()
     .use(errorHandler())
@@ -704,8 +868,40 @@ t.test('GraphQL resolver error.', async t => {
         })
       })
     )
-    .on('error', error =>
-      t.matchSnapshot(errorSnapshot(error), 'Koa app error event.')
+    .on(
+      'error',
+      ({ name, message, status, statusCode, expose, graphqlErrors }) => {
+        t.equals(name, 'Error', 'Error name.')
+        t.equals(message, 'GraphQL errors.', 'Error message.')
+        t.equals(status, 200, 'Error status.')
+        t.equals(statusCode, 200, 'Error statusCode.')
+        t.equals(expose, true, 'Error expose.')
+        if (
+          t.equals(Array.isArray(graphqlErrors), true, 'Error graphqlErrors.')
+        ) {
+          t.equals(graphqlErrors.length, 1, 'Error graphqlErrors length.')
+          t.equals(
+            graphqlErrors[0].name,
+            'GraphQLError',
+            'Error graphqlErrors first error name.'
+          )
+          t.equals(
+            graphqlErrors[0].message,
+            'Resolver error.',
+            'Error graphqlErrors first error message.'
+          )
+          t.same(
+            graphqlErrors[0].locations,
+            [
+              {
+                line: 1,
+                column: 3
+              }
+            ],
+            'Error graphqlErrors first error locations.'
+          )
+        }
+      }
     )
 
   const port = await startServer(t, app)
