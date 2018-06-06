@@ -1,6 +1,6 @@
 # graphql-api-koa changelog
 
-## Next
+## 0.2.0
 
 - Set Node.js support as v8.5+.
 - Avoided using a Koa context response shortcut.
