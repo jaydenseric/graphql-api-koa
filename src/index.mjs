@@ -233,7 +233,7 @@ const checkSchema = schema => {
  *   schema,
  *   override: ctx => ({
  *     contextValue: {
- *       user: ctx.user
+ *       user: ctx.state.user
  *     }
  *   })
  * }

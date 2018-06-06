@@ -6,7 +6,7 @@ GraphQL API Koa middleware.
 
 ## Setup
 
-Install with peer dependencies using [npm](https://npmjs.com):
+To install [`graphql-api-koa`](https://npm.im/graphql-api-koa) and [`graphql`](https://npm.im/graphql) from [npm](https://npmjs.com) run:
 
 ```sh
 npm install graphql-api-koa graphql
@@ -103,7 +103,7 @@ const executeOptions = {
   schema,
   override: ctx => ({
     contextValue: {
-      user: ctx.user
+      user: ctx.state.user
     }
   })
 }
