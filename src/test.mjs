@@ -8,6 +8,7 @@ import {
   GraphQLObjectType,
   GraphQLString
 } from 'graphql'
+import createError from 'http-errors'
 import { errorHandler, execute } from '.'
 
 /**
@@ -68,6 +69,44 @@ const schema = new GraphQLSchema({
       }
     }
   })
+})
+
+t.test('`errorHandler` middleware handles a standard error.', async t => {
+  t.plan(3)
+
+  const app = new Koa()
+    .use(errorHandler())
+    .use(() => {
+      throw new Error('Test.')
+    })
+    .on('error', error =>
+      t.matchSnapshot(errorSnapshot(error), 'Koa app error event.')
+    )
+
+  const port = await startServer(t, app)
+  const response = await testFetch(port)
+
+  t.equal(response.status, 500, 'Response status.')
+  t.matchSnapshot(await response.text(), 'Response body.')
+})
+
+t.test('`errorHandler` middleware handles a HTTP error.', async t => {
+  t.plan(3)
+
+  const app = new Koa()
+    .use(errorHandler())
+    .use(() => {
+      throw createError(403, 'Test.')
+    })
+    .on('error', error =>
+      t.matchSnapshot(errorSnapshot(error), 'Koa app error event.')
+    )
+
+  const port = await startServer(t, app)
+  const response = await testFetch(port)
+
+  t.equal(response.status, 403, 'Response status.')
+  t.matchSnapshot(await response.text(), 'Response body.')
 })
 
 t.test('`execute` middleware options missing.', t => {

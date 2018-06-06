@@ -5,6 +5,28 @@
  * Make sure to inspect the output below.  Do not ignore changes!
  */
 'use strict'
+exports[`lib/test TAP \`errorHandler\` middleware handles a standard error. > Koa app error event. 1`] = `
+Error {
+  "expose": false,
+  "statusCode": 500,
+  "status": 500
+}
+`
+
+exports[`lib/test TAP \`errorHandler\` middleware handles a standard error. > Response body. 1`] = `
+{"errors":[{"message":"Internal Server Error"}]}
+`
+
+exports[`lib/test TAP \`errorHandler\` middleware handles a HTTP error. > Koa app error event. 1`] = `
+ForbiddenError {
+  "message": "Test."
+}
+`
+
+exports[`lib/test TAP \`errorHandler\` middleware handles a HTTP error. > Response body. 1`] = `
+{"errors":[{"message":"Test."}]}
+`
+
 exports[`lib/test TAP \`execute\` middleware options missing. > Creation error. 1`] = `
 InternalServerError {
   "message": "GraphQL execute middleware options missing."
