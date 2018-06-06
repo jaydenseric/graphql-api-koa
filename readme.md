@@ -22,19 +22,58 @@ npm install graphql-api-koa graphql
   - [Examples](#examples)
 - [execute](#execute)
   - [Parameters](#parameters)
+  - [Examples](#examples-1)
 - [Types](#types)
   - [ExecuteOptions](#executeoptions)
     - [Properties](#properties)
+    - [Examples](#examples-2)
   - [MiddlewareOptionsOverride](#middlewareoptionsoverride)
     - [Parameters](#parameters-1)
-    - [Examples](#examples-1)
+    - [Examples](#examples-3)
 
 ### errorHandler
 
-- **See: [GraphQL Draft RFC Specification October 2016 § 7.2.2](http://facebook.github.io/graphql/October2016/#sec-Errors).**
-- **See: [http-errors on npm](https://npm.im/http-errors).**
+Creates Koa middleware to handle errors. Use this as the first to catch all errors for [a correctly formated GraphQL response](http://facebook.github.io/graphql/October2016/#sec-Errors). When intentionally throwing an error, create it with `status` and `expose` properties using [http-errors](https://npm.im/http-errors) or the response will be a generic 500 error for security.
 
-Creates Koa middleware to handle errors. Use this middleware first to catch all errors for a correctly formated GraphQL response. For security, errors thrown outside resolvers without an `expose` property and `true` value are masked by a generic 500 error.
+#### Examples
+
+_How to throw an error determining the response._
+
+```javascript
+import Koa from 'koa'
+import bodyParser from 'koa-bodyparser'
+import { errorHandler, execute } from 'graphql-api-koa'
+import createError from 'http-errors'
+import schema from './schema'
+
+const app = new Koa()
+  .use(errorHandler())
+  .use(async (ctx, next) => {
+    if (
+      // It’s Saturday.
+      new Date().getDay() === 6
+    )
+      throw createError({
+        message: 'No work on the sabbath.',
+        status: 503,
+        expose: true
+      })
+
+    await next()
+  })
+  .use(bodyParser())
+  .use(execute({ schema }))
+```
+
+Returns **[Function](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/function)** Koa middleware.
+
+### execute
+
+Creates Koa middleware to execute GraphQL. Use after the [errorHandler](#errorhandler) and [body parser](https://npm.im/koa-bodyparser) middleware.
+
+#### Parameters
+
+- `options` **[ExecuteOptions](#executeoptions)** Options.
 
 #### Examples
 
@@ -51,16 +90,6 @@ const app = new Koa()
   .use(bodyParser())
   .use(execute({ schema }))
 ```
-
-Returns **[Function](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/function)** Koa middleware.
-
-### execute
-
-Creates Koa middleware to execute GraphQL. Use after the [errorHandler](#errorhandler) and [body parser](https://npm.im/koa-bodyparser) middleware.
-
-#### Parameters
-
-- `options` **[ExecuteOptions](#executeoptions)** Options.
 
 Returns **[Function](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/function)** Koa middleware.
 
@@ -82,19 +111,9 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 - `fieldResolver` **[Function](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/function)?** Custom default field resolver.
 - `override` **[MiddlewareOptionsOverride](#middlewareoptionsoverride)?** Override any [ExecuteOptions](#executeoptions) (except `override`) per request.
 
-#### MiddlewareOptionsOverride
-
-Per-request Koa middleware options override.
-
-Type: [Function](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/function)
-
-##### Parameters
-
-- `context` **module:koa.Context** Koa context.
-
 ##### Examples
 
-_[execute](#execute) middleware options setting the schema once at startup and user context per-request._
+_[execute](#execute) middleware options that sets the schema once but populates the user in the GraphQL context from the Koa context each request._
 
 ```javascript
 import schema from './schema'
@@ -107,6 +126,28 @@ const executeOptions = {
     }
   })
 }
+```
+
+#### MiddlewareOptionsOverride
+
+Per-request Koa middleware options override.
+
+Type: [Function](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/function)
+
+##### Parameters
+
+- `context` **module:koa.Context** Koa context.
+
+##### Examples
+
+_An [execute](#execute) middleware options override that populates the user in the GraphQL context from the Koa request context._
+
+```javascript
+const executeOptionsOverride = ctx => ({
+  contextValue: {
+    user: ctx.state.user
+  }
+})
 ```
 
 Returns **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** Options.

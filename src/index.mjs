@@ -10,21 +10,34 @@ import {
 } from 'graphql'
 
 /**
- * Creates Koa middleware to handle errors. Use this middleware first to catch
- * all errors for a correctly formated GraphQL response. For security, errors
- * thrown outside resolvers without an `expose` property and `true` value are
- * masked by a generic 500 error.
- * @see {@link http://facebook.github.io/graphql/October2016/#sec-Errors GraphQL Draft RFC Specification October 2016 § 7.2.2}.
- * @see {@link https://npm.im/http-errors http-errors on npm}.
+ * Creates Koa middleware to handle errors. Use this as the first to catch all
+ * errors for {@link http://facebook.github.io/graphql/October2016/#sec-Errors a correctly formated GraphQL response}.
+ * When intentionally throwing an error, create it with `status` and `expose`
+ * properties using {@link https://npm.im/http-errors http-errors} or the
+ * response will be a generic 500 error for security.
  * @returns {Function} Koa middleware.
- * @example <caption>A basic GraphQL API.</caption>
+ * @example <caption>How to throw an error determining the response.</caption>
  * import Koa from 'koa'
  * import bodyParser from 'koa-bodyparser'
  * import { errorHandler, execute } from 'graphql-api-koa'
+ * import createError from 'http-errors'
  * import schema from './schema'
  *
  * const app = new Koa()
  *   .use(errorHandler())
+ *   .use(async (ctx, next) => {
+ *     if (
+ *      // It’s Saturday.
+ *      new Date().getDay() === 6
+ *     )
+ *       throw createError({
+ *         message: 'No work on the sabbath.',
+ *         status: 503,
+ *         expose: true
+ *       })
+ *
+ *     await next()
+ *   })
  *   .use(bodyParser())
  *   .use(execute({ schema }))
  */
@@ -63,6 +76,16 @@ export const errorHandler = () => async (ctx, next) => {
  * and {@link https://npm.im/koa-bodyparser body parser} middleware.
  * @param {ExecuteOptions} options Options.
  * @returns {Function} Koa middleware.
+ * @example <caption>A basic GraphQL API.</caption>
+ * import Koa from 'koa'
+ * import bodyParser from 'koa-bodyparser'
+ * import { errorHandler, execute } from 'graphql-api-koa'
+ * import schema from './schema'
+ *
+ * const app = new Koa()
+ *   .use(errorHandler())
+ *   .use(bodyParser())
+ *   .use(execute({ schema }))
  */
 export const execute = options => {
   if (typeof options === 'undefined')
@@ -219,14 +242,7 @@ const checkSchema = schema => {
  * @prop {*} [contextValue] Execution context (usually an object) passed to resolvers.
  * @prop {Function} [fieldResolver] Custom default field resolver.
  * @prop {MiddlewareOptionsOverride} [override] Override any {@link ExecuteOptions} (except `override`) per request.
- */
-
-/**
- * Per-request Koa middleware options override.
- * @callback MiddlewareOptionsOverride
- * @param {module:koa.Context} context Koa context.
- * @returns {Object} Options.
- * @example <caption>{@link execute} middleware options setting the schema once at startup and user context per-request.</caption>
+ * @example <caption>{@link execute} middleware options that sets the schema once but populates the user in the GraphQL context from the Koa context each request.</caption>
  * import schema from './schema'
  *
  * const executeOptions = {
@@ -237,4 +253,17 @@ const checkSchema = schema => {
  *     }
  *   })
  * }
+ */
+
+/**
+ * Per-request Koa middleware options override.
+ * @callback MiddlewareOptionsOverride
+ * @param {module:koa.Context} context Koa context.
+ * @returns {Object} Options.
+ * @example <caption>An {@link execute} middleware options override that populates the user in the GraphQL context from the Koa request context.</caption>
+ * const executeOptionsOverride = ctx => ({
+ *   contextValue: {
+ *     user: ctx.state.user
+ *   }
+ * })
  */
