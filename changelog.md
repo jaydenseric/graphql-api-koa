@@ -1,5 +1,9 @@
 # graphql-api-koa changelog
 
+## Next
+
+- Corrected an `errorHandler` middleware example in the readme.
+
 ## 0.2.0
 
 - Set Node.js support as v8.5+.

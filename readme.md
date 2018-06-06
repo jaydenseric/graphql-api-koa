@@ -55,11 +55,7 @@ const app = new Koa()
       // It’s Saturday.
       new Date().getDay() === 6
     )
-      throw createError({
-        message: 'No work on the sabbath.',
-        status: 503,
-        expose: true
-      })
+      throw createError(503, 'No work on the sabbath.', { expose: true })
 
     await next()
   })
