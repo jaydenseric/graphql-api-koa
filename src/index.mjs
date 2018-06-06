@@ -153,7 +153,7 @@ export const execute = options => {
       )
     }
 
-    if (result.data) ctx.body = { data: result.data }
+    if (result.data) ctx.response.body = { data: result.data }
 
     if (result.errors)
       throw createError(200, 'GraphQL errors.', {
