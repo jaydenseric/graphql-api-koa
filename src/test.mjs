@@ -47,26 +47,17 @@ const testFetch = (port, options = {}) =>
   })
 
 /**
- * Creates a stack removed version of an error suitable for a snapshot.
+ * Converts an error instance to a snapshot string.
  * @param {Object} error An error.
- * @returns {Object} Object to snapshot.
+ * @returns {string} Snapshot string.
  * @ignore
  */
-const errorSnapshot = error => {
-  const {
-    // eslint-disable-next-line no-unused-vars
-    stack,
-    ...stackless
-  } = error
-
-  if ('status' in error) stackless.status = error.status
-  if ('expose' in error) stackless.expose = error.expose
-
-  if (Array.isArray(stackless.graphqlErrors))
-    stackless.graphqlErrors = stackless.graphqlErrors.map(errorSnapshot)
-
-  return stackless
-}
+const errorSnapshot = error =>
+  `${error.name} ${JSON.stringify(
+    error,
+    (key, value) => (key === 'trace' ? undefined : value),
+    2
+  )}`
 
 const schema = new GraphQLSchema({
   query: new GraphQLObjectType({
