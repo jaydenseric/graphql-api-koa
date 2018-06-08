@@ -3,7 +3,7 @@
 ## Next
 
 - Corrected an `errorHandler` middleware example in the readme.
-- Refactored package scripts to use `prepare` to support installation via Git.
+- Refactored package scripts to use `prepare` to support installation via Git (e.g. `npm install jaydenseric/graphql-api-koa`).
 
 ## 0.2.0
 
