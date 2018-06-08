@@ -4,6 +4,7 @@
 
 - Corrected an `errorHandler` middleware example in the readme.
 - Refactored package scripts to use `prepare` to support installation via Git (e.g. `npm install jaydenseric/graphql-api-koa`).
+- Compact package `repository` field.
 
 ## 0.2.0
 
