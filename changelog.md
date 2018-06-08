@@ -3,6 +3,7 @@
 ## Next
 
 - Corrected an `errorHandler` middleware example in the readme.
+- Refactored package scripts to use `prepare` to support installation via Git.
 
 ## 0.2.0
 
