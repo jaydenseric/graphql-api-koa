@@ -1,5 +1,9 @@
 # graphql-api-koa changelog
 
+## Next
+
+- Simplified ESLint config with [eslint-config-env](https://npm.im/eslint-config-env).
+
 ## 0.3.0
 
 - Corrected an `errorHandler` middleware example in the readme.

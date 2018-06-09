@@ -35,8 +35,10 @@
     "@babel/cli": "^7.0.0-beta.49",
     "@babel/core": "^7.0.0-beta.49",
     "@babel/preset-env": "^7.0.0-beta.49",
+    "babel-eslint": "^8.2.3",
     "documentation": "^8.0.0",
     "eslint": "^4.19.1",
+    "eslint-config-env": "^0.1.0",
     "eslint-config-prettier": "^2.9.0",
     "eslint-plugin-import": "^2.12.0",
     "eslint-plugin-node": "^6.0.1",
@@ -78,89 +80,8 @@
     "tap-snapshots"
   ],
   "eslintConfig": {
-    "parserOptions": {
-      "sourceType": "script",
-      "ecmaVersion": 2018
-    },
-    "env": {
-      "es6": true,
-      "node": true
-    },
-    "plugins": [
-      "import",
-      "node",
-      "prettier"
-    ],
     "extends": [
-      "eslint:recommended",
-      "plugin:import/recommended",
-      "plugin:node/recommended",
-      "prettier"
-    ],
-    "rules": {
-      "require-jsdoc": [
-        "error",
-        {
-          "require": {
-            "FunctionDeclaration": true,
-            "MethodDefinition": true,
-            "ClassDeclaration": true,
-            "ArrowFunctionExpression": true
-          }
-        }
-      ],
-      "valid-jsdoc": [
-        "error",
-        {
-          "requireReturn": false
-        }
-      ],
-      "require-await": "error",
-      "no-return-await": "error",
-      "arrow-body-style": "error",
-      "prefer-arrow-callback": "error",
-      "object-shorthand": [
-        "error",
-        "always",
-        {
-          "avoidExplicitReturnArrows": true
-        }
-      ],
-      "curly": [
-        "error",
-        "multi"
-      ],
-      "prefer-destructuring": "error",
-      "quotes": [
-        "error",
-        "single"
-      ],
-      "import/first": "error",
-      "import/newline-after-import": "error",
-      "import/no-useless-path-segments": "error",
-      "import/order": "error",
-      "node/no-unsupported-features": "error",
-      "prettier/prettier": "error"
-    },
-    "overrides": [
-      {
-        "files": [
-          "*.mjs"
-        ],
-        "parserOptions": {
-          "sourceType": "module"
-        },
-        "rules": {
-          "node/no-unsupported-features": [
-            "error",
-            {
-              "ignores": [
-                "modules"
-              ]
-            }
-          ]
-        }
-      }
+      "env"
     ]
   },
   "prettier": {
