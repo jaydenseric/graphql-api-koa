@@ -1,6 +1,6 @@
 {
   "name": "graphql-api-koa",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "GraphQL API Koa middleware.",
   "license": "MIT",
   "author": {

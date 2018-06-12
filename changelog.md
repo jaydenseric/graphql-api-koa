@@ -1,6 +1,6 @@
 # graphql-api-koa changelog
 
-## Next
+## 0.3.1
 
 - Updated dependencies.
 - Simplified ESLint config with [eslint-config-env](https://npm.im/eslint-config-env).
