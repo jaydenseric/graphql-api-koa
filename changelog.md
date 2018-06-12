@@ -2,6 +2,7 @@
 
 ## Next
 
+- Updated dependencies.
 - Simplified ESLint config with [eslint-config-env](https://npm.im/eslint-config-env).
 
 ## 0.3.0
