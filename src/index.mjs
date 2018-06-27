@@ -15,7 +15,7 @@ import {
  * When intentionally throwing an error, create it with `status` and `expose`
  * properties using {@link https://npm.im/http-errors http-errors} or the
  * response will be a generic 500 error for security.
- * @return {Function} Koa middleware.
+ * @returns {Function} Koa middleware.
  * @example <caption>How to throw an error determining the response.</caption>
  * import Koa from 'koa'
  * import bodyParser from 'koa-bodyparser'
@@ -70,8 +70,8 @@ export const errorHandler = () => async (ctx, next) => {
 /**
  * Creates Koa middleware to execute GraphQL. Use after the {@link errorHandler}
  * and {@link https://npm.im/koa-bodyparser body parser} middleware.
- * @argument {ExecuteOptions} options Options.
- * @return {Function} Koa middleware.
+ * @param {ExecuteOptions} options Options.
+ * @returns {Function} Koa middleware.
  * @example <caption>A basic GraphQL API.</caption>
  * import Koa from 'koa'
  * import bodyParser from 'koa-bodyparser'
@@ -187,8 +187,8 @@ export const execute = options => {
 
 /**
  * Determines if a value is a plain object.
- * @argument {*} value The value to check.
- * @return {boolean} Is the value a plain object.
+ * @param {*} value The value to check.
+ * @returns {boolean} Is the value a plain object.
  * @private
  */
 const isPlainObject = value =>
@@ -196,9 +196,9 @@ const isPlainObject = value =>
 
 /**
  * Validates options conform to a whitelist.
- * @argument {Object} options Options to validate.
- * @argument {string[]} allowed Allowed option keys.
- * @argument {string} description The start of the error message.
+ * @param {Object} options Options to validate.
+ * @param {string[]} allowed Allowed option keys.
+ * @param {string} description The start of the error message.
  * @private
  */
 const checkOptions = (options, allowed, description) => {
@@ -214,7 +214,7 @@ const checkOptions = (options, allowed, description) => {
 
 /**
  * Validates a GraphQL schema.
- * @argument {module:graphql.GraphQLSchema} schema GraphQL schema.
+ * @param {module:graphql.GraphQLSchema} schema GraphQL schema.
  * @private
  */
 const checkSchema = schema => {

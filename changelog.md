@@ -3,6 +3,7 @@
 ## Next
 
 - Updated dependencies.
+- Lint fixes following dependency updates.
 
 ## 0.3.1
 

@@ -14,9 +14,9 @@ import { errorHandler, execute } from '.'
 /**
  * Asynchronously starts a given Koa app server that automatically closes when
  * the given test tears down.
- * @argument {module:tap.Test} t Tap test.
- * @argument {module:koa} app Koa app.
- * @return {Promise<module:net.Server>} Node.js server.
+ * @param {module:tap.Test} t Tap test.
+ * @param {module:koa} app Koa app.
+ * @returns {Promise<module:net.Server>} Node.js server.
  * @ignore
  */
 const startServer = (t, app) =>
@@ -32,9 +32,9 @@ const startServer = (t, app) =>
 
 /**
  * Makes a fetch request to the test API.
- * @argument {number} port API URL port.
- * @argument {Object} options Fetch options.
- * @return {Promise<external:Response>} Fetch response.
+ * @param {number} port API URL port.
+ * @param {Object} options Fetch options.
+ * @returns {Promise<external:Response>} Fetch response.
  * @ignore
  */
 const testFetch = (port, options = {}) =>
