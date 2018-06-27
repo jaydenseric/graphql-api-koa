@@ -1,5 +1,9 @@
 # graphql-api-koa changelog
 
+## Next
+
+- Updated dependencies.
+
 ## 0.3.1
 
 - Updated dependencies.
