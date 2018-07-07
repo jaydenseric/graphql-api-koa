@@ -10,13 +10,58 @@ import {
 } from 'graphql'
 
 /**
+ * GraphQL [`execute`]{@link execute} Koa middleware options.
+ * @kind typedef
+ * @name ExecuteOptions
+ * @type {Object}
+ * @prop {GraphQLSchema} schema GraphQL schema.
+ * @prop {*} [rootValue] Value passed to the first resolver.
+ * @prop {*} [contextValue] Execution context (usually an object) passed to resolvers.
+ * @prop {function} [fieldResolver] Custom default field resolver.
+ * @prop {MiddlewareOptionsOverride} [override] Override any [`ExecuteOptions`]{@link ExecuteOptions} (except `override`) per request.
+ * @example <caption>[`execute`]{@link execute} middleware options that sets the schema once but populates the user in the GraphQL context from the Koa context each request.</caption>
+ * ```js
+ * import schema from './schema'
+ *
+ * const executeOptions = {
+ *   schema,
+ *   override: ctx => ({
+ *     contextValue: {
+ *       user: ctx.state.user
+ *     }
+ *   })
+ * }
+ * ```
+ */
+
+/**
+ * Per-request Koa middleware options override.
+ * @kind typedef
+ * @name MiddlewareOptionsOverride
+ * @type {function}
+ * @param {Object} context Koa context.
+ * @returns {Object} Options.
+ * @example <caption>An [`execute`]{@link execute} middleware options override that populates the user in the GraphQL context from the Koa request context.</caption>
+ * ```js
+ * const executeOptionsOverride = ctx => ({
+ *   contextValue: {
+ *     user: ctx.state.user
+ *   }
+ * })
+ * ```
+ */
+
+/**
  * Creates Koa middleware to handle errors. Use this as the first to catch all
- * errors for {@link http://facebook.github.io/graphql/October2016/#sec-Errors a correctly formated GraphQL response}.
+ * errors for a [correctly formated GraphQL response](http://facebook.github.io/graphql/October2016/#sec-Errors).
  * When intentionally throwing an error, create it with `status` and `expose`
- * properties using {@link https://npm.im/http-errors http-errors} or the
- * response will be a generic 500 error for security.
- * @returns {Function} Koa middleware.
+ * properties using [http-errors](https://npm.im/http-errors) or the response
+ * will be a generic 500 error for security.
+ * @kind function
+ * @name errorHandler
+ * @returns {function} Koa middleware.
  * @example <caption>How to throw an error determining the response.</caption>
+ * ```js
  * import Koa from 'koa'
  * import bodyParser from 'koa-bodyparser'
  * import { errorHandler, execute } from 'graphql-api-koa'
@@ -36,6 +81,7 @@ import {
  *   })
  *   .use(bodyParser())
  *   .use(execute({ schema }))
+ * ```
  */
 export const errorHandler = () => async (ctx, next) => {
   try {
@@ -68,11 +114,15 @@ export const errorHandler = () => async (ctx, next) => {
 }
 
 /**
- * Creates Koa middleware to execute GraphQL. Use after the {@link errorHandler}
- * and {@link https://npm.im/koa-bodyparser body parser} middleware.
+ * Creates Koa middleware to execute GraphQL. Use after the
+ * [`errorHandler`]{@link errorHandler} and
+ * [body parser](https://npm.im/koa-bodyparser) middleware.
+ * @kind function
+ * @name execute
  * @param {ExecuteOptions} options Options.
- * @returns {Function} Koa middleware.
+ * @returns {function} Koa middleware.
  * @example <caption>A basic GraphQL API.</caption>
+ * ```js
  * import Koa from 'koa'
  * import bodyParser from 'koa-bodyparser'
  * import { errorHandler, execute } from 'graphql-api-koa'
@@ -82,6 +132,7 @@ export const errorHandler = () => async (ctx, next) => {
  *   .use(errorHandler())
  *   .use(bodyParser())
  *   .use(execute({ schema }))
+ * ```
  */
 export const execute = options => {
   if (typeof options === 'undefined')
@@ -187,19 +238,23 @@ export const execute = options => {
 
 /**
  * Determines if a value is a plain object.
+ * @kind function
+ * @name isPlainObject
  * @param {*} value The value to check.
  * @returns {boolean} Is the value a plain object.
- * @private
+ * @ignore
  */
 const isPlainObject = value =>
   typeof value === 'object' && value !== null && !Array.isArray(value)
 
 /**
  * Validates options conform to a whitelist.
+ * @kind function
+ * @name checkOptions
  * @param {Object} options Options to validate.
  * @param {string[]} allowed Allowed option keys.
  * @param {string} description The start of the error message.
- * @private
+ * @ignore
  */
 const checkOptions = (options, allowed, description) => {
   const invalid = Object.keys(options).filter(
@@ -214,8 +269,10 @@ const checkOptions = (options, allowed, description) => {
 
 /**
  * Validates a GraphQL schema.
- * @param {module:graphql.GraphQLSchema} schema GraphQL schema.
- * @private
+ * @kind function
+ * @name checkSchema
+ * @param {GraphQLSchema} schema GraphQL schema.
+ * @ignore
  */
 const checkSchema = schema => {
   if (!(schema instanceof GraphQLSchema))
@@ -229,37 +286,3 @@ const checkSchema = schema => {
       graphqlErrors: schemaValidationErrors
     })
 }
-
-/**
- * GraphQL {@link execute} Koa middleware options.
- * @typedef {Object} ExecuteOptions
- * @prop {module:graphql.GraphQLSchema} schema GraphQL schema.
- * @prop {*} [rootValue] Value passed to the first resolver.
- * @prop {*} [contextValue] Execution context (usually an object) passed to resolvers.
- * @prop {Function} [fieldResolver] Custom default field resolver.
- * @prop {MiddlewareOptionsOverride} [override] Override any {@link ExecuteOptions} (except `override`) per request.
- * @example <caption>{@link execute} middleware options that sets the schema once but populates the user in the GraphQL context from the Koa context each request.</caption>
- * import schema from './schema'
- *
- * const executeOptions = {
- *   schema,
- *   override: ctx => ({
- *     contextValue: {
- *       user: ctx.state.user
- *     }
- *   })
- * }
- */
-
-/**
- * Per-request Koa middleware options override.
- * @callback MiddlewareOptionsOverride
- * @param {module:koa.Context} context Koa context.
- * @returns {Object} Options.
- * @example <caption>An {@link execute} middleware options override that populates the user in the GraphQL context from the Koa request context.</caption>
- * const executeOptionsOverride = ctx => ({
- *   contextValue: {
- *     user: ctx.state.user
- *   }
- * })
- */

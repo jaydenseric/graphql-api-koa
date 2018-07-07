@@ -4,6 +4,7 @@
 
 - Updated dependencies.
 - Lint fixes following dependency updates.
+- Use [`jsdoc-md`](https://npm.im/jsdoc-md) instead of [`documentation`](https://npm.im/documentation) to generate readme API docs.
 
 ## 0.3.1
 
