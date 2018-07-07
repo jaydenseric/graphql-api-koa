@@ -68,6 +68,8 @@ Per-request Koa middleware options override.
 | --------- | ---------------------------------------------------------------------------------- | ------------ |
 | context   | [Object](https://developer.mozilla.org/javascript/reference/global_objects/Object) | Koa context. |
 
+**Returns:** [Object](https://developer.mozilla.org/javascript/reference/global_objects/Object) — Options.
+
 #### Examples
 
 _An [`execute`](#function-execute) middleware options override that populates the user in the GraphQL context from the Koa request context._
@@ -83,6 +85,8 @@ _An [`execute`](#function-execute) middleware options override that populates th
 ### function errorHandler
 
 Creates Koa middleware to handle errors. Use this as the first to catch all errors for a [correctly formated GraphQL response](http://facebook.github.io/graphql/October2016/#sec-Errors). When intentionally throwing an error, create it with `status` and `expose` properties using [http-errors](https://npm.im/http-errors) or the response will be a generic 500 error for security.
+
+**Returns:** function — Koa middleware.
 
 #### Examples
 
@@ -117,6 +121,8 @@ Creates Koa middleware to execute GraphQL. Use after the [`errorHandler`](#funct
 | Parameter | Type                                   | Description |
 | --------- | -------------------------------------- | ----------- |
 | options   | [ExecuteOptions](#type-executeoptions) | Options.    |
+
+**Returns:** function — Koa middleware.
 
 #### Examples
 
