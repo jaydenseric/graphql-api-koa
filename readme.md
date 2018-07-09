@@ -12,7 +12,7 @@ To install [`graphql-api-koa`](https://npm.im/graphql-api-koa) and [`graphql`](h
 npm install graphql-api-koa graphql
 ```
 
-See the [execute middleware](#execute) examples to get started.
+See the [execute middleware](#function-execute) examples to get started.
 
 ## API
 
@@ -31,15 +31,15 @@ See the [execute middleware](#execute) examples to get started.
 
 GraphQL [`execute`](#function-execute) Koa middleware options.
 
-**Type:** [Object](https://developer.mozilla.org/javascript/reference/global_objects/Object)
+**Type:** [Object](https://developer.mozilla.org/javascript/reference/global_objects/object)
 
-| Property      | Type                                                          | Description                                                                            |
-| ------------- | ------------------------------------------------------------- | -------------------------------------------------------------------------------------- |
-| schema        | GraphQLSchema                                                 | GraphQL schema.                                                                        |
-| rootValue     | \*?                                                           | Value passed to the first resolver.                                                    |
-| contextValue  | \*?                                                           | Execution context (usually an object) passed to resolvers.                             |
-| fieldResolver | function?                                                     | Custom default field resolver.                                                         |
-| override      | [MiddlewareOptionsOverride](#type-middlewareoptionsoverride)? | Override any [`ExecuteOptions`](#type-executeoptions) (except `override`) per request. |
+| Property      | Type                                                                                    | Description                                                                            |
+| ------------- | --------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------- |
+| schema        | GraphQLSchema                                                                           | GraphQL schema.                                                                        |
+| rootValue     | \*?                                                                                     | Value passed to the first resolver.                                                    |
+| contextValue  | \*?                                                                                     | Execution context (usually an object) passed to resolvers.                             |
+| fieldResolver | [function](https://developer.mozilla.org/javascript/reference/global_objects/function)? | Custom default field resolver.                                                         |
+| override      | [MiddlewareOptionsOverride](#type-middlewareoptionsoverride)?                           | Override any [`ExecuteOptions`](#type-executeoptions) (except `override`) per request. |
 
 #### Examples
 
@@ -62,13 +62,13 @@ _[`execute`](#function-execute) middleware options that sets the schema once but
 
 Per-request Koa middleware options override.
 
-**Type:** function
+**Type:** [function](https://developer.mozilla.org/javascript/reference/global_objects/function)
 
 | Parameter | Type                                                                               | Description  |
 | --------- | ---------------------------------------------------------------------------------- | ------------ |
-| context   | [Object](https://developer.mozilla.org/javascript/reference/global_objects/Object) | Koa context. |
+| context   | [Object](https://developer.mozilla.org/javascript/reference/global_objects/object) | Koa context. |
 
-**Returns:** [Object](https://developer.mozilla.org/javascript/reference/global_objects/Object) — Options.
+**Returns:** [Object](https://developer.mozilla.org/javascript/reference/global_objects/object) — Options.
 
 #### Examples
 
@@ -86,7 +86,7 @@ _An [`execute`](#function-execute) middleware options override that populates th
 
 Creates Koa middleware to handle errors. Use this as the first to catch all errors for a [correctly formated GraphQL response](http://facebook.github.io/graphql/October2016/#sec-Errors). When intentionally throwing an error, create it with `status` and `expose` properties using [http-errors](https://npm.im/http-errors) or the response will be a generic 500 error for security.
 
-**Returns:** function — Koa middleware.
+**Returns:** [function](https://developer.mozilla.org/javascript/reference/global_objects/function) — Koa middleware.
 
 #### Examples
 
@@ -122,7 +122,7 @@ Creates Koa middleware to execute GraphQL. Use after the [`errorHandler`](#funct
 | --------- | -------------------------------------- | ----------- |
 | options   | [ExecuteOptions](#type-executeoptions) | Options.    |
 
-**Returns:** function — Koa middleware.
+**Returns:** [function](https://developer.mozilla.org/javascript/reference/global_objects/function) — Koa middleware.
 
 #### Examples
 
