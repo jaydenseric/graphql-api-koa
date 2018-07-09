@@ -56,7 +56,7 @@
   },
   "scripts": {
     "prepare": "FORCE_COLOR=1 npm-run-all prepare:clean -p prepare:mjs prepare:js prepare:jsdoc -s prepare:prettier --aggregate-output",
-    "prepare:clean": "rm -r lib; mkdir lib",
+    "prepare:clean": "rm -r lib",
     "prepare:mjs": "BABEL_ESM=1 babel src -d lib --keep-file-extension",
     "prepare:js": "babel src -d lib",
     "prepare:jsdoc": "jsdoc-md",

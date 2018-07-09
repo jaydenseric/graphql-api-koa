@@ -5,6 +5,7 @@
 - Updated dependencies.
 - Lint fixes following dependency updates.
 - Use [`jsdoc-md`](https://npm.im/jsdoc-md) instead of [`documentation`](https://npm.im/documentation) to generate readme API docs.
+- Removed a temporary workaround for [a fixed Babel CLI bug](https://github.com/babel/babel/issues/8077).
 
 ## 0.3.1
 
