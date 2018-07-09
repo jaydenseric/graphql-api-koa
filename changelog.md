@@ -1,6 +1,6 @@
 # graphql-api-koa changelog
 
-## Next
+## 1.0.0
 
 - Updated dependencies.
 - Lint fixes following dependency updates.
