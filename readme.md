@@ -1,6 +1,6 @@
 # graphql-api-koa
 
-[![Build status](https://travis-ci.org/jaydenseric/graphql-api-koa.svg)](https://travis-ci.org/jaydenseric/graphql-api-koa) [![npm version](https://img.shields.io/npm/v/graphql-api-koa.svg)](https://npm.im/graphql-api-koa)
+[![Build status](https://travis-ci.org/jaydenseric/graphql-api-koa.svg?branch=master)](https://travis-ci.org/jaydenseric/graphql-api-koa) [![npm version](https://badgen.now.sh/npm/v/graphql-api-koa)](https://npm.im/graphql-api-koa)
 
 GraphQL API Koa middleware; the first Node.js GraphQL server to support [native ESM](https://nodejs.org/api/esm.html) via `.mjs`.
 
