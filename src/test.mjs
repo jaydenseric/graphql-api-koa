@@ -18,7 +18,7 @@ import { errorHandler, execute } from '.'
  * @name startServer
  * @param {Test} t Tap test.
  * @param {Object} app Koa app.
- * @returns {Promise<Server>} Node.js net server.
+ * @returns {Promise<number>} The port the server is listening on.
  * @ignore
  */
 const startServer = (t, app) =>
