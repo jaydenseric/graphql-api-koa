@@ -1,3 +1,5 @@
+![graphql-api-koa logo](graphql-api-koa-logo.svg)
+
 # graphql-api-koa
 
 [![npm version](https://badgen.net/npm/v/graphql-api-koa)](https://npm.im/graphql-api-koa) [![Build status](https://travis-ci.org/jaydenseric/graphql-api-koa.svg?branch=master)](https://travis-ci.org/jaydenseric/graphql-api-koa)

@@ -1,5 +1,11 @@
 # graphql-api-koa changelog
 
+## Next
+
+### Patch
+
+- Add a project logo.
+
 ## 1.1.0
 
 ### Minor
