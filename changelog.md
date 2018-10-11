@@ -5,6 +5,7 @@
 ### Patch
 
 - Fix event listeners added in v1.1.1 to be compatible with Node.js < v10.
+- Downgrade `node-fetch` to fix `--experimental-modules` tests for Node.js < v10.2.0 (see [bitinn/node-fetch#502](https://github.com/bitinn/node-fetch/issues/502)).
 
 ## 1.1.1
 
