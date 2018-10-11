@@ -1,7 +1,3 @@
-import t from 'tap'
-import Koa from 'koa'
-import bodyParser from 'koa-bodyparser'
-import fetch from 'node-fetch'
 import {
   GraphQLSchema,
   GraphQLNonNull,
@@ -9,6 +5,10 @@ import {
   GraphQLString
 } from 'graphql'
 import createError from 'http-errors'
+import Koa from 'koa'
+import bodyParser from 'koa-bodyparser'
+import fetch from 'node-fetch'
+import t from 'tap'
 import { errorHandler, execute } from '.'
 
 /**

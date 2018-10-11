@@ -6,6 +6,7 @@
 
 - Updated dependencies.
 - Updated package scripts and config for the new [`husky`](https://npm.im/husky) version.
+- Expanded the source into separate files for easier code navigation.
 - Add a project logo.
 
 ## 1.1.0
