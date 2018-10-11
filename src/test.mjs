@@ -4,11 +4,11 @@ import {
   GraphQLObjectType,
   GraphQLString
 } from 'graphql'
-import createError from 'http-errors'
 import Koa from 'koa'
 import bodyParser from 'koa-bodyparser'
 import fetch from 'node-fetch'
 import t from 'tap'
+import { createHttpError } from './createHttpError'
 import { errorHandler, execute } from '.'
 
 /**
@@ -91,7 +91,7 @@ t.test('`errorHandler` middleware handles a HTTP error.', async t => {
   const app = new Koa()
     .use(errorHandler())
     .use(() => {
-      throw createError(403, 'Test.')
+      throw createHttpError(403, 'Test.')
     })
     .on('error', ({ name, message, status, statusCode, expose }) => {
       t.equals(name, 'ForbiddenError', 'Error name.')

@@ -1,8 +1,8 @@
 import { Source, parse, validate, execute as executeGraphQL } from 'graphql'
-import createError from 'http-errors'
-import { isPlainObject } from './isPlainObject'
 import { checkOptions } from './checkOptions'
 import { checkSchema } from './checkSchema'
+import { createHttpError } from './createHttpError'
+import { isPlainObject } from './isPlainObject'
 
 /**
  * Creates Koa middleware to execute GraphQL. Use after the
@@ -27,10 +27,12 @@ import { checkSchema } from './checkSchema'
  */
 export const execute = options => {
   if (typeof options === 'undefined')
-    throw createError('GraphQL execute middleware options missing.')
+    throw createHttpError('GraphQL execute middleware options missing.')
 
   if (!isPlainObject(options))
-    throw createError('GraphQL execute middleware options must be an object.')
+    throw createHttpError(
+      'GraphQL execute middleware options must be an object.'
+    )
 
   const ALLOWED_OPTIONS = [
     'schema',
@@ -48,26 +50,26 @@ export const execute = options => {
     typeof options.override !== 'undefined' &&
     typeof options.override !== 'function'
   )
-    throw createError(
+    throw createHttpError(
       'GraphQL execute middleware `override` option must be a function.'
     )
 
   return async (ctx, next) => {
     if (typeof ctx.request.body === 'undefined')
-      throw createError('Request body missing.')
+      throw createHttpError('Request body missing.')
 
     if (!isPlainObject(ctx.request.body))
-      throw createError(400, 'Request body must be a JSON object.')
+      throw createHttpError(400, 'Request body must be a JSON object.')
 
     if (!('query' in ctx.request.body))
-      throw createError(400, 'GraphQL operation field `query` missing.')
+      throw createHttpError(400, 'GraphQL operation field `query` missing.')
 
     let document
 
     try {
       document = parse(new Source(ctx.request.body.query))
     } catch (error) {
-      throw createError(400, `GraphQL query syntax error: ${error.message}`)
+      throw createHttpError(400, `GraphQL query syntax error: ${error.message}`)
     }
 
     let optionsOverride = {}
@@ -76,7 +78,7 @@ export const execute = options => {
       optionsOverride = await options.override(ctx)
 
       if (!isPlainObject(optionsOverride))
-        throw createError(
+        throw createHttpError(
           'GraphQL execute middleware options must be an object, or an object promise.'
         )
 
@@ -94,7 +96,7 @@ export const execute = options => {
 
     const queryValidationErrors = validate(execute.schema, document)
     if (queryValidationErrors.length)
-      throw createError(400, 'GraphQL query validation errors.', {
+      throw createHttpError(400, 'GraphQL query validation errors.', {
         graphqlErrors: queryValidationErrors
       })
 
@@ -108,7 +110,7 @@ export const execute = options => {
         operationName: ctx.request.body.operationName
       })
     } catch (error) {
-      throw createError(
+      throw createHttpError(
         400,
         `GraphQL operation field invalid: ${error.message}`
       )
@@ -117,7 +119,7 @@ export const execute = options => {
     if (result.data) ctx.response.body = { data: result.data }
 
     if (result.errors)
-      throw createError(200, 'GraphQL errors.', {
+      throw createHttpError(200, 'GraphQL errors.', {
         graphqlErrors: result.errors
       })
 

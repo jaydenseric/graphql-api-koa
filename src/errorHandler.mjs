@@ -1,5 +1,5 @@
 import { formatError } from 'graphql'
-import createError from 'http-errors'
+import { createHttpError } from './createHttpError'
 
 /**
  * Creates Koa middleware to handle errors. Use this as the first to catch all
@@ -39,10 +39,10 @@ export const errorHandler = () => async (ctx, next) => {
     await next()
   } catch (error) {
     // Use, or coerce to, a HttpError instance.
-    let httpError = createError(error)
+    let httpError = createHttpError(error)
 
     // Use a generic 500 error if the error is not to be exposed to the client.
-    if (!httpError.expose) httpError = createError()
+    if (!httpError.expose) httpError = createHttpError()
 
     ctx.response.status = httpError.status
 

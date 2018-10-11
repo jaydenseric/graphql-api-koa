@@ -1,5 +1,5 @@
 import { GraphQLSchema, validateSchema } from 'graphql'
-import createError from 'http-errors'
+import { createHttpError } from './createHttpError'
 
 /**
  * Validates a GraphQL schema.
@@ -10,13 +10,13 @@ import createError from 'http-errors'
  */
 export const checkSchema = schema => {
   if (!(schema instanceof GraphQLSchema))
-    throw createError(
+    throw createHttpError(
       'GraphQL schema is required and must be a `GraphQLSchema` instance.'
     )
 
   const schemaValidationErrors = validateSchema(schema)
   if (schemaValidationErrors.length)
-    throw createError('GraphQL schema validation errors.', {
+    throw createHttpError('GraphQL schema validation errors.', {
       graphqlErrors: schemaValidationErrors
     })
 }

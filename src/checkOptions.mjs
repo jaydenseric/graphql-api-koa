@@ -1,4 +1,4 @@
-import createError from 'http-errors'
+import { createHttpError } from './createHttpError'
 
 /**
  * Validates options conform to a whitelist.
@@ -15,7 +15,7 @@ export const checkOptions = (options, allowed, description) => {
   )
 
   if (invalid.length)
-    throw createError(
+    throw createHttpError(
       `${description} options invalid: \`${invalid.join('`, `')}\`.`
     )
 }

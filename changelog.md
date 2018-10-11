@@ -6,6 +6,7 @@
 
 - Updated dependencies.
 - Updated package scripts and config for the new [`husky`](https://npm.im/husky) version.
+- Silence the `http-errors deprecated non-error status code; use only 4xx or 5xx status codes` warnings that appear (due to [jshttp/http-errors#50](https://github.com/jshttp/http-errors/issues/50)) when there are GraphQL errors.
 - Expanded the source into separate files for easier code navigation.
 - Add a project logo.
 
