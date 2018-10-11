@@ -849,7 +849,7 @@ t.test('Operation field `query` validation errors.', async t => {
   t.matchSnapshot(await response.text(), 'Response body.')
 })
 
-t.test('GraphQL resolver error.', async t => {
+t.test('GraphQL resolver error unexposed.', async t => {
   t.plan(12)
 
   const app = new Koa()
@@ -864,7 +864,7 @@ t.test('GraphQL resolver error.', async t => {
               test: {
                 type: new GraphQLNonNull(GraphQLString),
                 resolve() {
-                  throw new Error('Resolver error.')
+                  throw new Error('Unexposed message.')
                 }
               }
             }
@@ -887,12 +887,12 @@ t.test('GraphQL resolver error.', async t => {
           t.equals(
             graphqlErrors[0].name,
             'GraphQLError',
-            'Error graphqlErrors first error name.'
+            'Error graphqlErrors error 1 name.'
           )
           t.equals(
             graphqlErrors[0].message,
-            'Resolver error.',
-            'Error graphqlErrors first error message.'
+            'Unexposed message.',
+            'Error graphqlErrors error 1 message.'
           )
           t.same(
             graphqlErrors[0].locations,
@@ -902,7 +902,79 @@ t.test('GraphQL resolver error.', async t => {
                 column: 3
               }
             ],
-            'Error graphqlErrors first error locations.'
+            'Error graphqlErrors error 1 locations.'
+          )
+        }
+      }
+    )
+
+  const port = await startServer(t, app)
+  const response = await testFetch(port, {
+    body: JSON.stringify({
+      query: '{ test}'
+    })
+  })
+
+  t.equal(response.status, 200, 'Response status.')
+  t.matchSnapshot(await response.text(), 'Response body.')
+})
+
+t.test('GraphQL resolver error exposed.', async t => {
+  t.plan(12)
+
+  const app = new Koa()
+    .use(errorHandler())
+    .use(bodyParser())
+    .use(
+      execute({
+        schema: new GraphQLSchema({
+          query: new GraphQLObjectType({
+            name: 'Query',
+            fields: {
+              test: {
+                type: new GraphQLNonNull(GraphQLString),
+                resolve() {
+                  const error = new Error('Exposed message.')
+                  error.expose = true
+                  throw error
+                }
+              }
+            }
+          })
+        })
+      })
+    )
+    .on(
+      'error',
+      ({ name, message, status, statusCode, expose, graphqlErrors }) => {
+        t.equals(name, 'Error', 'Error name.')
+        t.equals(message, 'GraphQL errors.', 'Error message.')
+        t.equals(status, 200, 'Error status.')
+        t.equals(statusCode, 200, 'Error statusCode.')
+        t.equals(expose, true, 'Error expose.')
+        if (
+          t.equals(Array.isArray(graphqlErrors), true, 'Error graphqlErrors.')
+        ) {
+          t.equals(graphqlErrors.length, 1, 'Error graphqlErrors length.')
+          t.equals(
+            graphqlErrors[0].name,
+            'GraphQLError',
+            'Error graphqlErrors error 1 name.'
+          )
+          t.equals(
+            graphqlErrors[0].message,
+            'Exposed message.',
+            'Error graphqlErrors error 1 message.'
+          )
+          t.same(
+            graphqlErrors[0].locations,
+            [
+              {
+                line: 1,
+                column: 3
+              }
+            ],
+            'Error graphqlErrors error 1 locations.'
           )
         }
       }

@@ -1,5 +1,11 @@
 # graphql-api-koa changelog
 
+## Next
+
+### Major
+
+- Errors thrown in resolvers without an `expose: true` property have their message masked by `Internal Server Error` in the response body to prevent client exposure. Koa app listeners and middleware still have access to the original errors.
+
 ## 1.1.2
 
 ### Patch

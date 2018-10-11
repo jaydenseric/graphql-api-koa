@@ -81,6 +81,10 @@ exports[`lib/test TAP Operation field \`query\` validation errors. > Response bo
 {"errors":[{"message":"Cannot query field \\"wrongOne\\" on type \\"Query\\".","locations":[{"line":1,"column":9}]},{"message":"Cannot query field \\"wrongTwo\\" on type \\"Query\\".","locations":[{"line":1,"column":19}]}]}
 `
 
-exports[`lib/test TAP GraphQL resolver error. > Response body. 1`] = `
-{"errors":[{"message":"Resolver error.","locations":[{"line":1,"column":3}],"path":["test"]}]}
+exports[`lib/test TAP GraphQL resolver error unexposed. > Response body. 1`] = `
+{"errors":[{"message":"Internal Server Error","locations":[{"line":1,"column":3}],"path":["test"]}]}
+`
+
+exports[`lib/test TAP GraphQL resolver error exposed. > Response body. 1`] = `
+{"errors":[{"message":"Exposed message.","locations":[{"line":1,"column":3}],"path":["test"]}]}
 `

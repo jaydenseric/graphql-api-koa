@@ -53,9 +53,23 @@ export const errorHandler = () => async (ctx, next) => {
     // This error handler should be the only middleware that sets the response
     // body errors.
     ctx.response.body.errors = Array.isArray(httpError.graphqlErrors)
-      ? // Simultaneous errors (e.g. during validation).
-        httpError.graphqlErrors.map(formatError)
-      : // Single error.
+      ? // GraphQL execution errors.
+        httpError.graphqlErrors.map(graphqlError => {
+          const formattedError = formatError(graphqlError)
+
+          if (
+            // Originally thrown in resolvers (not a GraphQL validation error).
+            graphqlError.originalError &&
+            // Not specifically marked to be exposed to the client.
+            !graphqlError.originalError.expose
+          )
+            // Overwrite the message to prevent client exposure. Wording is
+            // consistent with the http-errors 500 error message.
+            formattedError.message = 'Internal Server Error'
+
+          return formattedError
+        })
+      : // A middleware error.
         [formatError(httpError)]
 
     // Support Koa app error listeners.
