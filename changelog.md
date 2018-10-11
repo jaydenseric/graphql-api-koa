@@ -1,5 +1,11 @@
 # graphql-api-koa changelog
 
+## Next
+
+### Patch
+
+- Fix event listeners added in v1.1.1 to be compatible with Node.js < v10.
+
 ## 1.1.1
 
 ### Patch

@@ -20,6 +20,6 @@ const noOp = () => {}
 export function createHttpError(...args) {
   process.on('deprecation', noOp)
   const error = createError(...args)
-  process.off('deprecation', noOp)
+  process.removeListener('deprecation', noOp)
   return error
 }
