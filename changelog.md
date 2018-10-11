@@ -4,6 +4,7 @@
 
 ### Patch
 
+- Updated dependencies.
 - Add a project logo.
 
 ## 1.1.0
