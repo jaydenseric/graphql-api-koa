@@ -1,6 +1,6 @@
 # graphql-api-koa changelog
 
-## Next
+## 1.1.1
 
 ### Patch
 
