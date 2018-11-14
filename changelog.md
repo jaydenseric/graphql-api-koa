@@ -5,6 +5,7 @@
 ### Patch
 
 - Updated dev dependencies.
+- Tests now log if the environment is CJS or ESM (`--experimental-modules`) and the `NODE_ENV`.
 
 ## 2.0.0
 

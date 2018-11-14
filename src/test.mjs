@@ -11,6 +11,13 @@ import t from 'tap'
 import { createHttpError } from './createHttpError'
 import { errorHandler, execute } from '.'
 
+// eslint-disable-next-line no-console
+console.log(
+  `Testing ${
+    process.execArgv.includes('--experimental-modules') ? 'ESM' : 'CJS'
+  } library with ${process.env.NODE_ENV} NODE_ENV…\n\n`
+)
+
 /**
  * Asynchronously starts a given Koa app server that automatically closes when
  * the given test tears down.
