@@ -54,8 +54,7 @@
     "lint-staged": "^9.2.0",
     "node-fetch": "^2.6.0",
     "prettier": "^1.18.2",
-    "tap": "^14.4.3",
-    "watch": "^1.0.2"
+    "tap": "^14.4.3"
   },
   "scripts": {
     "prepare": "npm run prepare:clean && npm run prepare:mjs && npm run prepare:js && npm run prepare:jsdoc && npm run prepare:prettier",
@@ -69,8 +68,7 @@
     "test:prettier": "prettier '**/*.{json,yml,md}' -l",
     "test:mjs": "node --experimental-modules --no-warnings lib/test | tap-mocha-reporter spec",
     "test:js": "node lib/test | tap-mocha-reporter spec",
-    "prepublishOnly": "npm run prepare && npm test",
-    "watch": "watch 'npm run prepublishOnly --silent' src --interval 1"
+    "prepublishOnly": "npm run prepare && npm test"
   },
   "husky": {
     "hooks": {
