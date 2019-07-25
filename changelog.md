@@ -4,7 +4,7 @@
 
 ### Patch
 
-- Updated dev dependencies.
+- Updated dependencies.
 - Tests now log if the environment is CJS or ESM (`--experimental-modules`) and the `NODE_ENV`.
 - Added the Open Graph image design to the logo Sketch file.
 
