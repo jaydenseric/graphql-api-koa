@@ -7,8 +7,8 @@
 - Updated dependencies.
 - Cleaner readme “API” section table of contents with “See” and “Examples” headings excluded, thanks to [`jsdoc-md` v3.1.0](https://github.com/jaydenseric/jsdoc-md/releases/tag/v3.1.0).
 - Removed the `watch` script and [`watch`](https://npm.im/watch) dev dependency.
+- Redid the test scripts and added a `.nycrc.json` file for improved reporting and code coverage.
 - Simplified the `prepublishOnly` script.
-- Tests now log if the environment is CJS or ESM (`--experimental-modules`) and the `NODE_ENV`.
 - Added the Open Graph image design to the logo Sketch file.
 
 ## 2.0.0

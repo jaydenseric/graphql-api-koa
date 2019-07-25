@@ -63,11 +63,10 @@
     "prepare:js": "babel src -d lib",
     "prepare:jsdoc": "jsdoc-md",
     "prepare:prettier": "prettier 'lib/**/*.{mjs,js}' readme.md --write",
-    "test": "npm run test:eslint && npm run test:prettier && npm run test:mjs && npm run test:js",
+    "test": "npm run test:eslint && npm run test:prettier && npm run test:tap",
     "test:eslint": "eslint . --ext mjs,js",
     "test:prettier": "prettier '**/*.{json,yml,md}' -l",
-    "test:mjs": "node --experimental-modules --no-warnings lib/test | tap-mocha-reporter spec",
-    "test:js": "node lib/test | tap-mocha-reporter spec",
+    "test:tap": "tap lib/test.{mjs,js}",
     "prepublishOnly": "npm test"
   },
   "husky": {
