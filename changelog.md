@@ -2,6 +2,10 @@
 
 ## Next
 
+### Minor
+
+- `execute` middleware now throws an appropriate error when the `schema` option is undefined, without an override.
+
 ### Patch
 
 - Updated dependencies.

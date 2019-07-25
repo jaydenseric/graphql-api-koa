@@ -88,3 +88,7 @@ exports[`lib/test.mjs TAP \`execute\` middleware option \`schema\` invalid Graph
 exports[`lib/test.mjs TAP \`execute\` middleware option \`schema\` not a GraphQLSchema instance override. > Response body. 1`] = `
 {"errors":[{"message":"Internal Server Error"}]}
 `
+
+exports[`lib/test.mjs TAP \`execute\` middleware option \`schema\` undefined, without an override. > Response body. 1`] = `
+{"errors":[{"message":"Internal Server Error"}]}
+`

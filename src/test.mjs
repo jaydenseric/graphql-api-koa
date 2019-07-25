@@ -533,6 +533,35 @@ t.test(
 )
 
 t.test(
+  '`execute` middleware option `schema` undefined, without an override.',
+  async t => {
+    t.plan(7)
+
+    const app = new Koa()
+      .use(errorHandler())
+      .use(bodyParser())
+      .use(execute({ schema: undefined }))
+      .on('error', ({ name, message, status, statusCode, expose }) => {
+        t.equals(name, 'InternalServerError', 'Error name.')
+        t.equals(message, 'GraphQL schema is required.', 'Error message.')
+        t.equals(status, 500, 'Error status.')
+        t.equals(statusCode, 500, 'Error statusCode.')
+        t.equals(expose, false, 'Error expose.')
+      })
+
+    const port = await startServer(t, app)
+    const response = await testFetch(port, {
+      body: JSON.stringify({
+        query: '{ test }'
+      })
+    })
+
+    t.equal(response.status, 500, 'Response status.')
+    t.matchSnapshot(await response.text(), 'Response body.')
+  }
+)
+
+t.test(
   '`execute` middleware option `schema` not a GraphQLSchema instance override.',
   async t => {
     t.plan(7)

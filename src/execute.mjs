@@ -94,6 +94,9 @@ export const execute = options => {
 
     const execute = { ...options, ...optionsOverride }
 
+    if (typeof execute.schema === 'undefined')
+      throw createHttpError('GraphQL schema is required.')
+
     const queryValidationErrors = validate(execute.schema, document)
     if (queryValidationErrors.length)
       throw createHttpError(400, 'GraphQL query validation errors.', {
