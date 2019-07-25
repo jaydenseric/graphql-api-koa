@@ -4,7 +4,7 @@ import { createHttpError } from './createHttpError'
  * Validates options conform to a whitelist.
  * @kind function
  * @name checkOptions
- * @param {Object} options Options to validate.
+ * @param {object} options Options to validate.
  * @param {string[]} allowed Allowed option keys.
  * @param {string} description The start of the error message.
  * @ignore

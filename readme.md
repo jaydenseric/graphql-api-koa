@@ -21,19 +21,15 @@ See the [execute middleware](#function-execute) examples to get started.
 ### Table of contents
 
 - [function errorHandler](#function-errorhandler)
-  - [Examples](#examples)
 - [function execute](#function-execute)
-  - [Examples](#examples-1)
 - [type ExecuteOptions](#type-executeoptions)
-  - [Examples](#examples-2)
 - [type MiddlewareOptionsOverride](#type-middlewareoptionsoverride)
-  - [Examples](#examples-3)
 
 ### function errorHandler
 
 Creates Koa middleware to handle errors. Use this as the first to catch all errors for a [correctly formated GraphQL response](http://facebook.github.io/graphql/October2016/#sec-Errors). When intentionally throwing an error, create it with `status` and `expose` properties using [http-errors](https://npm.im/http-errors) or the response will be a generic 500 error for security.
 
-**Returns:** [function](https://mdn.io/function) — Koa middleware.
+**Returns:** Function — Koa middleware.
 
 #### Examples
 
@@ -61,6 +57,8 @@ _How to throw an error determining the response._
 >   .use(execute({ schema }))
 > ```
 
+---
+
 ### function execute
 
 Creates Koa middleware to execute GraphQL. Use after the [`errorHandler`](#function-errorhandler) and [body parser](https://npm.im/koa-bodyparser) middleware.
@@ -69,7 +67,7 @@ Creates Koa middleware to execute GraphQL. Use after the [`errorHandler`](#funct
 | :-------- | :------------------------------------- | :---------- |
 | `options` | [ExecuteOptions](#type-executeoptions) | Options.    |
 
-**Returns:** [function](https://mdn.io/function) — Koa middleware.
+**Returns:** Function — Koa middleware.
 
 #### Examples
 
@@ -87,19 +85,21 @@ _A basic GraphQL API._
 >   .use(execute({ schema }))
 > ```
 
+---
+
 ### type ExecuteOptions
 
 GraphQL [`execute`](#function-execute) Koa middleware options.
 
-**Type:** [Object](https://mdn.io/object)
+**Type:** object
 
-| Property        | Type                                                          | Description                                                                            |
-| :-------------- | :------------------------------------------------------------ | :------------------------------------------------------------------------------------- |
-| `schema`        | GraphQLSchema                                                 | GraphQL schema.                                                                        |
-| `rootValue`     | \*?                                                           | Value passed to the first resolver.                                                    |
-| `contextValue`  | \*?                                                           | Execution context (usually an object) passed to resolvers.                             |
-| `fieldResolver` | [function](https://mdn.io/function)?                          | Custom default field resolver.                                                         |
-| `override`      | [MiddlewareOptionsOverride](#type-middlewareoptionsoverride)? | Override any [`ExecuteOptions`](#type-executeoptions) (except `override`) per request. |
+| Property | Type | Description |
+| :-- | :-- | :-- |
+| `schema` | GraphQLSchema | GraphQL schema. |
+| `rootValue` | \*? | Value passed to the first resolver. |
+| `contextValue` | \*? | Execution context (usually an object) passed to resolvers. |
+| `fieldResolver` | Function? | Custom default field resolver. |
+| `override` | [MiddlewareOptionsOverride](#type-middlewareoptionsoverride)? | Override any [`ExecuteOptions`](#type-executeoptions) (except `override`) per request. |
 
 #### Examples
 
@@ -118,17 +118,19 @@ _[`execute`](#function-execute) middleware options that sets the schema once but
 > }
 > ```
 
+---
+
 ### type MiddlewareOptionsOverride
 
 Per-request Koa middleware options override.
 
-**Type:** [function](https://mdn.io/function)
+**Type:** Function
 
-| Parameter | Type                            | Description  |
-| :-------- | :------------------------------ | :----------- |
-| `context` | [Object](https://mdn.io/object) | Koa context. |
+| Parameter | Type   | Description  |
+| :-------- | :----- | :----------- |
+| `context` | object | Koa context. |
 
-**Returns:** [Object](https://mdn.io/object) — Options.
+**Returns:** object — Options.
 
 #### Examples
 

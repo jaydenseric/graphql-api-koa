@@ -14,6 +14,7 @@ const noOp = () => {}
  * @name createHttpError
  * @see [jshttp/http-errors#50](https://github.com/jshttp/http-errors/issues/50)
  * @see [dougwilson/nodejs-depd#29](https://github.com/dougwilson/nodejs-depd/issues/29)
+ * @param {...*} args Arguments to be passed to the [`http-errors`](https://npm.im/http-errors) `createError` function.
  * @returns {HttpError} A [`http-errors`](https://npm.im/http-errors) `HttpError` instance.
  * @ignore
  */

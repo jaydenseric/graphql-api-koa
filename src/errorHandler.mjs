@@ -9,7 +9,7 @@ import { createHttpError } from './createHttpError'
  * will be a generic 500 error for security.
  * @kind function
  * @name errorHandler
- * @returns {function} Koa middleware.
+ * @returns {Function} Koa middleware.
  * @example <caption>How to throw an error determining the response.</caption>
  * ```js
  * import Koa from 'koa'

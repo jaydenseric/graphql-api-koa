@@ -1,4 +1,4 @@
-import { Source, parse, validate, execute as executeGraphQL } from 'graphql'
+import { Source, execute as executeGraphQL, parse, validate } from 'graphql'
 import { checkOptions } from './checkOptions'
 import { checkSchema } from './checkSchema'
 import { createHttpError } from './createHttpError'
@@ -11,7 +11,7 @@ import { isPlainObject } from './isPlainObject'
  * @kind function
  * @name execute
  * @param {ExecuteOptions} options Options.
- * @returns {function} Koa middleware.
+ * @returns {Function} Koa middleware.
  * @example <caption>A basic GraphQL API.</caption>
  * ```js
  * import Koa from 'koa'
@@ -133,11 +133,11 @@ export const execute = options => {
  * GraphQL [`execute`]{@link execute} Koa middleware options.
  * @kind typedef
  * @name ExecuteOptions
- * @type {Object}
+ * @type {object}
  * @prop {GraphQLSchema} schema GraphQL schema.
  * @prop {*} [rootValue] Value passed to the first resolver.
  * @prop {*} [contextValue] Execution context (usually an object) passed to resolvers.
- * @prop {function} [fieldResolver] Custom default field resolver.
+ * @prop {Function} [fieldResolver] Custom default field resolver.
  * @prop {MiddlewareOptionsOverride} [override] Override any [`ExecuteOptions`]{@link ExecuteOptions} (except `override`) per request.
  * @example <caption>[`execute`]{@link execute} middleware options that sets the schema once but populates the user in the GraphQL context from the Koa context each request.</caption>
  * ```js
@@ -158,9 +158,9 @@ export const execute = options => {
  * Per-request Koa middleware options override.
  * @kind typedef
  * @name MiddlewareOptionsOverride
- * @type {function}
- * @param {Object} context Koa context.
- * @returns {Object} Options.
+ * @type {Function}
+ * @param {object} context Koa context.
+ * @returns {object} Options.
  * @example <caption>An [`execute`]{@link execute} middleware options override that populates the user in the GraphQL context from the Koa request context.</caption>
  * ```js
  * const executeOptionsOverride = ctx => ({

@@ -1,7 +1,7 @@
 import {
-  GraphQLSchema,
   GraphQLNonNull,
   GraphQLObjectType,
+  GraphQLSchema,
   GraphQLString
 } from 'graphql'
 import Koa from 'koa'
@@ -24,7 +24,7 @@ console.log(
  * @kind function
  * @name startServer
  * @param {Test} t Tap test.
- * @param {Object} app Koa app.
+ * @param {object} app Koa app.
  * @returns {Promise<number>} The port the server is listening on.
  * @ignore
  */
@@ -44,7 +44,7 @@ const startServer = (t, app) =>
  * @kind function
  * @name testFetch
  * @param {number} port API URL port.
- * @param {Object} options Fetch options.
+ * @param {object} options Fetch options.
  * @returns {Promise<Response>} Fetch response.
  * @ignore
  */
