@@ -9,6 +9,7 @@
 - Removed the `watch` script and [`watch`](https://npm.im/watch) dev dependency.
 - Redid the test scripts and added a `.nycrc.json` file for improved reporting and code coverage.
 - Simplified the `prepublishOnly` script.
+- Reduced the size of the published `package.json` by moving dev tool config to files.
 - Added the Open Graph image design to the logo Sketch file.
 
 ## 2.0.0
