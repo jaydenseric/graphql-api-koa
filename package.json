@@ -42,18 +42,18 @@
     "eslint-config-prettier": "^6.0.0",
     "eslint-plugin-import": "^2.18.2",
     "eslint-plugin-import-order-alphabetical": "^0.0.2",
-    "eslint-plugin-jsdoc": "^15.7.2",
+    "eslint-plugin-jsdoc": "^15.8.0",
     "eslint-plugin-node": "^9.1.0",
     "eslint-plugin-prettier": "^3.1.0",
     "graphql": "^14.4.2",
-    "husky": "^3.0.1",
+    "husky": "^3.0.2",
     "jsdoc-md": "^3.1.0",
     "koa": "^2.7.0",
     "koa-bodyparser": "^4.2.1",
-    "lint-staged": "^9.2.0",
+    "lint-staged": "^9.2.1",
     "node-fetch": "^2.6.0",
     "prettier": "^1.18.2",
-    "tap": "^14.4.3"
+    "tap": "^14.5.0"
   },
   "scripts": {
     "prepare": "npm run prepare:clean && npm run prepare:mjs && npm run prepare:js && npm run prepare:jsdoc && npm run prepare:prettier",
