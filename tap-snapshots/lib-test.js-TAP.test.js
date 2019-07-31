@@ -45,6 +45,10 @@ exports[`lib/test.js TAP \`errorHandler\` middleware handles a standard error. >
 {"errors":[{"message":"Internal Server Error"}]}
 `
 
+exports[`lib/test.js TAP \`errorHandler\` middleware handles an error after \`ctx.response.body\` was set. > Response body. 1`] = `
+{"data":{},"errors":[{"message":"Internal Server Error"}]}
+`
+
 exports[`lib/test.js TAP \`execute\` middleware option \`contextValue\` override using Koa ctx async. > Response body. 1`] = `
 {"data":{"test":"contextValueOverridden"}}
 `
