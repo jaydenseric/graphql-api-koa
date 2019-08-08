@@ -54,10 +54,9 @@ export const execute = options => {
 
   if (typeof options.schema !== 'undefined') checkSchema(options.schema)
 
-  if (
-    typeof options.override !== 'undefined' &&
-    typeof options.override !== 'function'
-  )
+  const { override, ...staticOptions } = options
+
+  if (typeof override !== 'undefined' && typeof override !== 'function')
     throw createHttpError(
       'GraphQL execute middleware `override` option must be a function.'
     )
@@ -80,32 +79,32 @@ export const execute = options => {
       throw createHttpError(400, `GraphQL query syntax error: ${error.message}`)
     }
 
-    let optionsOverride = {}
+    let overrideOptions
 
-    if (options.override) {
-      optionsOverride = await options.override(ctx)
+    if (override) {
+      overrideOptions = await override(ctx)
 
-      if (!isPlainObject(optionsOverride))
+      if (!isPlainObject(overrideOptions))
         throw createHttpError(
           'GraphQL execute middleware `override` option must return an object, or an object promise.'
         )
 
       checkOptions(
-        optionsOverride,
+        overrideOptions,
         ALLOWED_EXECUTE_OPTIONS.filter(option => option !== 'override'),
         'GraphQL execute middleware `override` option return'
       )
 
-      if (typeof optionsOverride.schema !== 'undefined')
-        checkSchema(optionsOverride.schema)
+      if (typeof overrideOptions.schema !== 'undefined')
+        checkSchema(overrideOptions.schema)
     }
 
-    const execute = { ...options, ...optionsOverride }
+    const requestOptions = { ...staticOptions, ...overrideOptions }
 
-    if (typeof execute.schema === 'undefined')
+    if (typeof requestOptions.schema === 'undefined')
       throw createHttpError('GraphQL schema is required.')
 
-    const queryValidationErrors = validate(execute.schema, document)
+    const queryValidationErrors = validate(requestOptions.schema, document)
     if (queryValidationErrors.length)
       throw createHttpError(400, 'GraphQL query validation errors.', {
         graphqlErrors: queryValidationErrors
@@ -115,7 +114,10 @@ export const execute = options => {
 
     try {
       result = await executeGraphQL({
-        ...execute,
+        schema: requestOptions.schema,
+        rootValue: requestOptions.rootValue,
+        contextValue: requestOptions.contextValue,
+        fieldResolver: requestOptions.fieldResolver,
         document,
         variableValues: ctx.request.body.variables,
         operationName: ctx.request.body.operationName
