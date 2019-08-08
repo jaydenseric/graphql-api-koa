@@ -6,50 +6,10 @@ import {
 } from 'graphql'
 import Koa from 'koa'
 import bodyParser from 'koa-bodyparser'
-import fetch from 'node-fetch'
 import t from 'tap'
-import { createHttpError } from './createHttpError'
+import { startServer } from './test-helpers/startServer'
+import { testFetch } from './test-helpers/testFetch'
 import { errorHandler, execute } from '.'
-
-/**
- * Asynchronously starts a given Koa app server that automatically closes when
- * the given test tears down.
- * @kind function
- * @name startServer
- * @param {Test} t Tap test.
- * @param {object} app Koa app.
- * @returns {Promise<number>} The port the server is listening on.
- * @ignore
- */
-const startServer = (t, app) =>
-  new Promise((resolve, reject) => {
-    app.listen(function(error) {
-      if (error) reject(error)
-      else {
-        t.tearDown(() => this.close())
-        resolve(this.address().port)
-      }
-    })
-  })
-
-/**
- * Makes a fetch request to the test API.
- * @kind function
- * @name testFetch
- * @param {number} port API URL port.
- * @param {object} options Fetch options.
- * @returns {Promise<Response>} Fetch response.
- * @ignore
- */
-const testFetch = (port, options = {}) =>
-  fetch(`http://localhost:${port}`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      Accept: 'application/json'
-    },
-    ...options
-  })
 
 const schema = new GraphQLSchema({
   query: new GraphQLObjectType({
@@ -61,79 +21,6 @@ const schema = new GraphQLSchema({
     }
   })
 })
-
-t.test('`errorHandler` middleware handles a standard error.', async t => {
-  t.plan(7)
-
-  const app = new Koa()
-    .use(errorHandler())
-    .use(() => {
-      throw new Error('Test.')
-    })
-    .on('error', ({ name, message, status, statusCode, expose }) => {
-      t.equals(name, 'Error', 'Error name.')
-      t.equals(message, 'Test.', 'Error message.')
-      t.equals(status, 500, 'Error status.')
-      t.equals(statusCode, 500, 'Error statusCode.')
-      t.equals(expose, false, 'Error expose.')
-    })
-
-  const port = await startServer(t, app)
-  const response = await testFetch(port)
-
-  t.equal(response.status, 500, 'Response status.')
-  t.matchSnapshot(await response.text(), 'Response body.')
-})
-
-t.test('`errorHandler` middleware handles a HTTP error.', async t => {
-  t.plan(7)
-
-  const app = new Koa()
-    .use(errorHandler())
-    .use(() => {
-      throw createHttpError(403, 'Test.')
-    })
-    .on('error', ({ name, message, status, statusCode, expose }) => {
-      t.equals(name, 'ForbiddenError', 'Error name.')
-      t.equals(message, 'Test.', 'Error message.')
-      t.equals(status, 403, 'Error status.')
-      t.equals(statusCode, 403, 'Error statusCode.')
-      t.equals(expose, true, 'Error expose.')
-    })
-
-  const port = await startServer(t, app)
-  const response = await testFetch(port)
-
-  t.equal(response.status, 403, 'Response status.')
-  t.matchSnapshot(await response.text(), 'Response body.')
-})
-
-t.test(
-  '`errorHandler` middleware handles an error after `ctx.response.body` was set.',
-  async t => {
-    t.plan(7)
-
-    const app = new Koa()
-      .use(errorHandler())
-      .use(ctx => {
-        ctx.response.body = { data: {} }
-        throw new Error('Test.')
-      })
-      .on('error', ({ name, message, status, statusCode, expose }) => {
-        t.equals(name, 'Error', 'Error name.')
-        t.equals(message, 'Test.', 'Error message.')
-        t.equals(status, 500, 'Error status.')
-        t.equals(statusCode, 500, 'Error statusCode.')
-        t.equals(expose, false, 'Error expose.')
-      })
-
-    const port = await startServer(t, app)
-    const response = await testFetch(port)
-
-    t.equal(response.status, 500, 'Response status.')
-    t.matchSnapshot(await response.text(), 'Response body.')
-  }
-)
 
 t.test('`execute` middleware options missing.', t => {
   try {

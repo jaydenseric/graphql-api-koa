@@ -20,7 +20,8 @@
   ],
   "files": [
     "lib",
-    "!lib/test.*"
+    "!*.test.*",
+    "!test-helpers"
   ],
   "main": "lib",
   "engines": {
@@ -65,7 +66,7 @@
     "test": "npm run test:eslint && npm run test:prettier && npm run test:tap",
     "test:eslint": "eslint . --ext mjs,js",
     "test:prettier": "prettier '**/*.{json,yml,md}' -l",
-    "test:tap": "tap lib/test.{mjs,js} --100",
+    "test:tap": "tap --test-ignore=src --100",
     "prepublishOnly": "npm test"
   }
 }
