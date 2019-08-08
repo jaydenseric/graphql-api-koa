@@ -5,7 +5,7 @@ import { createHttpError } from './createHttpError'
  * @kind function
  * @name checkOptions
  * @param {object} options Options to validate.
- * @param {string[]} allowed Allowed option keys.
+ * @param {Array<string>} allowed Allowed option keys.
  * @param {string} description The start of the error message.
  * @ignore
  */
