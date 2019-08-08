@@ -5,6 +5,7 @@
 ### Patch
 
 - Updated dev dependencies.
+- Moved JSDoc type defs into `src/index.js`.
 
 ## 2.1.0
 
