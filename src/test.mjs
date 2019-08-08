@@ -196,44 +196,6 @@ t.test('`execute` middleware options invalid.', t => {
   t.end()
 })
 
-t.test('`execute` middleware option `override` options invalid.', async t => {
-  t.plan(7)
-
-  const app = new Koa()
-    .use(errorHandler())
-    .use(bodyParser())
-    .use(
-      execute({
-        schema,
-        override: () => ({
-          invalid: true,
-          override: true
-        })
-      })
-    )
-    .on('error', ({ name, message, status, statusCode, expose }) => {
-      t.equals(name, 'InternalServerError', 'Error name.')
-      t.equals(
-        message,
-        'GraphQL execute middleware `override` option return options invalid: `invalid`, `override`.',
-        'Error message.'
-      )
-      t.equals(status, 500, 'Error status.')
-      t.equals(statusCode, 500, 'Error statusCode.')
-      t.equals(expose, false, 'Error expose.')
-    })
-
-  const port = await startServer(t, app)
-  const response = await testFetch(port, {
-    body: JSON.stringify({
-      query: '{ test }'
-    })
-  })
-
-  t.equal(response.status, 500, 'Response status.')
-  t.matchSnapshot(await response.text(), 'Response body.')
-})
-
 t.test('`execute` middleware option `override` not a function.', t => {
   try {
     execute({
@@ -256,40 +218,84 @@ t.test('`execute` middleware option `override` not a function.', t => {
   t.end()
 })
 
-t.test('`execute` middleware option `override` not an object.', async t => {
-  t.plan(7)
+t.test(
+  '`execute` middleware option `override` returning not an object.',
+  async t => {
+    t.plan(7)
 
-  const app = new Koa()
-    .use(errorHandler())
-    .use(bodyParser())
-    .use(
-      execute({
-        schema,
-        override: () => true
-      })
-    )
-    .on('error', ({ name, message, status, statusCode, expose }) => {
-      t.equals(name, 'InternalServerError', 'Error name.')
-      t.equals(
-        message,
-        'GraphQL execute middleware options must be an object, or an object promise.',
-        'Error message.'
+    const app = new Koa()
+      .use(errorHandler())
+      .use(bodyParser())
+      .use(
+        execute({
+          schema,
+          override: () => true
+        })
       )
-      t.equals(status, 500, 'Error status.')
-      t.equals(statusCode, 500, 'Error statusCode.')
-      t.equals(expose, false, 'Error expose.')
+      .on('error', ({ name, message, status, statusCode, expose }) => {
+        t.equals(name, 'InternalServerError', 'Error name.')
+        t.equals(
+          message,
+          'GraphQL execute middleware `override` option must return an object, or an object promise.',
+          'Error message.'
+        )
+        t.equals(status, 500, 'Error status.')
+        t.equals(statusCode, 500, 'Error statusCode.')
+        t.equals(expose, false, 'Error expose.')
+      })
+
+    const port = await startServer(t, app)
+    const response = await testFetch(port, {
+      body: JSON.stringify({
+        query: '{ test }'
+      })
     })
 
-  const port = await startServer(t, app)
-  const response = await testFetch(port, {
-    body: JSON.stringify({
-      query: '{ test }'
-    })
-  })
+    t.equal(response.status, 500, 'Response status.')
+    t.matchSnapshot(await response.text(), 'Response body.')
+  }
+)
 
-  t.equal(response.status, 500, 'Response status.')
-  t.matchSnapshot(await response.text(), 'Response body.')
-})
+t.test(
+  '`execute` middleware option `override` returning options invalid.',
+  async t => {
+    t.plan(7)
+
+    const app = new Koa()
+      .use(errorHandler())
+      .use(bodyParser())
+      .use(
+        execute({
+          schema,
+          override: () => ({
+            invalid: true,
+            override: true
+          })
+        })
+      )
+      .on('error', ({ name, message, status, statusCode, expose }) => {
+        t.equals(name, 'InternalServerError', 'Error name.')
+        t.equals(
+          message,
+          'GraphQL execute middleware `override` option return options invalid: `invalid`, `override`.',
+          'Error message.'
+        )
+        t.equals(status, 500, 'Error status.')
+        t.equals(statusCode, 500, 'Error statusCode.')
+        t.equals(expose, false, 'Error expose.')
+      })
+
+    const port = await startServer(t, app)
+    const response = await testFetch(port, {
+      body: JSON.stringify({
+        query: '{ test }'
+      })
+    })
+
+    t.equal(response.status, 500, 'Response status.')
+    t.matchSnapshot(await response.text(), 'Response body.')
+  }
+)
 
 t.test('`execute` middleware option `rootValue`.', async t => {
   const app = new Koa()

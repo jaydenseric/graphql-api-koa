@@ -5,6 +5,7 @@
 ### Patch
 
 - Updated dev dependencies.
+- Better error message when `execute` middleware option `override` returns not an object.
 - Moved JSDoc type defs into `src/index.js`.
 - Consistent JSDoc syntax style for array types.
 - Moved an `execute` middleware constant from function to module scope.

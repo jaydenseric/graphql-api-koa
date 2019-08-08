@@ -69,11 +69,11 @@ exports[`lib/test.js TAP \`execute\` middleware option \`fieldResolver\`. > Resp
 {"data":{"test":"fieldResolver"}}
 `
 
-exports[`lib/test.js TAP \`execute\` middleware option \`override\` not an object. > Response body. 1`] = `
+exports[`lib/test.js TAP \`execute\` middleware option \`override\` returning not an object. > Response body. 1`] = `
 {"errors":[{"message":"Internal Server Error"}]}
 `
 
-exports[`lib/test.js TAP \`execute\` middleware option \`override\` options invalid. > Response body. 1`] = `
+exports[`lib/test.js TAP \`execute\` middleware option \`override\` returning options invalid. > Response body. 1`] = `
 {"errors":[{"message":"Internal Server Error"}]}
 `
 

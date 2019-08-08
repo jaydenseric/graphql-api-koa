@@ -87,7 +87,7 @@ export const execute = options => {
 
       if (!isPlainObject(optionsOverride))
         throw createHttpError(
-          'GraphQL execute middleware options must be an object, or an object promise.'
+          'GraphQL execute middleware `override` option must return an object, or an object promise.'
         )
 
       checkOptions(
