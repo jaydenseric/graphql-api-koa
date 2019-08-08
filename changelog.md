@@ -8,6 +8,7 @@
 - Better error message when `execute` middleware option `override` returns not an object.
 - Ensure only desired `execute` middleware options apply to the GraphQL `execute` function.
 - Move tests to files adjacent to source files.
+- Renamed the `isPlainObject` helper to `isEnumerableObject` and added tests.
 - Moved JSDoc type defs into `src/index.js`.
 - Consistent JSDoc syntax style for array types.
 - Moved an `execute` middleware constant from function to module scope.

@@ -2,7 +2,7 @@ import { Source, execute as executeGraphQL, parse, validate } from 'graphql'
 import { checkOptions } from './checkOptions'
 import { checkSchema } from './checkSchema'
 import { createHttpError } from './createHttpError'
-import { isPlainObject } from './isPlainObject'
+import { isEnumerableObject } from './isEnumerableObject'
 
 /**
  * List of allowed [`ExecuteOptions`]{@link ExecuteOptions} keys for validation
@@ -45,7 +45,7 @@ export const execute = options => {
   if (typeof options === 'undefined')
     throw createHttpError('GraphQL execute middleware options missing.')
 
-  if (!isPlainObject(options))
+  if (!isEnumerableObject(options))
     throw createHttpError(
       'GraphQL execute middleware options must be an object.'
     )
@@ -65,7 +65,7 @@ export const execute = options => {
     if (typeof ctx.request.body === 'undefined')
       throw createHttpError('Request body missing.')
 
-    if (!isPlainObject(ctx.request.body))
+    if (!isEnumerableObject(ctx.request.body))
       throw createHttpError(400, 'Request body must be a JSON object.')
 
     if (!('query' in ctx.request.body))
@@ -84,7 +84,7 @@ export const execute = options => {
     if (override) {
       overrideOptions = await override(ctx)
 
-      if (!isPlainObject(overrideOptions))
+      if (!isEnumerableObject(overrideOptions))
         throw createHttpError(
           'GraphQL execute middleware `override` option must return an object, or an object promise.'
         )
