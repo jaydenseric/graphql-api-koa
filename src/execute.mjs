@@ -5,6 +5,22 @@ import { createHttpError } from './createHttpError'
 import { isPlainObject } from './isPlainObject'
 
 /**
+ * List of allowed [`ExecuteOptions`]{@link ExecuteOptions} keys for validation
+ * purposes.
+ * @kind constant
+ * @name ALLOWED_EXECUTE_OPTIONS
+ * @type {Array<string>}
+ * @ignore
+ */
+const ALLOWED_EXECUTE_OPTIONS = [
+  'schema',
+  'rootValue',
+  'contextValue',
+  'fieldResolver',
+  'override'
+]
+
+/**
  * Creates Koa middleware to execute GraphQL. Use after the
  * [`errorHandler`]{@link errorHandler} and
  * [body parser](https://npm.im/koa-bodyparser) middleware.
@@ -34,15 +50,7 @@ export const execute = options => {
       'GraphQL execute middleware options must be an object.'
     )
 
-  const ALLOWED_OPTIONS = [
-    'schema',
-    'rootValue',
-    'contextValue',
-    'fieldResolver',
-    'override'
-  ]
-
-  checkOptions(options, ALLOWED_OPTIONS, 'GraphQL execute middleware')
+  checkOptions(options, ALLOWED_EXECUTE_OPTIONS, 'GraphQL execute middleware')
 
   if (typeof options.schema !== 'undefined') checkSchema(options.schema)
 
@@ -84,7 +92,7 @@ export const execute = options => {
 
       checkOptions(
         optionsOverride,
-        ALLOWED_OPTIONS.filter(option => option !== 'override'),
+        ALLOWED_EXECUTE_OPTIONS.filter(option => option !== 'override'),
         'GraphQL execute middleware `override` option return'
       )
 
