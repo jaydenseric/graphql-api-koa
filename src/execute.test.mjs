@@ -821,7 +821,12 @@ t.test('GraphQL resolver error unexposed.', async t => {
               name: 'GraphQLError',
               message: 'Unexposed message.',
               locations: [{ line: 1, column: 3 }],
-              path: ['test']
+              path: ['test'],
+              originalError: {
+                name: 'Error',
+                message: 'Unexposed message.',
+                expose: undefined
+              }
             }
           ]
         },
@@ -879,7 +884,12 @@ t.test('GraphQL resolver error exposed.', async t => {
               name: 'GraphQLError',
               message: 'Exposed message.',
               locations: [{ line: 1, column: 3 }],
-              path: ['test']
+              path: ['test'],
+              originalError: {
+                name: 'Error',
+                message: 'Exposed message.',
+                expose: true
+              }
             }
           ]
         },
