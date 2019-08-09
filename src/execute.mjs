@@ -1,6 +1,6 @@
 import { Source, execute as executeGraphQL, parse, validate } from 'graphql'
+import { checkGraphQLSchema } from './checkGraphQLSchema'
 import { checkOptions } from './checkOptions'
-import { checkSchema } from './checkSchema'
 import { createHttpError } from './createHttpError'
 import { isEnumerableObject } from './isEnumerableObject'
 
@@ -47,7 +47,11 @@ export const execute = options => {
 
   checkOptions(options, ALLOWED_EXECUTE_OPTIONS, 'GraphQL execute middleware')
 
-  if (typeof options.schema !== 'undefined') checkSchema(options.schema)
+  if (typeof options.schema !== 'undefined')
+    checkGraphQLSchema(
+      options.schema,
+      'GraphQL execute middleware `schema` option'
+    )
 
   const { override, ...staticOptions } = options
 
@@ -86,13 +90,18 @@ export const execute = options => {
       )
 
       if (typeof overrideOptions.schema !== 'undefined')
-        checkSchema(overrideOptions.schema)
+        checkGraphQLSchema(
+          overrideOptions.schema,
+          'GraphQL execute middleware `override` option resolved `schema` option'
+        )
     }
 
     const requestOptions = { ...staticOptions, ...overrideOptions }
 
     if (typeof requestOptions.schema === 'undefined')
-      throw createHttpError('GraphQL schema is required.')
+      throw createHttpError(
+        'GraphQL execute middleware requires a GraphQL schema.'
+      )
 
     const queryValidationErrors = validate(requestOptions.schema, document)
     if (queryValidationErrors.length)

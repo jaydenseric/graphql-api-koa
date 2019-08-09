@@ -4,19 +4,22 @@ import { createHttpError } from './createHttpError'
 /**
  * Validates a GraphQL schema.
  * @kind function
- * @name checkSchema
+ * @name checkGraphQLSchema
  * @param {GraphQLSchema} schema GraphQL schema.
+ * @param {string} errorMessagePrefix Error message prefix.
  * @ignore
  */
-export const checkSchema = schema => {
+export const checkGraphQLSchema = (schema, errorMessagePrefix) => {
   if (!(schema instanceof GraphQLSchema))
     throw createHttpError(
-      'GraphQL schema is required and must be a `GraphQLSchema` instance.'
+      `${errorMessagePrefix} GraphQL schema must be a \`GraphQLSchema\` instance.`
     )
 
   const schemaValidationErrors = validateSchema(schema)
+
   if (schemaValidationErrors.length)
-    throw createHttpError('GraphQL schema validation errors.', {
-      graphqlErrors: schemaValidationErrors
-    })
+    throw createHttpError(
+      `${errorMessagePrefix} has GraphQL schema validation errors.`,
+      { graphqlErrors: schemaValidationErrors }
+    )
 }

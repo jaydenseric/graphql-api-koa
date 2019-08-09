@@ -424,7 +424,7 @@ t.test(
       {
         name: 'InternalServerError',
         message:
-          'GraphQL schema is required and must be a `GraphQLSchema` instance.',
+          'GraphQL execute middleware `schema` option GraphQL schema must be a `GraphQLSchema` instance.',
         status: 500,
         statusCode: 500,
         expose: false
@@ -449,7 +449,7 @@ t.test(
           error,
           {
             name: 'InternalServerError',
-            message: 'GraphQL schema is required.',
+            message: 'GraphQL execute middleware requires a GraphQL schema.',
             status: 500,
             statusCode: 500,
             expose: false
@@ -492,7 +492,7 @@ t.test(
           {
             name: 'InternalServerError',
             message:
-              'GraphQL schema is required and must be a `GraphQLSchema` instance.',
+              'GraphQL execute middleware `override` option resolved `schema` option GraphQL schema must be a `GraphQLSchema` instance.',
             status: 500,
             statusCode: 500,
             expose: false
@@ -518,7 +518,8 @@ t.test('`execute` middleware option `schema` invalid GraphQL.', t => {
     () => execute({ schema: new GraphQLSchema({}) }),
     {
       name: 'InternalServerError',
-      message: 'GraphQL schema validation errors.',
+      message:
+        'GraphQL execute middleware `schema` option has GraphQL schema validation errors.',
       status: 500,
       statusCode: 500,
       expose: false,
@@ -555,7 +556,8 @@ t.test(
           error,
           {
             name: 'InternalServerError',
-            message: 'GraphQL schema validation errors.',
+            message:
+              'GraphQL execute middleware `override` option resolved `schema` option has GraphQL schema validation errors.',
             status: 500,
             statusCode: 500,
             expose: false,
