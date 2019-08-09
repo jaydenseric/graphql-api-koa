@@ -49,7 +49,7 @@ t.test('`execute` middleware options not an object.', t => {
     t.equals(name, 'InternalServerError', 'Error name.')
     t.equals(
       message,
-      'GraphQL execute middleware options must be an object.',
+      'GraphQL execute middleware options must be an enumerable object.',
       'Error message.'
     )
     t.equals(status, 500, 'Error status.')
@@ -123,7 +123,7 @@ t.test(
         t.equals(name, 'InternalServerError', 'Error name.')
         t.equals(
           message,
-          'GraphQL execute middleware `override` option must return an object, or an object promise.',
+          'GraphQL execute middleware `override` option resolved options must be an enumerable object.',
           'Error message.'
         )
         t.equals(status, 500, 'Error status.')
@@ -164,7 +164,7 @@ t.test(
         t.equals(name, 'InternalServerError', 'Error name.')
         t.equals(
           message,
-          'GraphQL execute middleware `override` option return options invalid: `invalid`, `override`.',
+          'GraphQL execute middleware `override` option resolved options invalid: `invalid`, `override`.',
           'Error message.'
         )
         t.equals(status, 500, 'Error status.')

@@ -1,21 +1,28 @@
 import { createHttpError } from './createHttpError'
+import { isEnumerableObject } from './isEnumerableObject'
 
 /**
- * Validates options conform to a whitelist.
+ * Validates options are an enumerable object that conforms to a whitelist of
+ * allowed keys.
  * @kind function
  * @name checkOptions
  * @param {object} options Options to validate.
- * @param {Array<string>} allowed Allowed option keys.
- * @param {string} description The start of the error message.
+ * @param {Array<string>} allowedKeys Allowed option keys.
+ * @param {string} errorMessagePrefix Error message prefix.
  * @ignore
  */
-export const checkOptions = (options, allowed, description) => {
+export const checkOptions = (options, allowedKeys, errorMessagePrefix) => {
+  if (!isEnumerableObject(options))
+    throw createHttpError(
+      `${errorMessagePrefix} options must be an enumerable object.`
+    )
+
   const invalid = Object.keys(options).filter(
-    option => !allowed.includes(option)
+    option => !allowedKeys.includes(option)
   )
 
   if (invalid.length)
     throw createHttpError(
-      `${description} options invalid: \`${invalid.join('`, `')}\`.`
+      `${errorMessagePrefix} options invalid: \`${invalid.join('`, `')}\`.`
     )
 }

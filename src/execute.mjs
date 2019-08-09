@@ -45,11 +45,6 @@ export const execute = options => {
   if (typeof options === 'undefined')
     throw createHttpError('GraphQL execute middleware options missing.')
 
-  if (!isEnumerableObject(options))
-    throw createHttpError(
-      'GraphQL execute middleware options must be an object.'
-    )
-
   checkOptions(options, ALLOWED_EXECUTE_OPTIONS, 'GraphQL execute middleware')
 
   if (typeof options.schema !== 'undefined') checkSchema(options.schema)
@@ -84,15 +79,10 @@ export const execute = options => {
     if (override) {
       overrideOptions = await override(ctx)
 
-      if (!isEnumerableObject(overrideOptions))
-        throw createHttpError(
-          'GraphQL execute middleware `override` option must return an object, or an object promise.'
-        )
-
       checkOptions(
         overrideOptions,
         ALLOWED_EXECUTE_OPTIONS.filter(option => option !== 'override'),
-        'GraphQL execute middleware `override` option return'
+        'GraphQL execute middleware `override` option resolved'
       )
 
       if (typeof overrideOptions.schema !== 'undefined')
