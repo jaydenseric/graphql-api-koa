@@ -14,6 +14,7 @@
 - Significantly simplified test assertions using `t.throws` and `t.match`.
 - Moved JSDoc type defs into `src/index.js`.
 - Consistent JSDoc syntax style for array types.
+- Prettier `errorHandler` JSDoc example source code formatting.
 - Moved an `execute` middleware constant from function to module scope.
 
 ## 2.1.0

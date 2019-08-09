@@ -22,8 +22,8 @@ import { createHttpError } from './createHttpError'
  *   .use(errorHandler())
  *   .use(async (ctx, next) => {
  *     if (
- *      // It’s Saturday.
- *      new Date().getDay() === 6
+ *       // It’s Saturday.
+ *       new Date().getDay() === 6
  *     )
  *       throw createError(503, 'No work on the sabbath.', { expose: true })
  *
