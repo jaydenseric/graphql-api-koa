@@ -18,7 +18,7 @@ t.test('`checkOptions` with unenumerable options.', t => {
       statusCode: 500,
       expose: false
     },
-    'throws.'
+    'Throws.'
   )
   t.end()
 })
@@ -32,7 +32,7 @@ t.test('`checkOptions` with invalid option keys.', t => {
       statusCode: 500,
       expose: false
     },
-    'throws.'
+    'Throws.'
   )
   t.end()
 })
