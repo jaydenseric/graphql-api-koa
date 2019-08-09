@@ -10,6 +10,7 @@
 - Renamed the `isPlainObject` helper to `isEnumerableObject` and added tests.
 - Moved `isEnumerableObject` checks into the `checkOptions` helper and added tests.
 - Tweaked option validation related error messages.
+- Significantly simplified test assertions using `t.throws` and `t.match`.
 - Moved JSDoc type defs into `src/index.js`.
 - Consistent JSDoc syntax style for array types.
 - Moved an `execute` middleware constant from function to module scope.
