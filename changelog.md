@@ -22,6 +22,7 @@
 - Consistent JSDoc syntax style for array types.
 - Prettier `errorHandler` JSDoc example source code formatting.
 - Moved an `execute` middleware constant from function to module scope.
+- Added “Minor” and “Patch” subheadings to old changelog entries.
 
 ## 2.1.0
 
@@ -81,6 +82,8 @@
 
 ## 1.0.0
 
+### Patch
+
 - Updated dependencies.
 - Lint fixes following dependency updates.
 - Use [`jsdoc-md`](https://npm.im/jsdoc-md) instead of [`documentation`](https://npm.im/documentation) to generate readme API docs.
@@ -89,18 +92,30 @@
 
 ## 0.3.1
 
+### Patch
+
 - Updated dependencies.
 - Simplified ESLint config with [`eslint-config-env`](https://npm.im/eslint-config-env).
 
 ## 0.3.0
 
-- Corrected an `errorHandler` middleware example in the readme.
+### Minor
+
 - Refactored package scripts to use `prepare` to support installation via Git (e.g. `npm install jaydenseric/graphql-api-koa`).
+
+### Patch
+
+- Corrected an `errorHandler` middleware example in the readme.
 - Compact package `repository` field.
 
 ## 0.2.0
 
+### Minor
+
 - Set Node.js support as v8.5+.
+
+### Patch
+
 - Avoided using a Koa context response shortcut.
 - Fixed test snapshot consistency between Node.js versions (see [tapjs/node-tap#450](https://github.com/tapjs/node-tap/issues/450)).
 - Manually test error properties instead of using snapshots.
