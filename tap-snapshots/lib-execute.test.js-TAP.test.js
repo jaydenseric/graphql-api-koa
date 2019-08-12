@@ -84,3 +84,11 @@ exports[`lib/execute.test.js TAP \`execute\` middleware option \`schema\` not a 
 exports[`lib/execute.test.js TAP \`execute\` middleware option \`schema\` undefined, without an override. > Response body. 1`] = `
 {"errors":[{"message":"Internal Server Error"}]}
 `
+
+exports[`lib/execute.test.js TAP \`execute\` middleware option \`validationRules\` override. > Response body. 1`] = `
+{"errors":[{"message":"Message overridden.","locations":[{"line":1,"column":1}]},{"message":"Cannot query field \\"wrong\\" on type \\"Query\\".","locations":[{"line":1,"column":3}]}]}
+`
+
+exports[`lib/execute.test.js TAP \`execute\` middleware option \`validationRules\`. > Response body. 1`] = `
+{"errors":[{"message":"Message.","locations":[{"line":1,"column":1}]},{"message":"Cannot query field \\"wrong\\" on type \\"Query\\".","locations":[{"line":1,"column":3}]}]}
+`

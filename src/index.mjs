@@ -7,6 +7,7 @@ export { execute } from './execute'
  * @name ExecuteOptions
  * @type {object}
  * @prop {GraphQLSchema} schema GraphQL schema.
+ * @prop {Array<Function>} [validationRules] Validation rules for [GraphQL.js `validate`](https://graphql.org/graphql-js/validation/#validate), in addition to the default [GraphQL.js `specifiedRules`](https://graphql.org/graphql-js/validation/#specifiedrules).
  * @prop {*} [rootValue] Value passed to the first resolver.
  * @prop {*} [contextValue] Execution context (usually an object) passed to resolvers.
  * @prop {Function} [fieldResolver] Custom default field resolver.

@@ -96,6 +96,7 @@ GraphQL [`execute`](#function-execute) Koa middleware options.
 | Property | Type | Description |
 | :-- | :-- | :-- |
 | `schema` | GraphQLSchema | GraphQL schema. |
+| `validationRules` | Array&lt;Function>? | Validation rules for [GraphQL.js `validate`](https://graphql.org/graphql-js/validation/#validate), in addition to the default [GraphQL.js `specifiedRules`](https://graphql.org/graphql-js/validation/#specifiedrules). |
 | `rootValue` | \*? | Value passed to the first resolver. |
 | `contextValue` | \*? | Execution context (usually an object) passed to resolvers. |
 | `fieldResolver` | Function? | Custom default field resolver. |

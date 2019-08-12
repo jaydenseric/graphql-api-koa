@@ -1,5 +1,12 @@
-import { Source, execute as executeGraphQL, parse, validate } from 'graphql'
+import {
+  Source,
+  execute as executeGraphQL,
+  parse,
+  specifiedRules,
+  validate
+} from 'graphql'
 import { checkGraphQLSchema } from './checkGraphQLSchema'
+import { checkGraphQLValidationRules } from './checkGraphQLValidationRules'
 import { checkOptions } from './checkOptions'
 import { createHttpError } from './createHttpError'
 import { isEnumerableObject } from './isEnumerableObject'
@@ -14,6 +21,7 @@ import { isEnumerableObject } from './isEnumerableObject'
  */
 const ALLOWED_EXECUTE_OPTIONS = [
   'schema',
+  'validationRules',
   'rootValue',
   'contextValue',
   'fieldResolver',
@@ -51,6 +59,12 @@ export const execute = options => {
     checkGraphQLSchema(
       options.schema,
       'GraphQL execute middleware `schema` option'
+    )
+
+  if (typeof options.validationRules !== 'undefined')
+    checkGraphQLValidationRules(
+      options.validationRules,
+      'GraphQL execute middleware `validationRules` option'
     )
 
   const { override, ...staticOptions } = options
@@ -94,16 +108,30 @@ export const execute = options => {
           overrideOptions.schema,
           'GraphQL execute middleware `override` option resolved `schema` option'
         )
+
+      if (typeof overrideOptions.validationRules !== 'undefined')
+        checkGraphQLValidationRules(
+          overrideOptions.validationRules,
+          'GraphQL execute middleware `override` option resolved `validationRules` option'
+        )
     }
 
-    const requestOptions = { ...staticOptions, ...overrideOptions }
+    const requestOptions = {
+      validationRules: [],
+      ...staticOptions,
+      ...overrideOptions
+    }
 
     if (typeof requestOptions.schema === 'undefined')
       throw createHttpError(
         'GraphQL execute middleware requires a GraphQL schema.'
       )
 
-    const queryValidationErrors = validate(requestOptions.schema, document)
+    const queryValidationErrors = validate(requestOptions.schema, document, [
+      ...specifiedRules,
+      ...requestOptions.validationRules
+    ])
+
     if (queryValidationErrors.length)
       throw createHttpError(400, 'GraphQL query validation errors.', {
         graphqlErrors: queryValidationErrors

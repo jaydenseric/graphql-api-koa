@@ -2,6 +2,10 @@
 
 ## Next
 
+### Minor
+
+- Added a new `execute` middleware `validationRules` option.
+
 ### Patch
 
 - Updated dev dependencies.

@@ -1,4 +1,5 @@
 import {
+  GraphQLError,
   GraphQLNonNull,
   GraphQLObjectType,
   GraphQLSchema,
@@ -169,6 +170,123 @@ t.test(
     t.matchSnapshot(await response.text(), 'Response body.')
   }
 )
+
+t.test('`execute` middleware option `validationRules`.', async t => {
+  const app = new Koa()
+    .use(errorHandler())
+    .use(bodyParser())
+    .use(
+      execute({
+        schema,
+        validationRules: [
+          context => ({
+            OperationDefinition(node) {
+              context.reportError(new GraphQLError('Message.', [node]))
+            }
+          })
+        ]
+      })
+    )
+    .on('error', error => {
+      t.match(
+        error,
+        {
+          name: 'BadRequestError',
+          message: 'GraphQL query validation errors.',
+          status: 400,
+          statusCode: 400,
+          expose: true,
+          graphqlErrors: [
+            {
+              name: 'GraphQLError',
+              message: 'Message.',
+              locations: [{ line: 1, column: 1 }]
+            },
+            {
+              name: 'GraphQLError',
+              message: 'Cannot query field "wrong" on type "Query".',
+              locations: [{ line: 1, column: 3 }]
+            }
+          ]
+        },
+        'Koa app emitted error.'
+      )
+    })
+
+  const port = await startServer(t, app)
+  const response = await testFetch(port, {
+    body: JSON.stringify({
+      query: '{ wrong }'
+    })
+  })
+
+  t.equal(response.status, 400, 'Response status.')
+  t.matchSnapshot(await response.text(), 'Response body.')
+})
+
+t.test('`execute` middleware option `validationRules` override.', async t => {
+  const app = new Koa()
+    .use(errorHandler())
+    .use(bodyParser())
+    .use(
+      execute({
+        schema,
+        validationRules: [
+          context => ({
+            OperationDefinition(node) {
+              context.reportError(new GraphQLError('Message.', [node]))
+            }
+          })
+        ],
+        override: () => ({
+          validationRules: [
+            context => ({
+              OperationDefinition(node) {
+                context.reportError(
+                  new GraphQLError('Message overridden.', [node])
+                )
+              }
+            })
+          ]
+        })
+      })
+    )
+    .on('error', error => {
+      t.match(
+        error,
+        {
+          name: 'BadRequestError',
+          message: 'GraphQL query validation errors.',
+          status: 400,
+          statusCode: 400,
+          expose: true,
+          graphqlErrors: [
+            {
+              name: 'GraphQLError',
+              message: 'Message overridden.',
+              locations: [{ line: 1, column: 1 }]
+            },
+            {
+              name: 'GraphQLError',
+              message: 'Cannot query field "wrong" on type "Query".',
+              locations: [{ line: 1, column: 3 }]
+            }
+          ]
+        },
+        'Koa app emitted error.'
+      )
+    })
+
+  const port = await startServer(t, app)
+  const response = await testFetch(port, {
+    body: JSON.stringify({
+      query: '{ wrong }'
+    })
+  })
+
+  t.equal(response.status, 400, 'Response status.')
+  t.matchSnapshot(await response.text(), 'Response body.')
+})
 
 t.test('`execute` middleware option `rootValue`.', async t => {
   const app = new Koa()
