@@ -1,6 +1,6 @@
 # graphql-api-koa changelog
 
-## Next
+## 2.2.0
 
 ### Minor
 

@@ -1,6 +1,6 @@
 {
   "name": "graphql-api-koa",
-  "version": "2.1.0",
+  "version": "2.2.0",
   "description": "GraphQL API Koa middleware; the first Node.js GraphQL server to support native ESM.",
   "license": "MIT",
   "author": {
