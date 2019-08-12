@@ -34,7 +34,7 @@ export { execute } from './execute'
  * @name ExecuteOptionsOverride
  * @type {Function}
  * @param {object} context Koa context.
- * @returns {ExecuteOptions} [`execute`]{@link execute} middleware options.
+ * @returns {object} [`execute`]{@link execute} middleware options subset.
  * @example <caption>An [`execute`]{@link execute} middleware options override that populates the user in the GraphQL context from the Koa request context.</caption>
  * ```js
  * const executeOptionsOverride = ctx => ({

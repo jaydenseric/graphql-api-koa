@@ -17,7 +17,7 @@
 - Tweaked option related error messages.
 - Significantly simplified test assertions using `t.throws` and `t.match`.
 - Moved JSDoc type defs into `src/index.js`.
-- Renamed the `MiddlewareOptionsOverride` JSDoc type to `ExecuteOptionsOverride` and documented its return type is `ExecuteOptions`.
+- Renamed the `MiddlewareOptionsOverride` JSDoc type to `ExecuteOptionsOverride`.
 - Tweaked JSDoc descriptions.
 - Consistent JSDoc syntax style for array types.
 - Prettier `errorHandler` JSDoc example source code formatting.

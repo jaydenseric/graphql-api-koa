@@ -131,7 +131,7 @@ Overrides any [`ExecuteOptions`](#type-executeoptions) (except `override`) per r
 | :-------- | :----- | :----------- |
 | `context` | object | Koa context. |
 
-**Returns:** [ExecuteOptions](#type-executeoptions) — [`execute`](#function-execute) middleware options.
+**Returns:** object — [`execute`](#function-execute) middleware options subset.
 
 #### Examples
 
