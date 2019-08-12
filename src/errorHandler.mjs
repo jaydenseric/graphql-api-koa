@@ -2,8 +2,8 @@ import { formatError } from 'graphql'
 import { createHttpError } from './createHttpError'
 
 /**
- * Creates Koa middleware to handle errors. Use this as the first to catch all
- * errors for a [correctly formated GraphQL response](http://facebook.github.io/graphql/October2016/#sec-Errors).
+ * Creates Koa middleware to handle errors. Use this before other middleware to
+ * catch all errors for a [correctly formated GraphQL response](http://facebook.github.io/graphql/October2016/#sec-Errors).
  * When intentionally throwing an error, create it with `status` and `expose`
  * properties using [http-errors](https://npm.im/http-errors) or the response
  * will be a generic 500 error for security.

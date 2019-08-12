@@ -23,11 +23,11 @@ See the [execute middleware](#function-execute) examples to get started.
 - [function errorHandler](#function-errorhandler)
 - [function execute](#function-execute)
 - [type ExecuteOptions](#type-executeoptions)
-- [type MiddlewareOptionsOverride](#type-middlewareoptionsoverride)
+- [type ExecuteOptionsOverride](#type-executeoptionsoverride)
 
 ### function errorHandler
 
-Creates Koa middleware to handle errors. Use this as the first to catch all errors for a [correctly formated GraphQL response](http://facebook.github.io/graphql/October2016/#sec-Errors). When intentionally throwing an error, create it with `status` and `expose` properties using [http-errors](https://npm.im/http-errors) or the response will be a generic 500 error for security.
+Creates Koa middleware to handle errors. Use this before other middleware to catch all errors for a [correctly formated GraphQL response](http://facebook.github.io/graphql/October2016/#sec-Errors). When intentionally throwing an error, create it with `status` and `expose` properties using [http-errors](https://npm.im/http-errors) or the response will be a generic 500 error for security.
 
 **Returns:** Function — Koa middleware.
 
@@ -89,7 +89,7 @@ _A basic GraphQL API._
 
 ### type ExecuteOptions
 
-GraphQL [`execute`](#function-execute) Koa middleware options.
+[`execute`](#function-execute) Koa middleware options.
 
 **Type:** object
 
@@ -100,7 +100,7 @@ GraphQL [`execute`](#function-execute) Koa middleware options.
 | `rootValue` | \*? | Value passed to the first resolver. |
 | `contextValue` | \*? | Execution context (usually an object) passed to resolvers. |
 | `fieldResolver` | Function? | Custom default field resolver. |
-| `override` | [MiddlewareOptionsOverride](#type-middlewareoptionsoverride)? | Override any [`ExecuteOptions`](#type-executeoptions) (except `override`) per request. |
+| `override` | [ExecuteOptionsOverride](#type-executeoptionsoverride)? | Override any [`ExecuteOptions`](#type-executeoptions) (except `override`) per request. |
 
 #### Examples
 
@@ -121,9 +121,9 @@ _[`execute`](#function-execute) middleware options that sets the schema once but
 
 ---
 
-### type MiddlewareOptionsOverride
+### type ExecuteOptionsOverride
 
-Per-request Koa middleware options override.
+Overrides any [`ExecuteOptions`](#type-executeoptions) (except `override`) per request.
 
 **Type:** Function
 
@@ -131,7 +131,7 @@ Per-request Koa middleware options override.
 | :-------- | :----- | :----------- |
 | `context` | object | Koa context. |
 
-**Returns:** object — Options.
+**Returns:** [ExecuteOptions](#type-executeoptions) — [`execute`](#function-execute) middleware options.
 
 #### Examples
 

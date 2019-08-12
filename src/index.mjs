@@ -2,7 +2,7 @@ export { errorHandler } from './errorHandler'
 export { execute } from './execute'
 
 /**
- * GraphQL [`execute`]{@link execute} Koa middleware options.
+ * [`execute`]{@link execute} Koa middleware options.
  * @kind typedef
  * @name ExecuteOptions
  * @type {object}
@@ -11,7 +11,7 @@ export { execute } from './execute'
  * @prop {*} [rootValue] Value passed to the first resolver.
  * @prop {*} [contextValue] Execution context (usually an object) passed to resolvers.
  * @prop {Function} [fieldResolver] Custom default field resolver.
- * @prop {MiddlewareOptionsOverride} [override] Override any [`ExecuteOptions`]{@link ExecuteOptions} (except `override`) per request.
+ * @prop {ExecuteOptionsOverride} [override] Override any [`ExecuteOptions`]{@link ExecuteOptions} (except `override`) per request.
  * @example <caption>[`execute`]{@link execute} middleware options that sets the schema once but populates the user in the GraphQL context from the Koa context each request.</caption>
  * ```js
  * import schema from './schema'
@@ -28,12 +28,13 @@ export { execute } from './execute'
  */
 
 /**
- * Per-request Koa middleware options override.
+ * Overrides any [`ExecuteOptions`]{@link ExecuteOptions} (except `override`)
+ * per request.
  * @kind typedef
- * @name MiddlewareOptionsOverride
+ * @name ExecuteOptionsOverride
  * @type {Function}
  * @param {object} context Koa context.
- * @returns {object} Options.
+ * @returns {ExecuteOptions} [`execute`]{@link execute} middleware options.
  * @example <caption>An [`execute`]{@link execute} middleware options override that populates the user in the GraphQL context from the Koa request context.</caption>
  * ```js
  * const executeOptionsOverride = ctx => ({
