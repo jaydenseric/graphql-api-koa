@@ -19,6 +19,7 @@
 - Stop using [`husky`](https://npm.im/husky) and [`lint-staged`](https://npm.im/lint-staged).
 - Removed `package-lock.json` from `.gitignore` and `.prettierignore` as it’s disabled in `.npmrc` anyway.
 - Use strict mode for scripts.
+- Use GitHub Actions instead of Travis for CI.
 
 ## 2.2.0
 
