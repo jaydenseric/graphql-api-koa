@@ -8,6 +8,10 @@
   - Added `.github/funding.yml` to display a sponsor button in GitHub.
   - Added a `package.json` `funding` field to enable npm CLI funding features.
 
+## Patch
+
+- Stop using [`husky`](https://npm.im/husky) and [`lint-staged`](https://npm.im/lint-staged).
+
 ## 2.2.0
 
 ### Minor
