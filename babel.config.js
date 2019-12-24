@@ -4,9 +4,36 @@ const {
   engines: { node }
 } = require('./package.json')
 
+/**
+ * A Babel plugin that adds a comment to ignore code coverage for the next line
+ * on the line before every Babel `_interopRequireDefault` function return
+ * statement.
+ * @kind function
+ * @name babelPluginCoverageIgnoreBabelInterop
+ * @returns {Function} The Babel plugin.
+ * @ignore
+ */
+const babelPluginCoverageIgnoreBabelInterop = () => ({
+  visitor: {
+    ReturnStatement(path) {
+      if (
+        path.scope.block &&
+        path.scope.block.id &&
+        path.scope.block.id.name === '_interopRequireDefault'
+      )
+        path.addComment('leading', ' coverage ignore next line', true)
+    }
+  }
+})
+
 module.exports = {
-  comments: false,
-  plugins: ['transform-require-extensions'],
+  shouldPrintComment: comment =>
+    // Preserve coverage ignore comments.
+    /@license|@preserve|coverage ignore/.test(comment),
+  plugins: [
+    'transform-require-extensions',
+    babelPluginCoverageIgnoreBabelInterop
+  ],
   presets: [
     [
       '@babel/env',

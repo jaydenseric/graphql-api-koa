@@ -1,15 +1,15 @@
 import fetch from 'node-fetch'
 
 /**
- * Makes a fetch request to the test API.
+ * Fetches JSON at a given localhost port.
  * @kind function
- * @name testFetch
- * @param {number} port API URL port.
+ * @name fetchJsonAtPort
+ * @param {number} port Localhost port.
  * @param {object} options Fetch options.
  * @returns {Promise<Response>} Fetch response.
  * @ignore
  */
-export const testFetch = (port, options = {}) =>
+export const fetchJsonAtPort = (port, options = {}) =>
   fetch(`http://localhost:${port}`, {
     method: 'POST',
     headers: {
