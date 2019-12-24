@@ -25,6 +25,7 @@
     "!test-helpers"
   ],
   "main": "lib",
+  "module": "lib/index.mjs",
   "engines": {
     "node": ">=10"
   },
