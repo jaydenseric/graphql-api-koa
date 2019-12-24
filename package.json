@@ -11,6 +11,7 @@
   "repository": "github:jaydenseric/graphql-api-koa",
   "homepage": "https://github.com/jaydenseric/graphql-api-koa#readme",
   "bugs": "https://github.com/jaydenseric/graphql-api-koa/issues",
+  "funding": "https://github.com/sponsors/jaydenseric",
   "keywords": [
     "graphql",
     "api",
