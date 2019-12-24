@@ -1,3 +1,5 @@
+'use strict'
+
 const {
   engines: { node }
 } = require('./package.json')
