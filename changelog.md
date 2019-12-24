@@ -5,6 +5,7 @@
 ## Major
 
 - Updated Node.js support from v8.5+ to v10+.
+- Updated dev dependencies, some of which require newer Node.js versions that v8.5.
 
 ### Minor
 
@@ -14,6 +15,7 @@
 
 ## Patch
 
+- Removed the now redundant [`eslint-plugin-import-order-alphabetical`](https://npm.im/eslint-plugin-import-order-alphabetical) dev dependency.
 - Stop using [`husky`](https://npm.im/husky) and [`lint-staged`](https://npm.im/lint-staged).
 - Removed `package-lock.json` from `.gitignore` and `.prettierignore` as it’s disabled in `.npmrc` anyway.
 
