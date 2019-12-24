@@ -8,9 +8,10 @@ import {
 import Koa from 'koa'
 import bodyParser from 'koa-bodyparser'
 import t from 'tap'
-import { startServer } from './test-helpers/startServer'
-import { testFetch } from './test-helpers/testFetch'
-import { errorHandler, execute } from '.'
+import { errorHandler } from './errorHandler.mjs'
+import { execute } from './execute.mjs'
+import { startServer } from './test-helpers/startServer.mjs'
+import { testFetch } from './test-helpers/testFetch.mjs'
 
 const schema = new GraphQLSchema({
   query: new GraphQLObjectType({

@@ -1,5 +1,5 @@
 import { GraphQLSchema, validateSchema } from 'graphql'
-import { createHttpError } from './createHttpError'
+import { createHttpError } from './createHttpError.mjs'
 
 /**
  * Validates a GraphQL schema.

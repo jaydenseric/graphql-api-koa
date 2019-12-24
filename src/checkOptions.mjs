@@ -1,5 +1,5 @@
-import { createHttpError } from './createHttpError'
-import { isEnumerableObject } from './isEnumerableObject'
+import { createHttpError } from './createHttpError.mjs'
+import { isEnumerableObject } from './isEnumerableObject.mjs'
 
 /**
  * Validates options are an enumerable object that conforms to a whitelist of

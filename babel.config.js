@@ -6,6 +6,7 @@ const {
 
 module.exports = {
   comments: false,
+  plugins: ['transform-require-extensions'],
   presets: [
     [
       '@babel/env',

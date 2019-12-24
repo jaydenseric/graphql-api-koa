@@ -5,11 +5,11 @@ import {
   specifiedRules,
   validate
 } from 'graphql'
-import { checkGraphQLSchema } from './checkGraphQLSchema'
-import { checkGraphQLValidationRules } from './checkGraphQLValidationRules'
-import { checkOptions } from './checkOptions'
-import { createHttpError } from './createHttpError'
-import { isEnumerableObject } from './isEnumerableObject'
+import { checkGraphQLSchema } from './checkGraphQLSchema.mjs'
+import { checkGraphQLValidationRules } from './checkGraphQLValidationRules.mjs'
+import { checkOptions } from './checkOptions.mjs'
+import { createHttpError } from './createHttpError.mjs'
+import { isEnumerableObject } from './isEnumerableObject.mjs'
 
 /**
  * List of allowed [`ExecuteOptions`]{@link ExecuteOptions} keys for validation
@@ -41,7 +41,7 @@ const ALLOWED_EXECUTE_OPTIONS = [
  * import Koa from 'koa'
  * import bodyParser from 'koa-bodyparser'
  * import { errorHandler, execute } from 'graphql-api-koa'
- * import schema from './schema'
+ * import schema from './schema.mjs'
  *
  * const app = new Koa()
  *   .use(errorHandler())

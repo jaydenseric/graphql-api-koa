@@ -1,6 +1,6 @@
 import { specifiedRules } from 'graphql'
 import t from 'tap'
-import { checkGraphQLValidationRules } from './checkGraphQLValidationRules'
+import { checkGraphQLValidationRules } from './checkGraphQLValidationRules.mjs'
 
 t.test(
   '`checkGraphQLValidationRules` with valid GraphQL validation rules.',

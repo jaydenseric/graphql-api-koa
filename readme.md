@@ -40,7 +40,7 @@ _How to throw an error determining the response._
 > import bodyParser from 'koa-bodyparser'
 > import { errorHandler, execute } from 'graphql-api-koa'
 > import createError from 'http-errors'
-> import schema from './schema'
+> import schema from './schema.mjs'
 >
 > const app = new Koa()
 >   .use(errorHandler())
@@ -77,7 +77,7 @@ _A basic GraphQL API._
 > import Koa from 'koa'
 > import bodyParser from 'koa-bodyparser'
 > import { errorHandler, execute } from 'graphql-api-koa'
-> import schema from './schema'
+> import schema from './schema.mjs'
 >
 > const app = new Koa()
 >   .use(errorHandler())
@@ -107,7 +107,7 @@ _A basic GraphQL API._
 _[`execute`](#function-execute) middleware options that sets the schema once but populates the user in the GraphQL context from the Koa context each request._
 
 > ```js
-> import schema from './schema'
+> import schema from './schema.mjs'
 >
 > const executeOptions = {
 >   schema,

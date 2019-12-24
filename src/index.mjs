@@ -1,5 +1,5 @@
-export { errorHandler } from './errorHandler'
-export { execute } from './execute'
+export { errorHandler } from './errorHandler.mjs'
+export { execute } from './execute.mjs'
 
 /**
  * [`execute`]{@link execute} Koa middleware options.
@@ -14,7 +14,7 @@ export { execute } from './execute'
  * @prop {ExecuteOptionsOverride} [override] Override any [`ExecuteOptions`]{@link ExecuteOptions} (except `override`) per request.
  * @example <caption>[`execute`]{@link execute} middleware options that sets the schema once but populates the user in the GraphQL context from the Koa context each request.</caption>
  * ```js
- * import schema from './schema'
+ * import schema from './schema.mjs'
  *
  * const executeOptions = {
  *   schema,

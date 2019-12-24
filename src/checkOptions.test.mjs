@@ -1,5 +1,5 @@
 import t from 'tap'
-import { checkOptions } from './checkOptions'
+import { checkOptions } from './checkOptions.mjs'
 
 t.test('`checkOptions` with valid options.', t => {
   t.doesNotThrow(

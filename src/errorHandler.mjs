@@ -1,5 +1,5 @@
 import { formatError } from 'graphql'
-import { createHttpError } from './createHttpError'
+import { createHttpError } from './createHttpError.mjs'
 
 /**
  * Creates Koa middleware to handle errors. Use this before other middleware to
@@ -16,7 +16,7 @@ import { createHttpError } from './createHttpError'
  * import bodyParser from 'koa-bodyparser'
  * import { errorHandler, execute } from 'graphql-api-koa'
  * import createError from 'http-errors'
- * import schema from './schema'
+ * import schema from './schema.mjs'
  *
  * const app = new Koa()
  *   .use(errorHandler())

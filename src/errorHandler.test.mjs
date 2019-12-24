@@ -1,9 +1,9 @@
 import Koa from 'koa'
 import t from 'tap'
-import { createHttpError } from './createHttpError'
-import { errorHandler } from './errorHandler'
-import { startServer } from './test-helpers/startServer'
-import { testFetch } from './test-helpers/testFetch'
+import { createHttpError } from './createHttpError.mjs'
+import { errorHandler } from './errorHandler.mjs'
+import { startServer } from './test-helpers/startServer.mjs'
+import { testFetch } from './test-helpers/testFetch.mjs'
 
 t.test('`errorHandler` middleware handles a standard error.', async t => {
   t.plan(3)

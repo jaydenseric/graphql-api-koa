@@ -1,6 +1,6 @@
 import { GraphQLObjectType, GraphQLSchema, GraphQLString } from 'graphql'
 import t from 'tap'
-import { checkGraphQLSchema } from './checkGraphQLSchema'
+import { checkGraphQLSchema } from './checkGraphQLSchema.mjs'
 
 t.test('`checkGraphQLSchema` with a valid GraphQL schema.', t => {
   t.doesNotThrow(

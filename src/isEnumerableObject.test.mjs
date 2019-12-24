@@ -1,5 +1,5 @@
 import t from 'tap'
-import { isEnumerableObject } from './isEnumerableObject'
+import { isEnumerableObject } from './isEnumerableObject.mjs'
 
 t.test('`isEnumerableObject` with various values.', t => {
   t.equal(isEnumerableObject({}), true, 'Plain object.')

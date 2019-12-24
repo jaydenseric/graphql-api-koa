@@ -1,4 +1,4 @@
-import { createHttpError } from './createHttpError'
+import { createHttpError } from './createHttpError.mjs'
 
 /**
  * Validates GraphQL validation rules.
