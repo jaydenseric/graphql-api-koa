@@ -9,6 +9,7 @@
 
 ### Minor
 
+- Added a package `module` field.
 - Setup [GitHub Sponsors funding](https://github.com/sponsors/jaydenseric):
   - Added `.github/funding.yml` to display a sponsor button in GitHub.
   - Added a `package.json` `funding` field to enable npm CLI funding features.
@@ -19,7 +20,6 @@
 - Stop using [`husky`](https://npm.im/husky) and [`lint-staged`](https://npm.im/lint-staged).
 - Replaced the [`tap`](https://npm.im/tap) dev dependency with [`test-director`](https://npm.im/test-director) and [`coverage-node`](https://npm.im/coverage-node), and refactored tests accordingly.
 - Added a new [`babel-plugin-transform-require-extensions`](https://npm.im/babel-plugin-transform-require-extensions) dev dependency and ensured ESM import specifiers in both source and published `.mjs` files contain file names with extensions, which [are mandatory in the final Node.js ESM implementation](https://nodejs.org/api/esm.html#esm_mandatory_file_extensions). Published CJS `.js` files now also have file extensions in `require` paths.
-- Added a package `module` field.
 - Removed `package-lock.json` from `.gitignore` and `.prettierignore` as it’s disabled in `.npmrc` anyway.
 - Use strict mode for scripts.
 - Use GitHub Actions instead of Travis for CI.
