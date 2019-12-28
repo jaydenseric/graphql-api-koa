@@ -12,7 +12,6 @@ module.exports = tests => {
     throws(() => checkOptions(null, ['a'], 'Test'), {
       message: 'Test options must be an enumerable object.',
       status: 500,
-      statusCode: 500,
       expose: false
     })
   })
@@ -21,7 +20,6 @@ module.exports = tests => {
     throws(() => checkOptions({ a: true, b: true, c: true }, ['b'], 'Test'), {
       message: 'Test options invalid: `a`, `c`.',
       status: 500,
-      statusCode: 500,
       expose: false
     })
   })

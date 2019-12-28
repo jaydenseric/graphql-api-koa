@@ -7,6 +7,10 @@
 - ESM is no longer published, due to CJS/ESM compatibility issues across recent Node.js versions.
 - The file structure and non-index file exports have changed. This should only affect projects using undocumented deep imports.
 
+### Patch
+
+- Stop testing the `statusCode` property of HTTP errors; they are inconsequential as Koa uses the `status` property.
+
 ## 3.0.0
 
 ### Major

@@ -17,7 +17,6 @@ module.exports = tests => {
       name: 'InternalServerError',
       message: 'Test GraphQL validation rules must be an array.',
       status: 500,
-      statusCode: 500,
       expose: false
     })
   })
@@ -27,7 +26,6 @@ module.exports = tests => {
       name: 'InternalServerError',
       message: 'Test GraphQL validation rules must be functions.',
       status: 500,
-      statusCode: 500,
       expose: false
     })
   })

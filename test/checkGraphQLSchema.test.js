@@ -33,7 +33,6 @@ module.exports = tests => {
       name: 'InternalServerError',
       message: 'Test GraphQL schema must be a `GraphQLSchema` instance.',
       status: 500,
-      statusCode: 500,
       expose: false
     })
   })
@@ -45,7 +44,6 @@ module.exports = tests => {
         name: 'InternalServerError',
         message: 'Test has GraphQL schema validation errors.',
         status: 500,
-        statusCode: 500,
         expose: false,
         graphqlErrors: [new GraphQLError('Query root type must be provided.')]
       })

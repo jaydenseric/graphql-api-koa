@@ -664,7 +664,6 @@ module.exports = tests => {
       message:
         'GraphQL execute middleware `schema` option has GraphQL schema validation errors.',
       status: 500,
-      statusCode: 500,
       expose: false,
       graphqlErrors: [new GraphQLError('Query root type must be provided.')]
     })
