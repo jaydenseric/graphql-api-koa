@@ -25,6 +25,7 @@
 - Removed `package-lock.json` from `.gitignore` and `.prettierignore` as it’s disabled in `.npmrc` anyway.
 - Use strict mode for scripts.
 - Use GitHub Actions instead of Travis for CI.
+- Use [jsDelivr](https://jsdelivr.com) for the readme logo instead of [RawGit](https://rawgit.com) as they are shutting down.
 
 ## 2.2.0
 

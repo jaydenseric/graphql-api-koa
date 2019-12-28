@@ -1,4 +1,4 @@
-![graphql-api-koa logo](https://cdn.rawgit.com/jaydenseric/graphql-api-koa/d65828b/graphql-api-koa-logo.svg)
+![graphql-api-koa logo](https://cdn.jsdelivr.net/gh/jaydenseric/graphql-api-koa@1.1.1/graphql-api-koa-logo.svg)
 
 # graphql-api-koa
 
