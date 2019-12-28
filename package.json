@@ -1,7 +1,7 @@
 {
   "name": "graphql-api-koa",
   "version": "2.2.0",
-  "description": "GraphQL API Koa middleware; the first Node.js GraphQL server to support native ESM.",
+  "description": "Koa middleware for GraphQL execution and error handling, written from scratch for Koa.",
   "license": "MIT",
   "author": {
     "name": "Jayden Seric",
@@ -15,9 +15,7 @@
   "keywords": [
     "graphql",
     "api",
-    "koa",
-    "esm",
-    "mjs"
+    "koa"
   ],
   "files": [
     "lib",

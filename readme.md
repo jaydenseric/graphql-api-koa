@@ -4,7 +4,7 @@
 
 [![npm version](https://badgen.net/npm/v/graphql-api-koa)](https://npm.im/graphql-api-koa) [![CI status](https://github.com/jaydenseric/graphql-api-koa/workflows/CI/badge.svg)](https://github.com/jaydenseric/graphql-api-koa/actions)
 
-GraphQL API Koa middleware; the first Node.js GraphQL server to support [native ESM](https://nodejs.org/api/esm.html) via `.mjs`.
+Koa middleware for GraphQL execution and error handling, written from scratch for Koa.
 
 ## Setup
 
