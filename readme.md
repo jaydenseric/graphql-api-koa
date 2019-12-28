@@ -4,7 +4,7 @@
 
 [![npm version](https://badgen.net/npm/v/graphql-api-koa)](https://npm.im/graphql-api-koa) [![CI status](https://github.com/jaydenseric/graphql-api-koa/workflows/CI/badge.svg)](https://github.com/jaydenseric/graphql-api-koa/actions)
 
-Koa middleware for GraphQL execution and error handling, written from scratch for Koa.
+[GraphQL](https://graphql.org) execution and error handling middleware written from scratch for [Koa](https://koajs.com).
 
 ## Setup
 
