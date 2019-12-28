@@ -2,7 +2,7 @@
 
 ## Next
 
-## Major
+### Major
 
 - Updated Node.js support from v8.5+ to v10+.
 - Updated dev dependencies, some of which require newer Node.js versions that v8.5.
@@ -14,7 +14,7 @@
   - Added `.github/funding.yml` to display a sponsor button in GitHub.
   - Added a `package.json` `funding` field to enable npm CLI funding features.
 
-## Patch
+### Patch
 
 - Removed the now redundant [`eslint-plugin-import-order-alphabetical`](https://npm.im/eslint-plugin-import-order-alphabetical) dev dependency.
 - Stop using [`husky`](https://npm.im/husky) and [`lint-staged`](https://npm.im/lint-staged).
