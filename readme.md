@@ -36,11 +36,11 @@ Creates Koa middleware to handle errors. Use this before other middleware to cat
 _How to throw an error determining the response._
 
 > ```js
-> import Koa from 'koa'
-> import bodyParser from 'koa-bodyparser'
-> import { errorHandler, execute } from 'graphql-api-koa'
-> import createError from 'http-errors'
-> import schema from './schema.mjs'
+> const Koa = require('koa')
+> const bodyParser = require('koa-bodyparser')
+> const { errorHandler, execute } = require('graphql-api-koa')
+> const createError = require('http-errors')
+> const schema = require('./schema')
 >
 > const app = new Koa()
 >   .use(errorHandler())
@@ -74,10 +74,10 @@ Creates Koa middleware to execute GraphQL. Use after the [`errorHandler`](#funct
 _A basic GraphQL API._
 
 > ```js
-> import Koa from 'koa'
-> import bodyParser from 'koa-bodyparser'
-> import { errorHandler, execute } from 'graphql-api-koa'
-> import schema from './schema.mjs'
+> const Koa = require('koa')
+> const bodyParser = require('koa-bodyparser')
+> const { errorHandler, execute } = require('graphql-api-koa')
+> const schema = require('./schema')
 >
 > const app = new Koa()
 >   .use(errorHandler())
@@ -107,7 +107,7 @@ _A basic GraphQL API._
 _[`execute`](#function-execute) middleware options that sets the schema once but populates the user in the GraphQL context from the Koa context each request._
 
 > ```js
-> import schema from './schema.mjs'
+> const schema = require('./schema')
 >
 > const executeOptions = {
 >   schema,

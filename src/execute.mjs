@@ -38,10 +38,10 @@ const ALLOWED_EXECUTE_OPTIONS = [
  * @returns {Function} Koa middleware.
  * @example <caption>A basic GraphQL API.</caption>
  * ```js
- * import Koa from 'koa'
- * import bodyParser from 'koa-bodyparser'
- * import { errorHandler, execute } from 'graphql-api-koa'
- * import schema from './schema.mjs'
+ * const Koa = require('koa')
+ * const bodyParser = require('koa-bodyparser')
+ * const { errorHandler, execute } = require('graphql-api-koa')
+ * const schema = require('./schema')
  *
  * const app = new Koa()
  *   .use(errorHandler())

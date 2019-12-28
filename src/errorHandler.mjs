@@ -12,11 +12,11 @@ import { createHttpError } from './createHttpError.mjs'
  * @returns {Function} Koa middleware.
  * @example <caption>How to throw an error determining the response.</caption>
  * ```js
- * import Koa from 'koa'
- * import bodyParser from 'koa-bodyparser'
- * import { errorHandler, execute } from 'graphql-api-koa'
- * import createError from 'http-errors'
- * import schema from './schema.mjs'
+ * const Koa = require('koa')
+ * const bodyParser = require('koa-bodyparser')
+ * const { errorHandler, execute } = require('graphql-api-koa')
+ * const createError = require('http-errors')
+ * const schema = require('./schema')
  *
  * const app = new Koa()
  *   .use(errorHandler())
