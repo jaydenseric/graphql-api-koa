@@ -1,6 +1,6 @@
 {
   "name": "graphql-api-koa",
-  "version": "2.2.0",
+  "version": "3.0.0",
   "description": "GraphQL execution and error handling middleware written from scratch for Koa.",
   "license": "MIT",
   "author": {
