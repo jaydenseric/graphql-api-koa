@@ -1,11 +1,13 @@
-import assert from 'assert'
-import Koa from 'koa'
-import { createHttpError } from '../createHttpError.mjs'
-import { errorHandler } from '../errorHandler.mjs'
-import { fetchJsonAtPort } from './fetchJsonAtPort.mjs'
-import { startServer } from './startServer.mjs'
+'use strict'
 
-export default tests => {
+const { deepStrictEqual, ok, strictEqual } = require('assert')
+const Koa = require('koa')
+const createHttpError = require('../lib/createHttpError')
+const errorHandler = require('../lib/errorHandler')
+const fetchJsonAtPort = require('./fetchJsonAtPort')
+const startServer = require('./startServer')
+
+module.exports = tests => {
   tests.add('`errorHandler` middleware handles a standard error.', async () => {
     let koaError
 
@@ -23,13 +25,13 @@ export default tests => {
     try {
       const response = await fetchJsonAtPort(port)
 
-      assert.ok(koaError instanceof Error)
-      assert.strictEqual(koaError.name, 'Error')
-      assert.strictEqual(koaError.message, 'Message.')
-      assert.strictEqual(koaError.status, 500)
-      assert.strictEqual(koaError.expose, false)
-      assert.strictEqual(response.status, 500)
-      assert.deepStrictEqual(await response.json(), {
+      ok(koaError instanceof Error)
+      strictEqual(koaError.name, 'Error')
+      strictEqual(koaError.message, 'Message.')
+      strictEqual(koaError.status, 500)
+      strictEqual(koaError.expose, false)
+      strictEqual(response.status, 500)
+      deepStrictEqual(await response.json(), {
         errors: [{ message: 'Internal Server Error' }]
       })
     } finally {
@@ -54,13 +56,13 @@ export default tests => {
     try {
       const response = await fetchJsonAtPort(port)
 
-      assert.ok(koaError instanceof Error)
-      assert.strictEqual(koaError.name, 'ForbiddenError')
-      assert.strictEqual(koaError.message, 'Message.')
-      assert.strictEqual(koaError.status, 403)
-      assert.strictEqual(koaError.expose, true)
-      assert.strictEqual(response.status, 403)
-      assert.deepStrictEqual(await response.json(), {
+      ok(koaError instanceof Error)
+      strictEqual(koaError.name, 'ForbiddenError')
+      strictEqual(koaError.message, 'Message.')
+      strictEqual(koaError.status, 403)
+      strictEqual(koaError.expose, true)
+      strictEqual(response.status, 403)
+      deepStrictEqual(await response.json(), {
         errors: [{ message: 'Message.' }]
       })
     } finally {
@@ -88,13 +90,13 @@ export default tests => {
       try {
         const response = await fetchJsonAtPort(port)
 
-        assert.ok(koaError instanceof Error)
-        assert.strictEqual(koaError.name, 'Error')
-        assert.strictEqual(koaError.message, 'Message.')
-        assert.strictEqual(koaError.status, 500)
-        assert.strictEqual(koaError.expose, false)
-        assert.strictEqual(response.status, 500)
-        assert.deepStrictEqual(await response.json(), {
+        ok(koaError instanceof Error)
+        strictEqual(koaError.name, 'Error')
+        strictEqual(koaError.message, 'Message.')
+        strictEqual(koaError.status, 500)
+        strictEqual(koaError.expose, false)
+        strictEqual(response.status, 500)
+        deepStrictEqual(await response.json(), {
           data: {},
           errors: [{ message: 'Internal Server Error' }]
         })

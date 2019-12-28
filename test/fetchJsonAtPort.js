@@ -1,4 +1,6 @@
-import fetch from 'node-fetch'
+'use strict'
+
+const fetch = require('node-fetch')
 
 /**
  * Fetches JSON at a given localhost port.
@@ -9,8 +11,8 @@ import fetch from 'node-fetch'
  * @returns {Promise<Response>} Fetch response.
  * @ignore
  */
-export const fetchJsonAtPort = (port, options = {}) =>
-  fetch(`http://localhost:${port}`, {
+module.exports = function fetchJsonAtPort(port, options = {}) {
+  return fetch(`http://localhost:${port}`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -18,3 +20,4 @@ export const fetchJsonAtPort = (port, options = {}) =>
     },
     ...options
   })
+}

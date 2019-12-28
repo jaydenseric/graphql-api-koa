@@ -1,17 +1,19 @@
-import assert from 'assert'
-import {
+'use strict'
+
+const { deepStrictEqual, ok, strictEqual, throws } = require('assert')
+const {
   GraphQLError,
   GraphQLNonNull,
   GraphQLObjectType,
   GraphQLSchema,
   GraphQLString
-} from 'graphql'
-import Koa from 'koa'
-import bodyParser from 'koa-bodyparser'
-import { errorHandler } from '../errorHandler.mjs'
-import { execute } from '../execute.mjs'
-import { fetchJsonAtPort } from './fetchJsonAtPort.mjs'
-import { startServer } from './startServer.mjs'
+} = require('graphql')
+const Koa = require('koa')
+const bodyParser = require('koa-bodyparser')
+const errorHandler = require('../lib/errorHandler')
+const execute = require('../lib/execute')
+const fetchJsonAtPort = require('./fetchJsonAtPort')
+const startServer = require('./startServer')
 
 const schema = new GraphQLSchema({
   query: new GraphQLObjectType({
@@ -24,9 +26,9 @@ const schema = new GraphQLSchema({
   })
 })
 
-export default tests => {
+module.exports = tests => {
   tests.add('`execute` middleware options missing.', () => {
-    assert.throws(() => execute(), {
+    throws(() => execute(), {
       name: 'InternalServerError',
       message: 'GraphQL execute middleware options missing.',
       status: 500,
@@ -35,7 +37,7 @@ export default tests => {
   })
 
   tests.add('`execute` middleware options not an object.', () => {
-    assert.throws(() => execute(true), {
+    throws(() => execute(true), {
       name: 'InternalServerError',
       message:
         'GraphQL execute middleware options must be an enumerable object.',
@@ -45,7 +47,7 @@ export default tests => {
   })
 
   tests.add('`execute` middleware options invalid.', () => {
-    assert.throws(() => execute({ schema, invalid1: true, invalid2: true }), {
+    throws(() => execute({ schema, invalid1: true, invalid2: true }), {
       name: 'InternalServerError',
       message:
         'GraphQL execute middleware options invalid: `invalid1`, `invalid2`.',
@@ -55,7 +57,7 @@ export default tests => {
   })
 
   tests.add('`execute` middleware option `override` not a function.', () => {
-    assert.throws(() => execute({ schema, override: true }), {
+    throws(() => execute({ schema, override: true }), {
       name: 'InternalServerError',
       message:
         'GraphQL execute middleware `override` option must be a function.',
@@ -89,16 +91,16 @@ export default tests => {
           body: JSON.stringify({ query: '{ test }' })
         })
 
-        assert.ok(koaError instanceof Error)
-        assert.strictEqual(koaError.name, 'InternalServerError')
-        assert.strictEqual(
+        ok(koaError instanceof Error)
+        strictEqual(koaError.name, 'InternalServerError')
+        strictEqual(
           koaError.message,
           'GraphQL execute middleware `override` option resolved options must be an enumerable object.'
         )
-        assert.strictEqual(koaError.status, 500)
-        assert.strictEqual(koaError.expose, false)
-        assert.strictEqual(response.status, 500)
-        assert.deepStrictEqual(await response.json(), {
+        strictEqual(koaError.status, 500)
+        strictEqual(koaError.expose, false)
+        strictEqual(response.status, 500)
+        deepStrictEqual(await response.json(), {
           errors: [{ message: 'Internal Server Error' }]
         })
       } finally {
@@ -135,16 +137,16 @@ export default tests => {
           body: JSON.stringify({ query: '{ test }' })
         })
 
-        assert.ok(koaError instanceof Error)
-        assert.strictEqual(koaError.name, 'InternalServerError')
-        assert.strictEqual(
+        ok(koaError instanceof Error)
+        strictEqual(koaError.name, 'InternalServerError')
+        strictEqual(
           koaError.message,
           'GraphQL execute middleware `override` option resolved options invalid: `invalid`, `override`.'
         )
-        assert.strictEqual(koaError.status, 500)
-        assert.strictEqual(koaError.expose, false)
-        assert.strictEqual(response.status, 500)
-        assert.deepStrictEqual(await response.json(), {
+        strictEqual(koaError.status, 500)
+        strictEqual(koaError.expose, false)
+        strictEqual(response.status, 500)
+        deepStrictEqual(await response.json(), {
           errors: [{ message: 'Internal Server Error' }]
         })
       } finally {
@@ -191,27 +193,21 @@ export default tests => {
         body: JSON.stringify({ query: '{ wrong }' })
       })
 
-      assert.ok(koaError instanceof Error)
-      assert.strictEqual(koaError.name, 'BadRequestError')
-      assert.strictEqual(koaError.message, 'GraphQL query validation errors.')
-      assert.strictEqual(koaError.status, 400)
-      assert.strictEqual(koaError.expose, true)
-      assert.strictEqual(Array.isArray(koaError.graphqlErrors), true)
-      assert.strictEqual(koaError.graphqlErrors.length, 2)
-      assert.strictEqual(koaError.graphqlErrors[0].name, 'GraphQLError')
-      assert.strictEqual(koaError.graphqlErrors[0].message, error1.message)
-      assert.deepStrictEqual(
-        koaError.graphqlErrors[0].locations,
-        error1.locations
-      )
-      assert.strictEqual(koaError.graphqlErrors[1].name, 'GraphQLError')
-      assert.strictEqual(koaError.graphqlErrors[1].message, error2.message)
-      assert.deepStrictEqual(
-        koaError.graphqlErrors[1].locations,
-        error2.locations
-      )
-      assert.strictEqual(response.status, 400)
-      assert.deepStrictEqual(await response.json(), {
+      ok(koaError instanceof Error)
+      strictEqual(koaError.name, 'BadRequestError')
+      strictEqual(koaError.message, 'GraphQL query validation errors.')
+      strictEqual(koaError.status, 400)
+      strictEqual(koaError.expose, true)
+      strictEqual(Array.isArray(koaError.graphqlErrors), true)
+      strictEqual(koaError.graphqlErrors.length, 2)
+      strictEqual(koaError.graphqlErrors[0].name, 'GraphQLError')
+      strictEqual(koaError.graphqlErrors[0].message, error1.message)
+      deepStrictEqual(koaError.graphqlErrors[0].locations, error1.locations)
+      strictEqual(koaError.graphqlErrors[1].name, 'GraphQLError')
+      strictEqual(koaError.graphqlErrors[1].message, error2.message)
+      deepStrictEqual(koaError.graphqlErrors[1].locations, error2.locations)
+      strictEqual(response.status, 400)
+      deepStrictEqual(await response.json(), {
         errors: [error1, error2]
       })
     } finally {
@@ -270,27 +266,21 @@ export default tests => {
           body: JSON.stringify({ query: '{ wrong }' })
         })
 
-        assert.ok(koaError instanceof Error)
-        assert.strictEqual(koaError.name, 'BadRequestError')
-        assert.strictEqual(koaError.message, 'GraphQL query validation errors.')
-        assert.strictEqual(koaError.status, 400)
-        assert.strictEqual(koaError.expose, true)
-        assert.strictEqual(Array.isArray(koaError.graphqlErrors), true)
-        assert.strictEqual(koaError.graphqlErrors.length, 2)
-        assert.strictEqual(koaError.graphqlErrors[0].name, 'GraphQLError')
-        assert.strictEqual(koaError.graphqlErrors[0].message, error1.message)
-        assert.deepStrictEqual(
-          koaError.graphqlErrors[0].locations,
-          error1.locations
-        )
-        assert.strictEqual(koaError.graphqlErrors[1].name, 'GraphQLError')
-        assert.strictEqual(koaError.graphqlErrors[1].message, error2.message)
-        assert.deepStrictEqual(
-          koaError.graphqlErrors[1].locations,
-          error2.locations
-        )
-        assert.strictEqual(response.status, 400)
-        assert.deepStrictEqual(await response.json(), {
+        ok(koaError instanceof Error)
+        strictEqual(koaError.name, 'BadRequestError')
+        strictEqual(koaError.message, 'GraphQL query validation errors.')
+        strictEqual(koaError.status, 400)
+        strictEqual(koaError.expose, true)
+        strictEqual(Array.isArray(koaError.graphqlErrors), true)
+        strictEqual(koaError.graphqlErrors.length, 2)
+        strictEqual(koaError.graphqlErrors[0].name, 'GraphQLError')
+        strictEqual(koaError.graphqlErrors[0].message, error1.message)
+        deepStrictEqual(koaError.graphqlErrors[0].locations, error1.locations)
+        strictEqual(koaError.graphqlErrors[1].name, 'GraphQLError')
+        strictEqual(koaError.graphqlErrors[1].message, error2.message)
+        deepStrictEqual(koaError.graphqlErrors[1].locations, error2.locations)
+        strictEqual(response.status, 400)
+        deepStrictEqual(await response.json(), {
           errors: [error1, error2]
         })
       } finally {
@@ -327,8 +317,8 @@ export default tests => {
         body: JSON.stringify({ query: '{ test }' })
       })
 
-      assert.strictEqual(response.status, 200)
-      assert.deepStrictEqual(await response.json(), {
+      strictEqual(response.status, 200)
+      deepStrictEqual(await response.json(), {
         data: { test: 'rootValue' }
       })
     } finally {
@@ -371,8 +361,8 @@ export default tests => {
           body: JSON.stringify({ query: '{ test }' })
         })
 
-        assert.strictEqual(response.status, 200)
-        assert.deepStrictEqual(await response.json(), {
+        strictEqual(response.status, 200)
+        deepStrictEqual(await response.json(), {
           data: { test: 'rootValueOverridden' }
         })
       } finally {
@@ -409,8 +399,8 @@ export default tests => {
         body: JSON.stringify({ query: '{ test }' })
       })
 
-      assert.strictEqual(response.status, 200)
-      assert.deepStrictEqual(await response.json(), {
+      strictEqual(response.status, 200)
+      deepStrictEqual(await response.json(), {
         data: { test: 'contextValue' }
       })
     } finally {
@@ -455,8 +445,8 @@ export default tests => {
           body: JSON.stringify({ query: '{ test }' })
         })
 
-        assert.strictEqual(response.status, 200)
-        assert.deepStrictEqual(await response.json(), {
+        strictEqual(response.status, 200)
+        deepStrictEqual(await response.json(), {
           data: { test: 'contextValueOverridden' }
         })
       } finally {
@@ -500,8 +490,8 @@ export default tests => {
           body: JSON.stringify({ query: '{ test }' })
         })
 
-        assert.strictEqual(response.status, 200)
-        assert.deepStrictEqual(await response.json(), {
+        strictEqual(response.status, 200)
+        deepStrictEqual(await response.json(), {
           data: { test: 'contextValueOverridden' }
         })
       } finally {
@@ -528,8 +518,8 @@ export default tests => {
         body: JSON.stringify({ query: '{ test }' })
       })
 
-      assert.strictEqual(response.status, 200)
-      assert.deepStrictEqual(await response.json(), {
+      strictEqual(response.status, 200)
+      deepStrictEqual(await response.json(), {
         data: { test: 'fieldResolver' }
       })
     } finally {
@@ -564,8 +554,8 @@ export default tests => {
           body: JSON.stringify({ query: '{ test }' })
         })
 
-        assert.strictEqual(response.status, 200)
-        assert.deepStrictEqual(await response.json(), {
+        strictEqual(response.status, 200)
+        deepStrictEqual(await response.json(), {
           data: { test: 'fieldResolverOverridden' }
         })
       } finally {
@@ -577,7 +567,7 @@ export default tests => {
   tests.add(
     '`execute` middleware option `schema` not a GraphQLSchema instance.',
     () => {
-      assert.throws(() => execute({ schema: true }), {
+      throws(() => execute({ schema: true }), {
         name: 'InternalServerError',
         message:
           'GraphQL execute middleware `schema` option GraphQL schema must be a `GraphQLSchema` instance.',
@@ -607,16 +597,16 @@ export default tests => {
           body: JSON.stringify({ query: '{ test }' })
         })
 
-        assert.ok(koaError instanceof Error)
-        assert.strictEqual(koaError.name, 'InternalServerError')
-        assert.strictEqual(
+        ok(koaError instanceof Error)
+        strictEqual(koaError.name, 'InternalServerError')
+        strictEqual(
           koaError.message,
           'GraphQL execute middleware requires a GraphQL schema.'
         )
-        assert.strictEqual(koaError.status, 500)
-        assert.strictEqual(koaError.expose, false)
-        assert.strictEqual(response.status, 500)
-        assert.deepStrictEqual(await response.json(), {
+        strictEqual(koaError.status, 500)
+        strictEqual(koaError.expose, false)
+        strictEqual(response.status, 500)
+        deepStrictEqual(await response.json(), {
           errors: [{ message: 'Internal Server Error' }]
         })
       } finally {
@@ -650,16 +640,16 @@ export default tests => {
           body: JSON.stringify({ query: '{ test }' })
         })
 
-        assert.ok(koaError instanceof Error)
-        assert.strictEqual(koaError.name, 'InternalServerError')
-        assert.strictEqual(
+        ok(koaError instanceof Error)
+        strictEqual(koaError.name, 'InternalServerError')
+        strictEqual(
           koaError.message,
           'GraphQL execute middleware `override` option resolved `schema` option GraphQL schema must be a `GraphQLSchema` instance.'
         )
-        assert.strictEqual(koaError.status, 500)
-        assert.strictEqual(koaError.expose, false)
-        assert.strictEqual(response.status, 500)
-        assert.deepStrictEqual(await response.json(), {
+        strictEqual(koaError.status, 500)
+        strictEqual(koaError.expose, false)
+        strictEqual(response.status, 500)
+        deepStrictEqual(await response.json(), {
           errors: [{ message: 'Internal Server Error' }]
         })
       } finally {
@@ -669,7 +659,7 @@ export default tests => {
   )
 
   tests.add('`execute` middleware option `schema` invalid GraphQL.', () => {
-    assert.throws(() => execute({ schema: new GraphQLSchema({}) }), {
+    throws(() => execute({ schema: new GraphQLSchema({}) }), {
       name: 'InternalServerError',
       message:
         'GraphQL execute middleware `schema` option has GraphQL schema validation errors.',
@@ -705,23 +695,23 @@ export default tests => {
           body: JSON.stringify({ query: '{ test }' })
         })
 
-        assert.ok(koaError instanceof Error)
-        assert.strictEqual(koaError.name, 'InternalServerError')
-        assert.strictEqual(
+        ok(koaError instanceof Error)
+        strictEqual(koaError.name, 'InternalServerError')
+        strictEqual(
           koaError.message,
           'GraphQL execute middleware `override` option resolved `schema` option has GraphQL schema validation errors.'
         )
-        assert.strictEqual(koaError.status, 500)
-        assert.strictEqual(koaError.expose, false)
-        assert.strictEqual(Array.isArray(koaError.graphqlErrors), true)
-        assert.strictEqual(koaError.graphqlErrors.length, 1)
-        assert.strictEqual(koaError.graphqlErrors[0].name, 'GraphQLError')
-        assert.strictEqual(
+        strictEqual(koaError.status, 500)
+        strictEqual(koaError.expose, false)
+        strictEqual(Array.isArray(koaError.graphqlErrors), true)
+        strictEqual(koaError.graphqlErrors.length, 1)
+        strictEqual(koaError.graphqlErrors[0].name, 'GraphQLError')
+        strictEqual(
           koaError.graphqlErrors[0].message,
           'Query root type must be provided.'
         )
-        assert.strictEqual(response.status, 500)
-        assert.deepStrictEqual(await response.json(), {
+        strictEqual(response.status, 500)
+        deepStrictEqual(await response.json(), {
           errors: [{ message: 'Internal Server Error' }]
         })
       } finally {
@@ -747,13 +737,13 @@ export default tests => {
       try {
         const response = await fetchJsonAtPort(port)
 
-        assert.ok(koaError instanceof Error)
-        assert.strictEqual(koaError.name, 'InternalServerError')
-        assert.strictEqual(koaError.message, 'Request body missing.')
-        assert.strictEqual(koaError.status, 500)
-        assert.strictEqual(koaError.expose, false)
-        assert.strictEqual(response.status, 500)
-        assert.deepStrictEqual(await response.json(), {
+        ok(koaError instanceof Error)
+        strictEqual(koaError.name, 'InternalServerError')
+        strictEqual(koaError.message, 'Request body missing.')
+        strictEqual(koaError.status, 500)
+        strictEqual(koaError.expose, false)
+        strictEqual(response.status, 500)
+        deepStrictEqual(await response.json(), {
           errors: [{ message: 'Internal Server Error' }]
         })
       } finally {
@@ -780,13 +770,13 @@ export default tests => {
     try {
       const response = await fetchJsonAtPort(port, { body: '[]' })
 
-      assert.ok(koaError instanceof Error)
-      assert.strictEqual(koaError.name, 'BadRequestError')
-      assert.strictEqual(koaError.message, errorMessage)
-      assert.strictEqual(koaError.status, 400)
-      assert.strictEqual(koaError.expose, true)
-      assert.strictEqual(response.status, 400)
-      assert.deepStrictEqual(await response.json(), {
+      ok(koaError instanceof Error)
+      strictEqual(koaError.name, 'BadRequestError')
+      strictEqual(koaError.message, errorMessage)
+      strictEqual(koaError.status, 400)
+      strictEqual(koaError.expose, true)
+      strictEqual(response.status, 400)
+      deepStrictEqual(await response.json(), {
         errors: [{ message: errorMessage }]
       })
     } finally {
@@ -812,13 +802,13 @@ export default tests => {
     try {
       const response = await fetchJsonAtPort(port, { body: '{}' })
 
-      assert.ok(koaError instanceof Error)
-      assert.strictEqual(koaError.name, 'BadRequestError')
-      assert.strictEqual(koaError.message, errorMessage)
-      assert.strictEqual(koaError.status, 400)
-      assert.strictEqual(koaError.expose, true)
-      assert.strictEqual(response.status, 400)
-      assert.deepStrictEqual(await response.json(), {
+      ok(koaError instanceof Error)
+      strictEqual(koaError.name, 'BadRequestError')
+      strictEqual(koaError.message, errorMessage)
+      strictEqual(koaError.status, 400)
+      strictEqual(koaError.expose, true)
+      strictEqual(response.status, 400)
+      deepStrictEqual(await response.json(), {
         errors: [{ message: errorMessage }]
       })
     } finally {
@@ -847,13 +837,13 @@ export default tests => {
         body: JSON.stringify({ query: '[]' })
       })
 
-      assert.ok(koaError instanceof Error)
-      assert.strictEqual(koaError.name, 'BadRequestError')
-      assert.strictEqual(koaError.message, errorMessage)
-      assert.strictEqual(koaError.status, 400)
-      assert.strictEqual(koaError.expose, true)
-      assert.strictEqual(response.status, 400)
-      assert.deepStrictEqual(await response.json(), {
+      ok(koaError instanceof Error)
+      strictEqual(koaError.name, 'BadRequestError')
+      strictEqual(koaError.message, errorMessage)
+      strictEqual(koaError.status, 400)
+      strictEqual(koaError.expose, true)
+      strictEqual(response.status, 400)
+      deepStrictEqual(await response.json(), {
         errors: [{ message: errorMessage }]
       })
     } finally {
@@ -882,13 +872,13 @@ export default tests => {
         body: JSON.stringify({ query: '{ test }', variables: '[]' })
       })
 
-      assert.ok(koaError instanceof Error)
-      assert.strictEqual(koaError.name, 'BadRequestError')
-      assert.strictEqual(koaError.message, errorMessage)
-      assert.strictEqual(koaError.status, 400)
-      assert.strictEqual(koaError.expose, true)
-      assert.strictEqual(response.status, 400)
-      assert.deepStrictEqual(await response.json(), {
+      ok(koaError instanceof Error)
+      strictEqual(koaError.name, 'BadRequestError')
+      strictEqual(koaError.message, errorMessage)
+      strictEqual(koaError.status, 400)
+      strictEqual(koaError.expose, true)
+      strictEqual(response.status, 400)
+      deepStrictEqual(await response.json(), {
         errors: [{ message: errorMessage }]
       })
     } finally {
@@ -923,27 +913,21 @@ export default tests => {
         body: JSON.stringify({ query: '{ test, wrongOne, wrongTwo }' })
       })
 
-      assert.ok(koaError instanceof Error)
-      assert.strictEqual(koaError.name, 'BadRequestError')
-      assert.strictEqual(koaError.message, 'GraphQL query validation errors.')
-      assert.strictEqual(koaError.status, 400)
-      assert.strictEqual(koaError.expose, true)
-      assert.strictEqual(Array.isArray(koaError.graphqlErrors), true)
-      assert.strictEqual(koaError.graphqlErrors.length, 2)
-      assert.strictEqual(koaError.graphqlErrors[0].name, 'GraphQLError')
-      assert.strictEqual(koaError.graphqlErrors[0].message, error1.message)
-      assert.deepStrictEqual(
-        koaError.graphqlErrors[0].locations,
-        error1.locations
-      )
-      assert.strictEqual(koaError.graphqlErrors[1].name, 'GraphQLError')
-      assert.strictEqual(koaError.graphqlErrors[1].message, error2.message)
-      assert.deepStrictEqual(
-        koaError.graphqlErrors[1].locations,
-        error2.locations
-      )
-      assert.strictEqual(response.status, 400)
-      assert.deepStrictEqual(await response.json(), {
+      ok(koaError instanceof Error)
+      strictEqual(koaError.name, 'BadRequestError')
+      strictEqual(koaError.message, 'GraphQL query validation errors.')
+      strictEqual(koaError.status, 400)
+      strictEqual(koaError.expose, true)
+      strictEqual(Array.isArray(koaError.graphqlErrors), true)
+      strictEqual(koaError.graphqlErrors.length, 2)
+      strictEqual(koaError.graphqlErrors[0].name, 'GraphQLError')
+      strictEqual(koaError.graphqlErrors[0].message, error1.message)
+      deepStrictEqual(koaError.graphqlErrors[0].locations, error1.locations)
+      strictEqual(koaError.graphqlErrors[1].name, 'GraphQLError')
+      strictEqual(koaError.graphqlErrors[1].message, error2.message)
+      deepStrictEqual(koaError.graphqlErrors[1].locations, error2.locations)
+      strictEqual(response.status, 400)
+      deepStrictEqual(await response.json(), {
         errors: [error1, error2]
       })
     } finally {
@@ -987,28 +971,22 @@ export default tests => {
         body: JSON.stringify({ query: '{ test }' })
       })
 
-      assert.ok(koaError instanceof Error)
-      assert.strictEqual(koaError.name, 'Error')
-      assert.strictEqual(koaError.message, 'GraphQL errors.')
-      assert.strictEqual(koaError.status, 200)
-      assert.strictEqual(koaError.expose, true)
-      assert.strictEqual(Array.isArray(koaError.graphqlErrors), true)
-      assert.strictEqual(koaError.graphqlErrors.length, 1)
-      assert.strictEqual(koaError.graphqlErrors[0].name, 'GraphQLError')
-      assert.strictEqual(
-        koaError.graphqlErrors[0].message,
-        'Unexposed message.'
-      )
-      assert.deepStrictEqual(koaError.graphqlErrors[0].locations, [
+      ok(koaError instanceof Error)
+      strictEqual(koaError.name, 'Error')
+      strictEqual(koaError.message, 'GraphQL errors.')
+      strictEqual(koaError.status, 200)
+      strictEqual(koaError.expose, true)
+      strictEqual(Array.isArray(koaError.graphqlErrors), true)
+      strictEqual(koaError.graphqlErrors.length, 1)
+      strictEqual(koaError.graphqlErrors[0].name, 'GraphQLError')
+      strictEqual(koaError.graphqlErrors[0].message, 'Unexposed message.')
+      deepStrictEqual(koaError.graphqlErrors[0].locations, [
         { line: 1, column: 3 }
       ])
-      assert.deepStrictEqual(koaError.graphqlErrors[0].path, ['test'])
-      assert.deepStrictEqual(
-        koaError.graphqlErrors[0].originalError,
-        resolverError
-      )
-      assert.strictEqual(response.status, 200)
-      assert.deepStrictEqual(await response.json(), {
+      deepStrictEqual(koaError.graphqlErrors[0].path, ['test'])
+      deepStrictEqual(koaError.graphqlErrors[0].originalError, resolverError)
+      strictEqual(response.status, 200)
+      deepStrictEqual(await response.json(), {
         errors: [
           {
             message: 'Internal Server Error',
@@ -1059,25 +1037,22 @@ export default tests => {
         body: JSON.stringify({ query: '{ test}' })
       })
 
-      assert.ok(koaError instanceof Error)
-      assert.strictEqual(koaError.name, 'Error')
-      assert.strictEqual(koaError.message, 'GraphQL errors.')
-      assert.strictEqual(koaError.status, 200)
-      assert.strictEqual(koaError.expose, true)
-      assert.strictEqual(Array.isArray(koaError.graphqlErrors), true)
-      assert.strictEqual(koaError.graphqlErrors.length, 1)
-      assert.strictEqual(koaError.graphqlErrors[0].name, 'GraphQLError')
-      assert.strictEqual(koaError.graphqlErrors[0].message, 'Exposed message.')
-      assert.deepStrictEqual(koaError.graphqlErrors[0].locations, [
+      ok(koaError instanceof Error)
+      strictEqual(koaError.name, 'Error')
+      strictEqual(koaError.message, 'GraphQL errors.')
+      strictEqual(koaError.status, 200)
+      strictEqual(koaError.expose, true)
+      strictEqual(Array.isArray(koaError.graphqlErrors), true)
+      strictEqual(koaError.graphqlErrors.length, 1)
+      strictEqual(koaError.graphqlErrors[0].name, 'GraphQLError')
+      strictEqual(koaError.graphqlErrors[0].message, 'Exposed message.')
+      deepStrictEqual(koaError.graphqlErrors[0].locations, [
         { line: 1, column: 3 }
       ])
-      assert.deepStrictEqual(koaError.graphqlErrors[0].path, ['test'])
-      assert.deepStrictEqual(
-        koaError.graphqlErrors[0].originalError,
-        resolverError
-      )
-      assert.strictEqual(response.status, 200)
-      assert.deepStrictEqual(await response.json(), {
+      deepStrictEqual(koaError.graphqlErrors[0].path, ['test'])
+      deepStrictEqual(koaError.graphqlErrors[0].originalError, resolverError)
+      strictEqual(response.status, 200)
+      deepStrictEqual(await response.json(), {
         errors: [
           {
             message: 'Exposed message.',

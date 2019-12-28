@@ -1,15 +1,17 @@
-import assert from 'assert'
-import {
+'use strict'
+
+const { doesNotThrow, throws } = require('assert')
+const {
   GraphQLError,
   GraphQLObjectType,
   GraphQLSchema,
   GraphQLString
-} from 'graphql'
-import { checkGraphQLSchema } from '../checkGraphQLSchema.mjs'
+} = require('graphql')
+const checkGraphQLSchema = require('../lib/checkGraphQLSchema')
 
-export default tests => {
+module.exports = tests => {
   tests.add('`checkGraphQLSchema` with a valid GraphQL schema.', () => {
-    assert.doesNotThrow(() =>
+    doesNotThrow(() =>
       checkGraphQLSchema(
         new GraphQLSchema({
           query: new GraphQLObjectType({
@@ -27,7 +29,7 @@ export default tests => {
   })
 
   tests.add('`checkGraphQLSchema` with a non GraphQL schema.', () => {
-    assert.throws(() => checkGraphQLSchema(false, 'Test'), {
+    throws(() => checkGraphQLSchema(false, 'Test'), {
       name: 'InternalServerError',
       message: 'Test GraphQL schema must be a `GraphQLSchema` instance.',
       status: 500,
@@ -39,7 +41,7 @@ export default tests => {
   tests.add(
     '`checkGraphQLSchema` with GraphQL schema validation errors.',
     () => {
-      assert.throws(() => checkGraphQLSchema(new GraphQLSchema({}), 'Test'), {
+      throws(() => checkGraphQLSchema(new GraphQLSchema({}), 'Test'), {
         name: 'InternalServerError',
         message: 'Test has GraphQL schema validation errors.',
         status: 500,

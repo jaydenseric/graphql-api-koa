@@ -1,19 +1,19 @@
-import assert from 'assert'
-import { specifiedRules } from 'graphql'
-import { checkGraphQLValidationRules } from '../checkGraphQLValidationRules.mjs'
+'use strict'
 
-export default tests => {
+const { doesNotThrow, throws } = require('assert')
+const { specifiedRules } = require('graphql')
+const checkGraphQLValidationRules = require('../lib/checkGraphQLValidationRules')
+
+module.exports = tests => {
   tests.add(
     '`checkGraphQLValidationRules` with valid GraphQL validation rules.',
     () => {
-      assert.doesNotThrow(() =>
-        checkGraphQLValidationRules(specifiedRules, 'Test')
-      )
+      doesNotThrow(() => checkGraphQLValidationRules(specifiedRules, 'Test'))
     }
   )
 
   tests.add('`checkGraphQLValidationRules` with a non array.', () => {
-    assert.throws(() => checkGraphQLValidationRules(false, 'Test'), {
+    throws(() => checkGraphQLValidationRules(false, 'Test'), {
       name: 'InternalServerError',
       message: 'Test GraphQL validation rules must be an array.',
       status: 500,
@@ -23,7 +23,7 @@ export default tests => {
   })
 
   tests.add('`checkGraphQLValidationRules` with non function rules.', () => {
-    assert.throws(() => checkGraphQLValidationRules([false], 'Test'), {
+    throws(() => checkGraphQLValidationRules([false], 'Test'), {
       name: 'InternalServerError',
       message: 'Test GraphQL validation rules must be functions.',
       status: 500,
