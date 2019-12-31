@@ -2,10 +2,10 @@
 
 const { deepStrictEqual, ok, strictEqual } = require('assert')
 const Koa = require('koa')
-const createHttpError = require('../lib/createHttpError')
-const errorHandler = require('../lib/errorHandler')
-const fetchJsonAtPort = require('./fetchJsonAtPort')
-const startServer = require('./startServer')
+const createHttpError = require('../../lib/createHttpError')
+const errorHandler = require('../../lib/errorHandler')
+const fetchJsonAtPort = require('../fetchJsonAtPort')
+const startServer = require('../startServer')
 
 module.exports = tests => {
   tests.add('`errorHandler` middleware handles a standard error.', async () => {

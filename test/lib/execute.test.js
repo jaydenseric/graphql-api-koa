@@ -10,10 +10,10 @@ const {
 } = require('graphql')
 const Koa = require('koa')
 const bodyParser = require('koa-bodyparser')
-const errorHandler = require('../lib/errorHandler')
-const execute = require('../lib/execute')
-const fetchJsonAtPort = require('./fetchJsonAtPort')
-const startServer = require('./startServer')
+const errorHandler = require('../../lib/errorHandler')
+const execute = require('../../lib/execute')
+const fetchJsonAtPort = require('../fetchJsonAtPort')
+const startServer = require('../startServer')
 
 const schema = new GraphQLSchema({
   query: new GraphQLObjectType({

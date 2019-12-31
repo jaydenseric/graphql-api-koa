@@ -1,7 +1,7 @@
 'use strict'
 
 const { doesNotThrow, throws } = require('assert')
-const checkOptions = require('../lib/checkOptions')
+const checkOptions = require('../../lib/checkOptions')
 
 module.exports = tests => {
   tests.add('`checkOptions` with valid options.', () => {

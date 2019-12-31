@@ -4,11 +4,11 @@ const { TestDirector } = require('test-director')
 
 const tests = new TestDirector()
 
-require('./checkGraphQLSchema.test')(tests)
-require('./checkGraphQLValidationRules.test')(tests)
-require('./checkOptions.test')(tests)
-require('./errorHandler.test')(tests)
-require('./execute.test')(tests)
-require('./isEnumerableObject.test')(tests)
+require('./lib/checkGraphQLSchema.test')(tests)
+require('./lib/checkGraphQLValidationRules.test')(tests)
+require('./lib/checkOptions.test')(tests)
+require('./lib/errorHandler.test')(tests)
+require('./lib/execute.test')(tests)
+require('./lib/isEnumerableObject.test')(tests)
 
 tests.run()

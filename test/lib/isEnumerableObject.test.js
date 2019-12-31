@@ -1,7 +1,7 @@
 'use strict'
 
 const { strictEqual } = require('assert')
-const isEnumerableObject = require('../lib/isEnumerableObject')
+const isEnumerableObject = require('../../lib/isEnumerableObject')
 
 module.exports = tests => {
   tests.add('`isEnumerableObject` with a plain object.', () => {
