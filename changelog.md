@@ -5,6 +5,7 @@
 ### Patch
 
 - Added a new [`hard-rejection`](https://npm.im/hard-rejection) dev dependency to ensure unhandled rejections in tests exit the process with an error.
+- Simplified `test/index.js`.
 
 ## 4.0.0
 
