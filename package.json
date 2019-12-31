@@ -40,6 +40,7 @@
     "eslint-plugin-node": "^11.0.0",
     "eslint-plugin-prettier": "^3.1.2",
     "graphql": "^14.4.2",
+    "hard-rejection": "^2.1.0",
     "jsdoc-md": "^4.0.1",
     "koa": "^2.11.0",
     "koa-bodyparser": "^4.2.1",
@@ -54,7 +55,7 @@
     "test": "npm run test:eslint && npm run test:prettier && npm run test:api",
     "test:eslint": "eslint .",
     "test:prettier": "prettier '**/*.{json,yml,md}' -l",
-    "test:api": "coverage-node test",
+    "test:api": "coverage-node -r hard-rejection/register test",
     "prepublishOnly": "npm test"
   }
 }
