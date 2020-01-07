@@ -319,9 +319,7 @@ module.exports = tests => {
       })
 
       strictEqual(response.status, 200)
-      deepStrictEqual(await response.json(), {
-        data: { test: 'rootValue' }
-      })
+      deepStrictEqual(await response.json(), { data: { test: 'rootValue' } })
     } finally {
       close()
     }
@@ -401,9 +399,7 @@ module.exports = tests => {
       })
 
       strictEqual(response.status, 200)
-      deepStrictEqual(await response.json(), {
-        data: { test: 'contextValue' }
-      })
+      deepStrictEqual(await response.json(), { data: { test: 'contextValue' } })
     } finally {
       close()
     }
