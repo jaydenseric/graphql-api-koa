@@ -1023,7 +1023,7 @@ module.exports = tests => {
       let koaError
 
       const errorMessage =
-        'GraphQL operation field invalid: Variables must be provided as an Object where each property is a variable value. Perhaps look to see if an unparsed JSON string was provided.'
+        'Request body JSON `variables` field must be an object.'
 
       const app = new Koa()
         .use(errorHandler())
@@ -1056,7 +1056,51 @@ module.exports = tests => {
   )
 
   tests.add(
-    '`execute` middleware with GraphQL resolver error unexposed.',
+    '`execute` middleware with a GraphQL execution error.',
+    async () => {
+      let koaError
+
+      const errorMessage = 'Message.'
+
+      const app = new Koa()
+        .use(errorHandler())
+        .use(bodyParser())
+        .use(
+          execute({
+            schema,
+            execute() {
+              throw new Error(errorMessage)
+            }
+          })
+        )
+        .on('error', error => {
+          koaError = error
+        })
+
+      const { port, close } = await startServer(app)
+
+      try {
+        const response = await fetchJsonAtPort(port, {
+          body: JSON.stringify({ query: '{ test }' })
+        })
+
+        ok(koaError instanceof Error)
+        strictEqual(koaError.name, 'Error')
+        strictEqual(koaError.message, errorMessage)
+        strictEqual(koaError.status, 500)
+        strictEqual(koaError.expose, false)
+        strictEqual(response.status, 500)
+        deepStrictEqual(await response.json(), {
+          errors: [{ message: 'Internal Server Error' }]
+        })
+      } finally {
+        close()
+      }
+    }
+  )
+
+  tests.add(
+    '`execute` middleware with a GraphQL resolver error unexposed.',
     async () => {
       let koaError
       let resolverError
@@ -1124,7 +1168,7 @@ module.exports = tests => {
   )
 
   tests.add(
-    '`execute` middleware with GraphQL resolver error exposed.',
+    '`execute` middleware with a GraphQL resolver error exposed.',
     async () => {
       let koaError
       let resolverError

@@ -14,6 +14,7 @@
 - Simplified `test/index.js`.
 - Tweaked some test names.
 - Reduced the `execute` middleware per request validation work.
+- Better handling of invalid GraphQL operation `variables` and GraphQL execution errors.
 
 ## 4.0.0
 
