@@ -1,5 +1,11 @@
 # graphql-api-koa changelog
 
+## Next
+
+### Patch
+
+- Destructure GraphQL execute results.
+
 ## 4.1.0
 
 ### Minor
