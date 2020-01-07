@@ -2,6 +2,7 @@
 
 const { deepStrictEqual, ok, strictEqual, throws } = require('assert')
 const {
+  execute: graphqlExecute,
   GraphQLError,
   GraphQLNonNull,
   GraphQLObjectType,
@@ -557,6 +558,118 @@ module.exports = tests => {
         strictEqual(response.status, 200)
         deepStrictEqual(await response.json(), {
           data: { test: 'fieldResolverOverridden' }
+        })
+      } finally {
+        close()
+      }
+    }
+  )
+
+  tests.add('`execute` middleware option `execute`.', async () => {
+    let executeRan
+
+    const app = new Koa()
+      .use(errorHandler())
+      .use(bodyParser())
+      .use(
+        execute({
+          schema,
+          execute(...args) {
+            executeRan = true
+            return graphqlExecute(...args)
+          }
+        })
+      )
+
+    const { port, close } = await startServer(app)
+
+    try {
+      const response = await fetchJsonAtPort(port, {
+        body: JSON.stringify({ query: '{ test }' })
+      })
+
+      ok(executeRan)
+      strictEqual(response.status, 200)
+      deepStrictEqual(await response.json(), { data: { test: null } })
+    } finally {
+      close()
+    }
+  })
+
+  tests.add('`execute` middleware option `execute` not a function.', () => {
+    throws(() => execute({ schema, execute: true }), {
+      name: 'InternalServerError',
+      message:
+        'GraphQL execute middleware `execute` option must be a function.',
+      status: 500,
+      expose: false
+    })
+  })
+
+  tests.add('`execute` middleware option `execute` override.', async () => {
+    let executeRan
+
+    const app = new Koa()
+      .use(errorHandler())
+      .use(bodyParser())
+      .use(
+        execute({
+          schema,
+          override: () => ({
+            execute(...args) {
+              executeRan = true
+              return graphqlExecute(...args)
+            }
+          })
+        })
+      )
+
+    const { port, close } = await startServer(app)
+
+    try {
+      const response = await fetchJsonAtPort(port, {
+        body: JSON.stringify({ query: '{ test }' })
+      })
+
+      ok(executeRan)
+      strictEqual(response.status, 200)
+      deepStrictEqual(await response.json(), { data: { test: null } })
+    } finally {
+      close()
+    }
+  })
+
+  tests.add(
+    '`execute` middleware option `execute` override not a function.',
+    async () => {
+      let koaError
+
+      const app = new Koa()
+        .use(errorHandler())
+        .use(bodyParser())
+        .use(execute({ schema, override: () => ({ execute: true }) }))
+        .on('error', error => {
+          koaError = error
+        })
+
+      const { port, close } = await startServer(app)
+
+      try {
+        const response = await fetchJsonAtPort(port, {
+          body: JSON.stringify({ query: '{ test }' })
+        })
+
+        ok(koaError instanceof Error)
+        strictEqual(koaError.name, 'InternalServerError')
+        strictEqual(
+          koaError.message,
+          'GraphQL execute middleware `override` option resolved `execute` option must be a function.'
+        )
+        strictEqual(koaError.status, 500)
+        strictEqual(koaError.expose, false)
+        strictEqual(response.status, 500)
+        deepStrictEqual(await response.json(), {
+          errors: [{ message: 'Internal Server Error' }]
         })
       } finally {
         close()

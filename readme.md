@@ -100,6 +100,7 @@ _A basic GraphQL API._
 | `rootValue` | \*? | Value passed to the first resolver. |
 | `contextValue` | \*? | Execution context (usually an object) passed to resolvers. |
 | `fieldResolver` | Function? | Custom default field resolver. |
+| `execute` | Function? | Replacement for [GraphQL.js `execute`](https://graphql.org/graphql-js/execution/#execute). |
 | `override` | [ExecuteOptionsOverride](#type-executeoptionsoverride)? | Override any [`ExecuteOptions`](#type-executeoptions) (except `override`) per request. |
 
 #### Examples

@@ -2,6 +2,10 @@
 
 ## Next
 
+### Minor
+
+- Added a new overridable `execute` middleware option `execute`, to optionally replace [GraphQL.js `execute`](https://graphql.org/graphql-js/execution/#execute). This [adds support](https://twitter.com/jaydenseric/status/1214343687284518912) for [`graphql-jit`](https://npm.im/graphql-jit).
+
 ### Patch
 
 - Updated dev dependencies.
