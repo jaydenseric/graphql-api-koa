@@ -9,6 +9,5 @@ require('./lib/checkGraphQLValidationRules.test')(tests)
 require('./lib/checkOptions.test')(tests)
 require('./lib/errorHandler.test')(tests)
 require('./lib/execute.test')(tests)
-require('./lib/isEnumerableObject.test')(tests)
 
 tests.run()

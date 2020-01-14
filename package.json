@@ -28,7 +28,8 @@
     "graphql": "0.13.1 - 14"
   },
   "dependencies": {
-    "http-errors": "^1.7.3"
+    "http-errors": "^1.7.3",
+    "isobject": "^4.0.0"
   },
   "devDependencies": {
     "coverage-node": "^2.0.2",

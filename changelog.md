@@ -5,6 +5,7 @@
 ### Patch
 
 - Updated dev dependencies.
+- Use [`isobject`](https://npm.im/isobject) for checking if values are enumerable, non-array objects.
 - Destructure GraphQL execute results.
 
 ## 4.1.0
