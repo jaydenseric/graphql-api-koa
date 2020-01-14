@@ -4,6 +4,7 @@
 
 ### Patch
 
+- Updated dev dependencies.
 - Destructure GraphQL execute results.
 
 ## 4.1.0
