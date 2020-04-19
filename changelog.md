@@ -5,6 +5,8 @@
 ### Patch
 
 - Updated dev dependencies.
+- Updated Prettier related package scripts.
+- Configured Prettier option `semi` to the default, `true`.
 - Ensure GitHub Actions run on pull request.
 - Minor v0.1.0 changelog entry tweak.
 

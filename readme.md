@@ -36,11 +36,11 @@ Creates Koa middleware to handle errors. Use this before other middleware to cat
 _How to throw an error determining the response._
 
 > ```js
-> const Koa = require('koa')
-> const bodyParser = require('koa-bodyparser')
-> const { errorHandler, execute } = require('graphql-api-koa')
-> const createError = require('http-errors')
-> const schema = require('./schema')
+> const Koa = require('koa');
+> const bodyParser = require('koa-bodyparser');
+> const { errorHandler, execute } = require('graphql-api-koa');
+> const createError = require('http-errors');
+> const schema = require('./schema');
 >
 > const app = new Koa()
 >   .use(errorHandler())
@@ -49,12 +49,12 @@ _How to throw an error determining the response._
 >       // It’s Saturday.
 >       new Date().getDay() === 6
 >     )
->       throw createError(503, 'No work on the sabbath.', { expose: true })
+>       throw createError(503, 'No work on the sabbath.', { expose: true });
 >
->     await next()
+>     await next();
 >   })
 >   .use(bodyParser())
->   .use(execute({ schema }))
+>   .use(execute({ schema }));
 > ```
 
 ---
@@ -74,15 +74,15 @@ Creates Koa middleware to execute GraphQL. Use after the [`errorHandler`](#funct
 _A basic GraphQL API._
 
 > ```js
-> const Koa = require('koa')
-> const bodyParser = require('koa-bodyparser')
-> const { errorHandler, execute } = require('graphql-api-koa')
-> const schema = require('./schema')
+> const Koa = require('koa');
+> const bodyParser = require('koa-bodyparser');
+> const { errorHandler, execute } = require('graphql-api-koa');
+> const schema = require('./schema');
 >
 > const app = new Koa()
 >   .use(errorHandler())
 >   .use(bodyParser())
->   .use(execute({ schema }))
+>   .use(execute({ schema }));
 > ```
 
 ---
@@ -108,16 +108,16 @@ _A basic GraphQL API._
 _[`execute`](#function-execute) middleware options that sets the schema once but populates the user in the GraphQL context from the Koa context each request._
 
 > ```js
-> const schema = require('./schema')
+> const schema = require('./schema');
 >
 > const executeOptions = {
 >   schema,
->   override: ctx => ({
+>   override: (ctx) => ({
 >     contextValue: {
->       user: ctx.state.user
->     }
->   })
-> }
+>       user: ctx.state.user,
+>     },
+>   }),
+> };
 > ```
 
 ---
@@ -139,9 +139,9 @@ Overrides any [`ExecuteOptions`](#type-executeoptions) (except `override`) per r
 _An [`execute`](#function-execute) middleware options override that populates the user in the GraphQL context from the Koa request context._
 
 > ```js
-> const executeOptionsOverride = ctx => ({
+> const executeOptionsOverride = (ctx) => ({
 >   contextValue: {
->     user: ctx.state.user
->   }
-> })
+>     user: ctx.state.user,
+>   },
+> });
 > ```
