@@ -4,6 +4,7 @@
 
 ### Patch
 
+- Updated dev dependencies.
 - Ensure GitHub Actions run on pull request.
 
 ## 4.1.1
