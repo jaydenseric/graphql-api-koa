@@ -1,5 +1,11 @@
 # graphql-api-koa changelog
 
+## Next
+
+### Patch
+
+- Ensure GitHub Actions run on pull request.
+
 ## 4.1.1
 
 ### Patch
