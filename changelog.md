@@ -6,6 +6,7 @@
 
 - Updated dev dependencies.
 - Ensure GitHub Actions run on pull request.
+- Minor v0.1.0 changelog entry tweak.
 
 ## 4.1.1
 
@@ -197,4 +198,4 @@
 
 ## 0.1.0
 
-- Initial release.
+Initial release.
