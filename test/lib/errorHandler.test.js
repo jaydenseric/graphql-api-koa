@@ -5,7 +5,7 @@ const createHttpError = require('http-errors');
 const Koa = require('koa');
 const errorHandler = require('../../lib/errorHandler');
 const fetchJsonAtPort = require('../fetchJsonAtPort');
-const startServer = require('../startServer');
+const listen = require('../listen');
 
 module.exports = (tests) => {
   tests.add(
@@ -22,7 +22,7 @@ module.exports = (tests) => {
           koaError = error;
         });
 
-      const { port, close } = await startServer(app);
+      const { port, close } = await listen(app);
 
       try {
         const response = await fetchJsonAtPort(port);
@@ -51,7 +51,7 @@ module.exports = (tests) => {
         koaError = error;
       });
 
-    const { port, close } = await startServer(app);
+    const { port, close } = await listen(app);
 
     try {
       const response = await fetchJsonAtPort(port);
@@ -87,7 +87,7 @@ module.exports = (tests) => {
         koaError = error;
       });
 
-    const { port, close } = await startServer(app);
+    const { port, close } = await listen(app);
 
     try {
       const response = await fetchJsonAtPort(port);
@@ -129,7 +129,7 @@ module.exports = (tests) => {
           koaError = error;
         });
 
-      const { port, close } = await startServer(app);
+      const { port, close } = await listen(app);
 
       try {
         const response = await fetchJsonAtPort(port);

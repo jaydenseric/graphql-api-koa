@@ -25,6 +25,7 @@
   - The `extensions` property of an error is now always exposed to the client in the payload `errors` array, even if the error message is not exposed via an `expose` property.
   - Added new `ErrorKoaMiddleware` and `ErrorGraphQLResolver` JSDoc typedefs to better document the special properties errors may have for the `errorHandler` Koa middleware to use to determine how the error appears in the response payload `errors` array and the response HTTP status code.
   - Documented that additional custom Koa middleware can be used to customize the response.
+- Renamed the `startServer` test helper to `listen`.
 
 ## 4.1.1
 

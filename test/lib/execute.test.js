@@ -14,7 +14,7 @@ const bodyParser = require('koa-bodyparser');
 const errorHandler = require('../../lib/errorHandler');
 const execute = require('../../lib/execute');
 const fetchJsonAtPort = require('../fetchJsonAtPort');
-const startServer = require('../startServer');
+const listen = require('../listen');
 
 const schema = new GraphQLSchema({
   query: new GraphQLObjectType({
@@ -85,7 +85,7 @@ module.exports = (tests) => {
           koaError = error;
         });
 
-      const { port, close } = await startServer(app);
+      const { port, close } = await listen(app);
 
       try {
         const response = await fetchJsonAtPort(port, {
@@ -131,7 +131,7 @@ module.exports = (tests) => {
           koaError = error;
         });
 
-      const { port, close } = await startServer(app);
+      const { port, close } = await listen(app);
 
       try {
         const response = await fetchJsonAtPort(port, {
@@ -182,7 +182,7 @@ module.exports = (tests) => {
           koaError = error;
         });
 
-      const { port, close } = await startServer(app);
+      const { port, close } = await listen(app);
 
       try {
         const response = await fetchJsonAtPort(port, {
@@ -225,7 +225,7 @@ module.exports = (tests) => {
           koaError = error;
         });
 
-      const { port, close } = await startServer(app);
+      const { port, close } = await listen(app);
 
       try {
         const response = await fetchJsonAtPort(port, {
@@ -279,7 +279,7 @@ module.exports = (tests) => {
           koaError = error;
         });
 
-      const { port, close } = await startServer(app);
+      const { port, close } = await listen(app);
 
       try {
         const response = await fetchJsonAtPort(port, {
@@ -342,7 +342,7 @@ module.exports = (tests) => {
         koaError = error;
       });
 
-    const { port, close } = await startServer(app);
+    const { port, close } = await listen(app);
 
     try {
       const response = await fetchJsonAtPort(port, {
@@ -415,7 +415,7 @@ module.exports = (tests) => {
           koaError = error;
         });
 
-      const { port, close } = await startServer(app);
+      const { port, close } = await listen(app);
 
       try {
         const response = await fetchJsonAtPort(port, {
@@ -466,7 +466,7 @@ module.exports = (tests) => {
         })
       );
 
-    const { port, close } = await startServer(app);
+    const { port, close } = await listen(app);
 
     try {
       const response = await fetchJsonAtPort(port, {
@@ -508,7 +508,7 @@ module.exports = (tests) => {
           })
         );
 
-      const { port, close } = await startServer(app);
+      const { port, close } = await listen(app);
 
       try {
         const response = await fetchJsonAtPort(port, {
@@ -546,7 +546,7 @@ module.exports = (tests) => {
         })
       );
 
-    const { port, close } = await startServer(app);
+    const { port, close } = await listen(app);
 
     try {
       const response = await fetchJsonAtPort(port, {
@@ -592,7 +592,7 @@ module.exports = (tests) => {
           })
         );
 
-      const { port, close } = await startServer(app);
+      const { port, close } = await listen(app);
 
       try {
         const response = await fetchJsonAtPort(port, {
@@ -637,7 +637,7 @@ module.exports = (tests) => {
           })
         );
 
-      const { port, close } = await startServer(app);
+      const { port, close } = await listen(app);
 
       try {
         const response = await fetchJsonAtPort(port, {
@@ -665,7 +665,7 @@ module.exports = (tests) => {
         })
       );
 
-    const { port, close } = await startServer(app);
+    const { port, close } = await listen(app);
 
     try {
       const response = await fetchJsonAtPort(port, {
@@ -701,7 +701,7 @@ module.exports = (tests) => {
           })
         );
 
-      const { port, close } = await startServer(app);
+      const { port, close } = await listen(app);
 
       try {
         const response = await fetchJsonAtPort(port, {
@@ -734,7 +734,7 @@ module.exports = (tests) => {
         })
       );
 
-    const { port, close } = await startServer(app);
+    const { port, close } = await listen(app);
 
     try {
       const response = await fetchJsonAtPort(port, {
@@ -777,7 +777,7 @@ module.exports = (tests) => {
         })
       );
 
-    const { port, close } = await startServer(app);
+    const { port, close } = await listen(app);
 
     try {
       const response = await fetchJsonAtPort(port, {
@@ -805,7 +805,7 @@ module.exports = (tests) => {
           koaError = error;
         });
 
-      const { port, close } = await startServer(app);
+      const { port, close } = await listen(app);
 
       try {
         const response = await fetchJsonAtPort(port, {
@@ -842,7 +842,7 @@ module.exports = (tests) => {
           koaError = error;
         });
 
-      const { port, close } = await startServer(app);
+      const { port, close } = await listen(app);
 
       try {
         const response = await fetchJsonAtPort(port);
@@ -875,7 +875,7 @@ module.exports = (tests) => {
         koaError = error;
       });
 
-    const { port, close } = await startServer(app);
+    const { port, close } = await listen(app);
 
     try {
       const response = await fetchJsonAtPort(port, { body: '[]' });
@@ -909,7 +909,7 @@ module.exports = (tests) => {
           koaError = error;
         });
 
-      const { port, close } = await startServer(app);
+      const { port, close } = await listen(app);
 
       try {
         const response = await fetchJsonAtPort(port, { body: '{}' });
@@ -945,7 +945,7 @@ module.exports = (tests) => {
           koaError = error;
         });
 
-      const { port, close } = await startServer(app);
+      const { port, close } = await listen(app);
 
       try {
         const response = await fetchJsonAtPort(port, {
@@ -989,7 +989,7 @@ module.exports = (tests) => {
           koaError = error;
         });
 
-      const { port, close } = await startServer(app);
+      const { port, close } = await listen(app);
 
       try {
         const response = await fetchJsonAtPort(port, {
@@ -1035,7 +1035,7 @@ module.exports = (tests) => {
           koaError = error;
         });
 
-      const { port, close } = await startServer(app);
+      const { port, close } = await listen(app);
 
       try {
         const response = await fetchJsonAtPort(port, {
@@ -1079,7 +1079,7 @@ module.exports = (tests) => {
           koaError = error;
         });
 
-      const { port, close } = await startServer(app);
+      const { port, close } = await listen(app);
 
       try {
         const response = await fetchJsonAtPort(port, {
@@ -1135,7 +1135,7 @@ module.exports = (tests) => {
           koaError = error;
         });
 
-      const { port, close } = await startServer(app);
+      const { port, close } = await listen(app);
 
       try {
         const response = await fetchJsonAtPort(port, {
@@ -1208,7 +1208,7 @@ module.exports = (tests) => {
           koaError = error;
         });
 
-      const { port, close } = await startServer(app);
+      const { port, close } = await listen(app);
 
       try {
         const response = await fetchJsonAtPort(port, {

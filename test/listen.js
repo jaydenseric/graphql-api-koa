@@ -1,16 +1,16 @@
 'use strict';
 
 /**
- * Asynchronously starts a given Koa app server.
+ * Starts a Node.js HTTP server.
  * @kind function
- * @name startServer
- * @param {object} app Koa app.
+ * @name listen
+ * @param {object} server Node.js HTTP server.
  * @returns {Promise<{port: number, close: Function}>} Resolves the port the server is listening on, and a server close function.
  * @ignore
  */
-module.exports = function startServer(app) {
+module.exports = function listen(server) {
   return new Promise((resolve, reject) => {
-    app.listen(function (error) {
+    server.listen(function (error) {
       if (error) reject(error);
       else
         resolve({
