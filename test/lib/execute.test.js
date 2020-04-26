@@ -1120,6 +1120,9 @@ module.exports = (tests) => {
                     type: new GraphQLNonNull(GraphQLString),
                     resolve() {
                       resolverError = new Error('Unexposed message.');
+                      resolverError.extensions = {
+                        a: true,
+                      };
                       throw resolverError;
                     },
                   },
@@ -1141,7 +1144,7 @@ module.exports = (tests) => {
 
         ok(koaError instanceof Error);
         strictEqual(koaError.name, 'Error');
-        strictEqual(koaError.message, 'GraphQL errors.');
+        strictEqual(koaError.message, 'GraphQL execution errors.');
         strictEqual(koaError.status, 200);
         strictEqual(koaError.expose, true);
         strictEqual(Array.isArray(koaError.graphqlErrors), true);
@@ -1152,6 +1155,7 @@ module.exports = (tests) => {
           { line: 1, column: 3 },
         ]);
         deepStrictEqual(koaError.graphqlErrors[0].path, ['test']);
+        deepStrictEqual(koaError.graphqlErrors[0].extensions, { a: true });
         deepStrictEqual(koaError.graphqlErrors[0].originalError, resolverError);
         strictEqual(response.status, 200);
         deepStrictEqual(await response.json(), {
@@ -1160,6 +1164,7 @@ module.exports = (tests) => {
               message: 'Internal Server Error',
               locations: [{ line: 1, column: 3 }],
               path: ['test'],
+              extensions: { a: true },
             },
           ],
         });
@@ -1189,6 +1194,8 @@ module.exports = (tests) => {
                     resolve() {
                       resolverError = new Error('Exposed message.');
                       resolverError.expose = true;
+                      resolverError.extensions = { a: true };
+
                       throw resolverError;
                     },
                   },
@@ -1205,12 +1212,12 @@ module.exports = (tests) => {
 
       try {
         const response = await fetchJsonAtPort(port, {
-          body: JSON.stringify({ query: '{ test}' }),
+          body: JSON.stringify({ query: '{ test }' }),
         });
 
         ok(koaError instanceof Error);
         strictEqual(koaError.name, 'Error');
-        strictEqual(koaError.message, 'GraphQL errors.');
+        strictEqual(koaError.message, 'GraphQL execution errors.');
         strictEqual(koaError.status, 200);
         strictEqual(koaError.expose, true);
         strictEqual(Array.isArray(koaError.graphqlErrors), true);
@@ -1221,6 +1228,7 @@ module.exports = (tests) => {
           { line: 1, column: 3 },
         ]);
         deepStrictEqual(koaError.graphqlErrors[0].path, ['test']);
+        deepStrictEqual(koaError.graphqlErrors[0].extensions, { a: true });
         deepStrictEqual(koaError.graphqlErrors[0].originalError, resolverError);
         strictEqual(response.status, 200);
         deepStrictEqual(await response.json(), {
@@ -1229,6 +1237,7 @@ module.exports = (tests) => {
               message: 'Exposed message.',
               locations: [{ line: 1, column: 3 }],
               path: ['test'],
+              extensions: { a: true },
             },
           ],
         });

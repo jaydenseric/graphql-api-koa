@@ -9,7 +9,22 @@
 - Configured Prettier option `semi` to the default, `true`.
 - Ensure GitHub Actions run on pull request.
 - Minor v0.1.0 changelog entry tweak.
-- Minor `createHttpError` JSDoc comment formatting tweak.
+- For clarity, manually specify a `500` HTTP status code even though it’s the default when throwing errors via [`http-errors`](https://npm.im/http-errors).
+- Changed the error that the `execute` Koa middleware throws when there are GraphQL execution errors:
+
+  - The error is no longer created using [`http-errors`](https://npm.im/http-errors), which [doesn’t easily accept a `200` `status`](https://github.com/jshttp/http-errors/issues/50#issuecomment-395107925). This allowed the removal of the `createHttpError` function workaround.
+  - Changed the error message (an internal change as this message is not exposed to the client by the `errorHandler` Koa middleware):
+
+    ```diff
+    - GraphQL errors.
+    + GraphQL execution errors.
+    ```
+
+- Updated the `errorHandler` Koa middleware, fixing [#8](https://github.com/jaydenseric/graphql-api-koa/issues/8):
+  - It can now handle a non enumerable object error, e.g. `null`.
+  - The `extensions` property of an error is now always exposed to the client in the payload `errors` array, even if the error message is not exposed via an `expose` property.
+  - Added new `ErrorKoaMiddleware` and `ErrorGraphQLResolver` JSDoc typedefs to better document the special properties errors may have for the `errorHandler` Koa middleware to use to determine how the error appears in the response payload `errors` array and the response HTTP status code.
+  - Documented that additional custom Koa middleware can be used to customize the response.
 
 ## 4.1.1
 

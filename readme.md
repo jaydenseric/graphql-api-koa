@@ -22,40 +22,22 @@ See the [execute middleware](#function-execute) examples to get started.
 
 - [function errorHandler](#function-errorhandler)
 - [function execute](#function-execute)
+- [type ErrorGraphQLResolver](#type-errorgraphqlresolver)
+- [type ErrorKoaMiddleware](#type-errorkoamiddleware)
 - [type ExecuteOptions](#type-executeoptions)
 - [type ExecuteOptionsOverride](#type-executeoptionsoverride)
 
 ### function errorHandler
 
-Creates Koa middleware to handle errors. Use this before other middleware to catch all errors for a [correctly formated GraphQL response](http://facebook.github.io/graphql/October2016/#sec-Errors). When intentionally throwing an error, create it with `status` and `expose` properties using [http-errors](https://npm.im/http-errors) or the response will be a generic 500 error for security.
+Creates Koa middleware to handle errors. Use this before other middleware to catch all errors for a correctly formatted [GraphQL response](https://spec.graphql.org/June2018/#sec-Errors).
+
+[Special Koa middleware error properties](#type-errorkoamiddleware) can be used to determine how the error appears in the response payload `errors` array and the response HTTP status code.
+
+[Special GraphQL resolver error properties](#type-errorgraphqlresolver) can be used to determine how the error appears in the response payload `errors` array.
+
+Additional custom Koa middleware can be used to customize the response.
 
 **Returns:** Function — Koa middleware.
-
-#### Examples
-
-_How to throw an error determining the response._
-
-> ```js
-> const Koa = require('koa');
-> const bodyParser = require('koa-bodyparser');
-> const { errorHandler, execute } = require('graphql-api-koa');
-> const createError = require('http-errors');
-> const schema = require('./schema');
->
-> const app = new Koa()
->   .use(errorHandler())
->   .use(async (ctx, next) => {
->     if (
->       // It’s Saturday.
->       new Date().getDay() === 6
->     )
->       throw createError(503, 'No work on the sabbath.', { expose: true });
->
->     await next();
->   })
->   .use(bodyParser())
->   .use(execute({ schema }));
-> ```
 
 ---
 
@@ -83,6 +65,169 @@ _A basic GraphQL API._
 >   .use(errorHandler())
 >   .use(bodyParser())
 >   .use(execute({ schema }));
+> ```
+
+---
+
+### type ErrorGraphQLResolver
+
+A GraphQL resolver error may have these special properties for the [`errorHandler`](#function-errorhandler) Koa middleware to use to determine how the error appears in the response payload `errors` array.
+
+**Type:** object
+
+| Property | Type | Description |
+| :-- | :-- | :-- |
+| `message` | string | Error message. If the error `expose` property isn’t `true`, the message is replaced with `Internal Server Error` in the response payload `errors` array. |
+| `extensions` | object&lt;string, \*>? | A map of custom error data that is exposed to the client in the response payload `errors` array, regardless of the error `expose` or `status` properties. |
+| `expose` | boolean? | Should the original error `message` be exposed to the client. |
+
+#### See
+
+- [GraphQL spec for errors](https://spec.graphql.org/June2018/#sec-Errors).
+
+#### Examples
+
+_An error thrown in a GraphQL resolver, exposed to the client._
+
+> Query:
+>
+> ```graphql
+> {
+>   user(handle: "jaydenseric") {
+>     name
+>     email
+>   }
+> }
+> ```
+>
+> Error thrown in the `User.email` resolver:
+>
+> ```js
+> const error = new Error('Unauthorized access to user data.');
+> error.expose = true;
+> ```
+>
+> Response has a 200 HTTP status code, with this payload:
+>
+> ```json
+> {
+>   "errors": [
+>     {
+>       "message": "Unauthorized access to user data.",
+>       "locations": [{ "line": 4, "column": 5 }],
+>       "path": ["user", "email"]
+>     }
+>   ],
+>   "data": {
+>     "user": {
+>       "name": "Jayden Seric",
+>       "email": null
+>     }
+>   }
+> }
+> ```
+
+---
+
+### type ErrorKoaMiddleware
+
+A Koa middleware error may have these special properties for the [`errorHandler`](#function-errorhandler) Koa middleware to use to determine how the error appears in the response payload `errors` array and the response HTTP status code.
+
+**Type:** object
+
+| Property | Type | Description |
+| :-- | :-- | :-- |
+| `message` | string | Error message. If the error `status` property >= 500 or the error `expose` property isn’t `true`, the message is replaced with `Internal Server Error` in the response payload `errors` array. |
+| `extensions` | object&lt;string, \*>? | A map of custom error data that is exposed to the client in the response payload `errors` array, regardless of the error `expose` or `status` properties. |
+| `status` | number? | Determines the response HTTP status code. |
+| `expose` | boolean? | Should the original error `message` be exposed to the client. |
+
+#### See
+
+- [GraphQL spec for errors](https://spec.graphql.org/June2018/#sec-Errors).
+- [Koa error handling docs](https://koajs.com/#error-handling).
+- [`http-errors`](https://npm.im/http-errors), used by this package and Koa.
+
+#### Examples
+
+_A client error thrown in Koa middleware._
+
+> Error constructed manually:
+>
+> ```js
+> const error = new Error('Rate limit exceeded.');
+> error.extensions = {
+>   code: 'RATE_LIMIT_EXCEEDED',
+> };
+> error.status = 429;
+> ```
+>
+> Error constructed using [`http-errors`](https://npm.im/http-errors):
+>
+> ```js
+> const createHttpError = require('http-errors');
+> const error = createHttpError(429, 'Rate limit exceeded.', {
+>   extensions: {
+>     code: 'RATE_LIMIT_EXCEEDED',
+>   },
+> });
+> ```
+>
+> Response has a 429 HTTP status code, with this payload:
+>
+> ```json
+> {
+>   "errors": [
+>     {
+>       "message": "Rate limit exceeded.",
+>       "extensions": {
+>         "code": "RATE_LIMIT_EXCEEDED"
+>       }
+>     }
+>   ]
+> }
+> ```
+
+_A server error thrown in Koa middleware, not exposed to the client._
+
+> Error:
+>
+> ```js
+> const error = new Error('Database connection failed.');
+> ```
+>
+> Response has a 500 HTTP status code, with this payload:
+>
+> ```json
+> {
+>   "errors": [
+>     {
+>       "message": "Internal Server Error"
+>     }
+>   ]
+> }
+> ```
+
+_A server error thrown in Koa middleware, exposed to the client._
+
+> Error:
+>
+> ```js
+> const error = new Error('Service unavailable due to maintenance.');
+> error.status = 503;
+> error.expose = true;
+> ```
+>
+> Response has a 503 HTTP status code, with this payload:
+>
+> ```json
+> {
+>   "errors": [
+>     {
+>       "message": "Service unavailable due to maintenance."
+>     }
+>   ]
+> }
 > ```
 
 ---
