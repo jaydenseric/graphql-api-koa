@@ -935,7 +935,7 @@ module.exports = (tests) => {
       let koaError;
 
       const errorMessage =
-        'GraphQL query syntax error: Syntax Error: Unexpected [';
+        'GraphQL query syntax error: Syntax Error: Unexpected "[".';
 
       const app = new Koa()
         .use(errorHandler())

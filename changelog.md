@@ -1,5 +1,16 @@
 # graphql-api-koa changelog
 
+## Next
+
+### Major
+
+- Updated Node.js support to `^10.13.0 || ^12.0.0 || >= 13.7.0`.
+- Updated dev dependencies, some of which require newer Node.js versions than previously supported.
+
+### Patch
+
+- Updated the [`graphql`](https://npm.im/graphql) peer dependency to `0.13.1 - 15`.
+
 ## 4.1.2
 
 ### Patch
