@@ -10,6 +10,7 @@
 ### Patch
 
 - Updated the [`graphql`](https://npm.im/graphql) peer dependency to `0.13.1 - 15`.
+- Also run GitHub Actions with Node.js v14.
 
 ## 4.1.2
 
