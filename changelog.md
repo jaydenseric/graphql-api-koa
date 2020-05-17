@@ -1,6 +1,6 @@
 # graphql-api-koa changelog
 
-## Next
+## 5.0.0
 
 ### Major
 
