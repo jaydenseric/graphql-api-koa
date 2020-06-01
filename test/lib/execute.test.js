@@ -930,12 +930,11 @@ module.exports = (tests) => {
   );
 
   tests.add(
-    '`execute` middleware with operation field `query` invalid.',
+    '`execute` middleware with operation field `query` not a string.',
     async () => {
       let koaError;
 
-      const errorMessage =
-        'GraphQL query syntax error: Syntax Error: Unexpected "[".';
+      const errorMessage = 'GraphQL operation field `query` must be a string.';
 
       const app = new Koa()
         .use(errorHandler())
@@ -949,7 +948,7 @@ module.exports = (tests) => {
 
       try {
         const response = await fetchJsonAtPort(port, {
-          body: JSON.stringify({ query: '[]' }),
+          body: JSON.stringify({ query: null }),
         });
 
         ok(koaError instanceof Error);
@@ -968,7 +967,52 @@ module.exports = (tests) => {
   );
 
   tests.add(
-    '`execute` middleware with operation field `query` validation errors.',
+    '`execute` middleware with operation field `query` syntax errors.',
+    async () => {
+      let koaError;
+
+      const error = {
+        message: 'Syntax Error: Expected Name, found "{".',
+        locations: [{ line: 1, column: 2 }],
+      };
+
+      const app = new Koa()
+        .use(errorHandler())
+        .use(bodyParser())
+        .use(execute({ schema }))
+        .on('error', (error) => {
+          koaError = error;
+        });
+
+      const { port, close } = await listen(app);
+
+      try {
+        const response = await fetchJsonAtPort(port, {
+          body: JSON.stringify({ query: '{{ test }' }),
+        });
+
+        ok(koaError instanceof Error);
+        strictEqual(koaError.name, 'BadRequestError');
+        strictEqual(koaError.message, 'GraphQL query syntax errors.');
+        strictEqual(koaError.status, 400);
+        strictEqual(koaError.expose, true);
+        strictEqual(Array.isArray(koaError.graphqlErrors), true);
+        strictEqual(koaError.graphqlErrors.length, 1);
+        strictEqual(koaError.graphqlErrors[0].name, 'GraphQLError');
+        strictEqual(koaError.graphqlErrors[0].message, error.message);
+        deepStrictEqual(koaError.graphqlErrors[0].locations, error.locations);
+        strictEqual(response.status, 400);
+        deepStrictEqual(await response.json(), {
+          errors: [error],
+        });
+      } finally {
+        close();
+      }
+    }
+  );
+
+  tests.add(
+    '`execute` middleware with operation field `query` validation type errors.',
     async () => {
       let koaError;
 

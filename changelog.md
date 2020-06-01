@@ -1,5 +1,13 @@
 # graphql-api-koa changelog
 
+## Next
+
+### Minor
+
+- Improved `execute` middleware errors:
+  - More specific error when the operation field `query` isn’t a string.
+  - Use GraphQL errors when the query can’t be parsed due to syntax errors and expose the location of the syntax error to the client.
+
 ## 5.0.0
 
 ### Major
