@@ -5,6 +5,7 @@
 ### Patch
 
 - Updated dev dependencies.
+- Updated the EditorConfig URL.
 
 ## 5.1.0
 
