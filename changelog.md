@@ -5,6 +5,7 @@
 ### Major
 
 - Added a [package `exports` field](https://nodejs.org/api/esm.html#esm_package_entry_points) with [conditional exports](https://nodejs.org/api/esm.html#esm_conditional_exports) to support native ESM in Node.js and keep internal code private, [whilst avoiding the dual package hazard](https://nodejs.org/api/esm.html#esm_approach_1_use_an_es_module_wrapper). Published files have been reorganized, so previously undocumented deep imports will need to be rewritten according to the newly documented paths.
+- Use the `application/graphql+json` content-type instead of `application/json` for GraphQL requests and responses. This content-type [is being standardized](https://github.com/APIs-guru/graphql-over-http/issues/31) in the [GraphQL over HTTP specification](https://github.com/APIs-guru/graphql-over-http).
 
 ### Patch
 

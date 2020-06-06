@@ -4,7 +4,7 @@ const { deepStrictEqual, ok, strictEqual } = require('assert');
 const createHttpError = require('http-errors');
 const Koa = require('koa');
 const errorHandler = require('../../public/errorHandler');
-const fetchJsonAtPort = require('../fetchJsonAtPort');
+const fetchGraphQL = require('../fetchGraphQL');
 const listen = require('../listen');
 
 module.exports = (tests) => {
@@ -25,9 +25,13 @@ module.exports = (tests) => {
       const { port, close } = await listen(app);
 
       try {
-        const response = await fetchJsonAtPort(port);
+        const response = await fetchGraphQL(port);
 
         strictEqual(koaError, null);
+        strictEqual(
+          response.headers.get('Content-Type'),
+          'application/graphql+json'
+        );
         deepStrictEqual(await response.json(), {
           errors: [{ message: 'Internal Server Error' }],
         });
@@ -54,7 +58,7 @@ module.exports = (tests) => {
     const { port, close } = await listen(app);
 
     try {
-      const response = await fetchJsonAtPort(port);
+      const response = await fetchGraphQL(port);
 
       ok(koaError instanceof Error);
       strictEqual(koaError.name, 'Error');
@@ -62,6 +66,10 @@ module.exports = (tests) => {
       strictEqual(koaError.status, 500);
       strictEqual(koaError.expose, false);
       strictEqual(response.status, 500);
+      strictEqual(
+        response.headers.get('Content-Type'),
+        'application/graphql+json'
+      );
       deepStrictEqual(await response.json(), {
         errors: [
           {
@@ -90,7 +98,7 @@ module.exports = (tests) => {
     const { port, close } = await listen(app);
 
     try {
-      const response = await fetchJsonAtPort(port);
+      const response = await fetchGraphQL(port);
 
       ok(koaError instanceof Error);
       strictEqual(koaError.name, 'ForbiddenError');
@@ -98,6 +106,10 @@ module.exports = (tests) => {
       strictEqual(koaError.status, 403);
       strictEqual(koaError.expose, true);
       strictEqual(response.status, 403);
+      strictEqual(
+        response.headers.get('Content-Type'),
+        'application/graphql+json'
+      );
       deepStrictEqual(await response.json(), {
         errors: [
           {
@@ -132,7 +144,7 @@ module.exports = (tests) => {
       const { port, close } = await listen(app);
 
       try {
-        const response = await fetchJsonAtPort(port);
+        const response = await fetchGraphQL(port);
 
         ok(koaError instanceof Error);
         strictEqual(koaError.name, 'Error');
@@ -140,6 +152,10 @@ module.exports = (tests) => {
         strictEqual(koaError.status, 500);
         strictEqual(koaError.expose, false);
         strictEqual(response.status, 500);
+        strictEqual(
+          response.headers.get('Content-Type'),
+          'application/graphql+json'
+        );
         deepStrictEqual(await response.json(), {
           data: {},
           errors: [

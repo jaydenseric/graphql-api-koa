@@ -76,7 +76,11 @@ const ALLOWED_EXECUTE_OPTIONS_OVERRIDE = ALLOWED_EXECUTE_OPTIONS_STATIC.filter(
  *
  * const app = new Koa()
  *   .use(errorHandler())
- *   .use(bodyParser())
+ *   .use(bodyParser({
+ *     extendTypes: {
+ *       json: 'application/graphql+json',
+ *     },
+ *   }))
  *   .use(execute({ schema }));
  * ```
  */
@@ -236,6 +240,9 @@ module.exports = function execute(options) {
 
       throw error;
     }
+
+    // Set the content-type.
+    ctx.response.type = 'application/graphql+json';
 
     await next();
   };

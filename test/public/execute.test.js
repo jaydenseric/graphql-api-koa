@@ -13,7 +13,7 @@ const Koa = require('koa');
 const bodyParser = require('koa-bodyparser');
 const errorHandler = require('../../public/errorHandler');
 const execute = require('../../public/execute');
-const fetchJsonAtPort = require('../fetchJsonAtPort');
+const fetchGraphQL = require('../fetchGraphQL');
 const listen = require('../listen');
 
 const schema = new GraphQLSchema({
@@ -25,6 +25,12 @@ const schema = new GraphQLSchema({
       },
     },
   }),
+});
+
+const bodyParserMiddleware = bodyParser({
+  extendTypes: {
+    json: 'application/graphql+json',
+  },
 });
 
 module.exports = (tests) => {
@@ -74,7 +80,7 @@ module.exports = (tests) => {
 
       const app = new Koa()
         .use(errorHandler())
-        .use(bodyParser())
+        .use(bodyParserMiddleware)
         .use(
           execute({
             schema,
@@ -88,7 +94,7 @@ module.exports = (tests) => {
       const { port, close } = await listen(app);
 
       try {
-        const response = await fetchJsonAtPort(port, {
+        const response = await fetchGraphQL(port, {
           body: JSON.stringify({ query: '{ test }' }),
         });
 
@@ -101,6 +107,10 @@ module.exports = (tests) => {
         strictEqual(koaError.status, 500);
         strictEqual(koaError.expose, false);
         strictEqual(response.status, 500);
+        strictEqual(
+          response.headers.get('Content-Type'),
+          'application/graphql+json'
+        );
         deepStrictEqual(await response.json(), {
           errors: [{ message: 'Internal Server Error' }],
         });
@@ -117,7 +127,7 @@ module.exports = (tests) => {
 
       const app = new Koa()
         .use(errorHandler())
-        .use(bodyParser())
+        .use(bodyParserMiddleware)
         .use(
           execute({
             schema,
@@ -134,7 +144,7 @@ module.exports = (tests) => {
       const { port, close } = await listen(app);
 
       try {
-        const response = await fetchJsonAtPort(port, {
+        const response = await fetchGraphQL(port, {
           body: JSON.stringify({ query: '{ test }' }),
         });
 
@@ -147,6 +157,10 @@ module.exports = (tests) => {
         strictEqual(koaError.status, 500);
         strictEqual(koaError.expose, false);
         strictEqual(response.status, 500);
+        strictEqual(
+          response.headers.get('Content-Type'),
+          'application/graphql+json'
+        );
         deepStrictEqual(await response.json(), {
           errors: [{ message: 'Internal Server Error' }],
         });
@@ -176,7 +190,7 @@ module.exports = (tests) => {
 
       const app = new Koa()
         .use(errorHandler())
-        .use(bodyParser())
+        .use(bodyParserMiddleware)
         .use(execute({ schema: undefined }))
         .on('error', (error) => {
           koaError = error;
@@ -185,7 +199,7 @@ module.exports = (tests) => {
       const { port, close } = await listen(app);
 
       try {
-        const response = await fetchJsonAtPort(port, {
+        const response = await fetchGraphQL(port, {
           body: JSON.stringify({ query: '{ test }' }),
         });
 
@@ -198,6 +212,10 @@ module.exports = (tests) => {
         strictEqual(koaError.status, 500);
         strictEqual(koaError.expose, false);
         strictEqual(response.status, 500);
+        strictEqual(
+          response.headers.get('Content-Type'),
+          'application/graphql+json'
+        );
         deepStrictEqual(await response.json(), {
           errors: [{ message: 'Internal Server Error' }],
         });
@@ -214,7 +232,7 @@ module.exports = (tests) => {
 
       const app = new Koa()
         .use(errorHandler())
-        .use(bodyParser())
+        .use(bodyParserMiddleware)
         .use(
           execute({
             schema,
@@ -228,7 +246,7 @@ module.exports = (tests) => {
       const { port, close } = await listen(app);
 
       try {
-        const response = await fetchJsonAtPort(port, {
+        const response = await fetchGraphQL(port, {
           body: JSON.stringify({ query: '{ test }' }),
         });
 
@@ -241,6 +259,10 @@ module.exports = (tests) => {
         strictEqual(koaError.status, 500);
         strictEqual(koaError.expose, false);
         strictEqual(response.status, 500);
+        strictEqual(
+          response.headers.get('Content-Type'),
+          'application/graphql+json'
+        );
         deepStrictEqual(await response.json(), {
           errors: [{ message: 'Internal Server Error' }],
         });
@@ -268,7 +290,7 @@ module.exports = (tests) => {
 
       const app = new Koa()
         .use(errorHandler())
-        .use(bodyParser())
+        .use(bodyParserMiddleware)
         .use(
           execute({
             schema,
@@ -282,7 +304,7 @@ module.exports = (tests) => {
       const { port, close } = await listen(app);
 
       try {
-        const response = await fetchJsonAtPort(port, {
+        const response = await fetchGraphQL(port, {
           body: JSON.stringify({ query: '{ test }' }),
         });
 
@@ -302,6 +324,10 @@ module.exports = (tests) => {
           'Query root type must be provided.'
         );
         strictEqual(response.status, 500);
+        strictEqual(
+          response.headers.get('Content-Type'),
+          'application/graphql+json'
+        );
         deepStrictEqual(await response.json(), {
           errors: [{ message: 'Internal Server Error' }],
         });
@@ -325,7 +351,7 @@ module.exports = (tests) => {
 
     const app = new Koa()
       .use(errorHandler())
-      .use(bodyParser())
+      .use(bodyParserMiddleware)
       .use(
         execute({
           schema,
@@ -345,7 +371,7 @@ module.exports = (tests) => {
     const { port, close } = await listen(app);
 
     try {
-      const response = await fetchJsonAtPort(port, {
+      const response = await fetchGraphQL(port, {
         body: JSON.stringify({ query: '{ wrong }' }),
       });
 
@@ -363,6 +389,10 @@ module.exports = (tests) => {
       strictEqual(koaError.graphqlErrors[1].message, error2.message);
       deepStrictEqual(koaError.graphqlErrors[1].locations, error2.locations);
       strictEqual(response.status, 400);
+      strictEqual(
+        response.headers.get('Content-Type'),
+        'application/graphql+json'
+      );
       deepStrictEqual(await response.json(), {
         errors: [error1, error2],
       });
@@ -387,7 +417,7 @@ module.exports = (tests) => {
 
       const app = new Koa()
         .use(errorHandler())
-        .use(bodyParser())
+        .use(bodyParserMiddleware)
         .use(
           execute({
             schema,
@@ -418,7 +448,7 @@ module.exports = (tests) => {
       const { port, close } = await listen(app);
 
       try {
-        const response = await fetchJsonAtPort(port, {
+        const response = await fetchGraphQL(port, {
           body: JSON.stringify({ query: '{ wrong }' }),
         });
 
@@ -436,6 +466,10 @@ module.exports = (tests) => {
         strictEqual(koaError.graphqlErrors[1].message, error2.message);
         deepStrictEqual(koaError.graphqlErrors[1].locations, error2.locations);
         strictEqual(response.status, 400);
+        strictEqual(
+          response.headers.get('Content-Type'),
+          'application/graphql+json'
+        );
         deepStrictEqual(await response.json(), {
           errors: [error1, error2],
         });
@@ -448,7 +482,7 @@ module.exports = (tests) => {
   tests.add('`execute` middleware option `rootValue`.', async () => {
     const app = new Koa()
       .use(errorHandler())
-      .use(bodyParser())
+      .use(bodyParserMiddleware)
       .use(
         execute({
           schema: new GraphQLSchema({
@@ -469,11 +503,15 @@ module.exports = (tests) => {
     const { port, close } = await listen(app);
 
     try {
-      const response = await fetchJsonAtPort(port, {
+      const response = await fetchGraphQL(port, {
         body: JSON.stringify({ query: '{ test }' }),
       });
 
       strictEqual(response.status, 200);
+      strictEqual(
+        response.headers.get('Content-Type'),
+        'application/graphql+json'
+      );
       deepStrictEqual(await response.json(), { data: { test: 'rootValue' } });
     } finally {
       close();
@@ -485,7 +523,7 @@ module.exports = (tests) => {
     async () => {
       const app = new Koa()
         .use(errorHandler())
-        .use(bodyParser())
+        .use(bodyParserMiddleware)
         .use(async (ctx, next) => {
           ctx.state.test = 'rootValueOverridden';
           await next();
@@ -511,11 +549,15 @@ module.exports = (tests) => {
       const { port, close } = await listen(app);
 
       try {
-        const response = await fetchJsonAtPort(port, {
+        const response = await fetchGraphQL(port, {
           body: JSON.stringify({ query: '{ test }' }),
         });
 
         strictEqual(response.status, 200);
+        strictEqual(
+          response.headers.get('Content-Type'),
+          'application/graphql+json'
+        );
         deepStrictEqual(await response.json(), {
           data: { test: 'rootValueOverridden' },
         });
@@ -528,7 +570,7 @@ module.exports = (tests) => {
   tests.add('`execute` middleware option `contextValue`.', async () => {
     const app = new Koa()
       .use(errorHandler())
-      .use(bodyParser())
+      .use(bodyParserMiddleware)
       .use(
         execute({
           schema: new GraphQLSchema({
@@ -549,11 +591,15 @@ module.exports = (tests) => {
     const { port, close } = await listen(app);
 
     try {
-      const response = await fetchJsonAtPort(port, {
+      const response = await fetchGraphQL(port, {
         body: JSON.stringify({ query: '{ test }' }),
       });
 
       strictEqual(response.status, 200);
+      strictEqual(
+        response.headers.get('Content-Type'),
+        'application/graphql+json'
+      );
       deepStrictEqual(await response.json(), {
         data: { test: 'contextValue' },
       });
@@ -567,7 +613,7 @@ module.exports = (tests) => {
     async () => {
       const app = new Koa()
         .use(errorHandler())
-        .use(bodyParser())
+        .use(bodyParserMiddleware)
         .use(async (ctx, next) => {
           ctx.state.test = 'contextValueOverridden';
           await next();
@@ -595,11 +641,15 @@ module.exports = (tests) => {
       const { port, close } = await listen(app);
 
       try {
-        const response = await fetchJsonAtPort(port, {
+        const response = await fetchGraphQL(port, {
           body: JSON.stringify({ query: '{ test }' }),
         });
 
         strictEqual(response.status, 200);
+        strictEqual(
+          response.headers.get('Content-Type'),
+          'application/graphql+json'
+        );
         deepStrictEqual(await response.json(), {
           data: { test: 'contextValueOverridden' },
         });
@@ -614,7 +664,7 @@ module.exports = (tests) => {
     async () => {
       const app = new Koa()
         .use(errorHandler())
-        .use(bodyParser())
+        .use(bodyParserMiddleware)
         .use(async (ctx, next) => {
           ctx.state.test = 'contextValueOverridden';
           await next();
@@ -640,11 +690,15 @@ module.exports = (tests) => {
       const { port, close } = await listen(app);
 
       try {
-        const response = await fetchJsonAtPort(port, {
+        const response = await fetchGraphQL(port, {
           body: JSON.stringify({ query: '{ test }' }),
         });
 
         strictEqual(response.status, 200);
+        strictEqual(
+          response.headers.get('Content-Type'),
+          'application/graphql+json'
+        );
         deepStrictEqual(await response.json(), {
           data: { test: 'contextValueOverridden' },
         });
@@ -657,7 +711,7 @@ module.exports = (tests) => {
   tests.add('`execute` middleware option `fieldResolver`.', async () => {
     const app = new Koa()
       .use(errorHandler())
-      .use(bodyParser())
+      .use(bodyParserMiddleware)
       .use(
         execute({
           schema,
@@ -668,11 +722,15 @@ module.exports = (tests) => {
     const { port, close } = await listen(app);
 
     try {
-      const response = await fetchJsonAtPort(port, {
+      const response = await fetchGraphQL(port, {
         body: JSON.stringify({ query: '{ test }' }),
       });
 
       strictEqual(response.status, 200);
+      strictEqual(
+        response.headers.get('Content-Type'),
+        'application/graphql+json'
+      );
       deepStrictEqual(await response.json(), {
         data: { test: 'fieldResolver' },
       });
@@ -686,7 +744,7 @@ module.exports = (tests) => {
     async () => {
       const app = new Koa()
         .use(errorHandler())
-        .use(bodyParser())
+        .use(bodyParserMiddleware)
         .use(async (ctx, next) => {
           ctx.state.test = 'fieldResolverOverridden';
           await next();
@@ -704,11 +762,15 @@ module.exports = (tests) => {
       const { port, close } = await listen(app);
 
       try {
-        const response = await fetchJsonAtPort(port, {
+        const response = await fetchGraphQL(port, {
           body: JSON.stringify({ query: '{ test }' }),
         });
 
         strictEqual(response.status, 200);
+        strictEqual(
+          response.headers.get('Content-Type'),
+          'application/graphql+json'
+        );
         deepStrictEqual(await response.json(), {
           data: { test: 'fieldResolverOverridden' },
         });
@@ -723,7 +785,7 @@ module.exports = (tests) => {
 
     const app = new Koa()
       .use(errorHandler())
-      .use(bodyParser())
+      .use(bodyParserMiddleware)
       .use(
         execute({
           schema,
@@ -737,12 +799,16 @@ module.exports = (tests) => {
     const { port, close } = await listen(app);
 
     try {
-      const response = await fetchJsonAtPort(port, {
+      const response = await fetchGraphQL(port, {
         body: JSON.stringify({ query: '{ test }' }),
       });
 
       ok(executeRan);
       strictEqual(response.status, 200);
+      strictEqual(
+        response.headers.get('Content-Type'),
+        'application/graphql+json'
+      );
       deepStrictEqual(await response.json(), { data: { test: null } });
     } finally {
       close();
@@ -764,7 +830,7 @@ module.exports = (tests) => {
 
     const app = new Koa()
       .use(errorHandler())
-      .use(bodyParser())
+      .use(bodyParserMiddleware)
       .use(
         execute({
           schema,
@@ -780,12 +846,16 @@ module.exports = (tests) => {
     const { port, close } = await listen(app);
 
     try {
-      const response = await fetchJsonAtPort(port, {
+      const response = await fetchGraphQL(port, {
         body: JSON.stringify({ query: '{ test }' }),
       });
 
       ok(executeRan);
       strictEqual(response.status, 200);
+      strictEqual(
+        response.headers.get('Content-Type'),
+        'application/graphql+json'
+      );
       deepStrictEqual(await response.json(), { data: { test: null } });
     } finally {
       close();
@@ -799,7 +869,7 @@ module.exports = (tests) => {
 
       const app = new Koa()
         .use(errorHandler())
-        .use(bodyParser())
+        .use(bodyParserMiddleware)
         .use(execute({ schema, override: () => ({ execute: true }) }))
         .on('error', (error) => {
           koaError = error;
@@ -808,7 +878,7 @@ module.exports = (tests) => {
       const { port, close } = await listen(app);
 
       try {
-        const response = await fetchJsonAtPort(port, {
+        const response = await fetchGraphQL(port, {
           body: JSON.stringify({ query: '{ test }' }),
         });
 
@@ -821,6 +891,10 @@ module.exports = (tests) => {
         strictEqual(koaError.status, 500);
         strictEqual(koaError.expose, false);
         strictEqual(response.status, 500);
+        strictEqual(
+          response.headers.get('Content-Type'),
+          'application/graphql+json'
+        );
         deepStrictEqual(await response.json(), {
           errors: [{ message: 'Internal Server Error' }],
         });
@@ -845,7 +919,7 @@ module.exports = (tests) => {
       const { port, close } = await listen(app);
 
       try {
-        const response = await fetchJsonAtPort(port);
+        const response = await fetchGraphQL(port);
 
         ok(koaError instanceof Error);
         strictEqual(koaError.name, 'InternalServerError');
@@ -853,6 +927,10 @@ module.exports = (tests) => {
         strictEqual(koaError.status, 500);
         strictEqual(koaError.expose, false);
         strictEqual(response.status, 500);
+        strictEqual(
+          response.headers.get('Content-Type'),
+          'application/graphql+json'
+        );
         deepStrictEqual(await response.json(), {
           errors: [{ message: 'Internal Server Error' }],
         });
@@ -869,7 +947,7 @@ module.exports = (tests) => {
 
     const app = new Koa()
       .use(errorHandler())
-      .use(bodyParser())
+      .use(bodyParserMiddleware)
       .use(execute({ schema }))
       .on('error', (error) => {
         koaError = error;
@@ -878,7 +956,7 @@ module.exports = (tests) => {
     const { port, close } = await listen(app);
 
     try {
-      const response = await fetchJsonAtPort(port, { body: '[]' });
+      const response = await fetchGraphQL(port, { body: '[]' });
 
       ok(koaError instanceof Error);
       strictEqual(koaError.name, 'BadRequestError');
@@ -886,6 +964,10 @@ module.exports = (tests) => {
       strictEqual(koaError.status, 400);
       strictEqual(koaError.expose, true);
       strictEqual(response.status, 400);
+      strictEqual(
+        response.headers.get('Content-Type'),
+        'application/graphql+json'
+      );
       deepStrictEqual(await response.json(), {
         errors: [{ message: errorMessage }],
       });
@@ -903,7 +985,7 @@ module.exports = (tests) => {
 
       const app = new Koa()
         .use(errorHandler())
-        .use(bodyParser())
+        .use(bodyParserMiddleware)
         .use(execute({ schema }))
         .on('error', (error) => {
           koaError = error;
@@ -912,7 +994,7 @@ module.exports = (tests) => {
       const { port, close } = await listen(app);
 
       try {
-        const response = await fetchJsonAtPort(port, { body: '{}' });
+        const response = await fetchGraphQL(port, { body: '{}' });
 
         ok(koaError instanceof Error);
         strictEqual(koaError.name, 'BadRequestError');
@@ -920,6 +1002,10 @@ module.exports = (tests) => {
         strictEqual(koaError.status, 400);
         strictEqual(koaError.expose, true);
         strictEqual(response.status, 400);
+        strictEqual(
+          response.headers.get('Content-Type'),
+          'application/graphql+json'
+        );
         deepStrictEqual(await response.json(), {
           errors: [{ message: errorMessage }],
         });
@@ -938,7 +1024,7 @@ module.exports = (tests) => {
 
       const app = new Koa()
         .use(errorHandler())
-        .use(bodyParser())
+        .use(bodyParserMiddleware)
         .use(execute({ schema }))
         .on('error', (error) => {
           koaError = error;
@@ -947,7 +1033,7 @@ module.exports = (tests) => {
       const { port, close } = await listen(app);
 
       try {
-        const response = await fetchJsonAtPort(port, {
+        const response = await fetchGraphQL(port, {
           body: JSON.stringify({ query: null }),
         });
 
@@ -957,6 +1043,10 @@ module.exports = (tests) => {
         strictEqual(koaError.status, 400);
         strictEqual(koaError.expose, true);
         strictEqual(response.status, 400);
+        strictEqual(
+          response.headers.get('Content-Type'),
+          'application/graphql+json'
+        );
         deepStrictEqual(await response.json(), {
           errors: [{ message: errorMessage }],
         });
@@ -978,7 +1068,7 @@ module.exports = (tests) => {
 
       const app = new Koa()
         .use(errorHandler())
-        .use(bodyParser())
+        .use(bodyParserMiddleware)
         .use(execute({ schema }))
         .on('error', (error) => {
           koaError = error;
@@ -987,7 +1077,7 @@ module.exports = (tests) => {
       const { port, close } = await listen(app);
 
       try {
-        const response = await fetchJsonAtPort(port, {
+        const response = await fetchGraphQL(port, {
           body: JSON.stringify({ query: '{{ test }' }),
         });
 
@@ -1002,6 +1092,10 @@ module.exports = (tests) => {
         strictEqual(koaError.graphqlErrors[0].message, error.message);
         deepStrictEqual(koaError.graphqlErrors[0].locations, error.locations);
         strictEqual(response.status, 400);
+        strictEqual(
+          response.headers.get('Content-Type'),
+          'application/graphql+json'
+        );
         deepStrictEqual(await response.json(), {
           errors: [error],
         });
@@ -1027,7 +1121,7 @@ module.exports = (tests) => {
 
       const app = new Koa()
         .use(errorHandler())
-        .use(bodyParser())
+        .use(bodyParserMiddleware)
         .use(execute({ schema }))
         .on('error', (error) => {
           koaError = error;
@@ -1036,7 +1130,7 @@ module.exports = (tests) => {
       const { port, close } = await listen(app);
 
       try {
-        const response = await fetchJsonAtPort(port, {
+        const response = await fetchGraphQL(port, {
           body: JSON.stringify({ query: '{ test, wrongOne, wrongTwo }' }),
         });
 
@@ -1054,6 +1148,10 @@ module.exports = (tests) => {
         strictEqual(koaError.graphqlErrors[1].message, error2.message);
         deepStrictEqual(koaError.graphqlErrors[1].locations, error2.locations);
         strictEqual(response.status, 400);
+        strictEqual(
+          response.headers.get('Content-Type'),
+          'application/graphql+json'
+        );
         deepStrictEqual(await response.json(), {
           errors: [error1, error2],
         });
@@ -1073,7 +1171,7 @@ module.exports = (tests) => {
 
       const app = new Koa()
         .use(errorHandler())
-        .use(bodyParser())
+        .use(bodyParserMiddleware)
         .use(execute({ schema }))
         .on('error', (error) => {
           koaError = error;
@@ -1082,7 +1180,7 @@ module.exports = (tests) => {
       const { port, close } = await listen(app);
 
       try {
-        const response = await fetchJsonAtPort(port, {
+        const response = await fetchGraphQL(port, {
           body: JSON.stringify({ query: '{ test }', variables: '[]' }),
         });
 
@@ -1092,6 +1190,10 @@ module.exports = (tests) => {
         strictEqual(koaError.status, 400);
         strictEqual(koaError.expose, true);
         strictEqual(response.status, 400);
+        strictEqual(
+          response.headers.get('Content-Type'),
+          'application/graphql+json'
+        );
         deepStrictEqual(await response.json(), {
           errors: [{ message: errorMessage }],
         });
@@ -1110,7 +1212,7 @@ module.exports = (tests) => {
 
       const app = new Koa()
         .use(errorHandler())
-        .use(bodyParser())
+        .use(bodyParserMiddleware)
         .use(
           execute({
             schema,
@@ -1126,7 +1228,7 @@ module.exports = (tests) => {
       const { port, close } = await listen(app);
 
       try {
-        const response = await fetchJsonAtPort(port, {
+        const response = await fetchGraphQL(port, {
           body: JSON.stringify({ query: '{ test }' }),
         });
 
@@ -1136,6 +1238,10 @@ module.exports = (tests) => {
         strictEqual(koaError.status, 500);
         strictEqual(koaError.expose, false);
         strictEqual(response.status, 500);
+        strictEqual(
+          response.headers.get('Content-Type'),
+          'application/graphql+json'
+        );
         deepStrictEqual(await response.json(), {
           errors: [{ message: 'Internal Server Error' }],
         });
@@ -1153,7 +1259,7 @@ module.exports = (tests) => {
 
       const app = new Koa()
         .use(errorHandler())
-        .use(bodyParser())
+        .use(bodyParserMiddleware)
         .use(
           execute({
             schema: new GraphQLSchema({
@@ -1182,7 +1288,7 @@ module.exports = (tests) => {
       const { port, close } = await listen(app);
 
       try {
-        const response = await fetchJsonAtPort(port, {
+        const response = await fetchGraphQL(port, {
           body: JSON.stringify({ query: '{ test }' }),
         });
 
@@ -1202,6 +1308,10 @@ module.exports = (tests) => {
         deepStrictEqual(koaError.graphqlErrors[0].extensions, { a: true });
         deepStrictEqual(koaError.graphqlErrors[0].originalError, resolverError);
         strictEqual(response.status, 200);
+        strictEqual(
+          response.headers.get('Content-Type'),
+          'application/graphql+json'
+        );
         deepStrictEqual(await response.json(), {
           errors: [
             {
@@ -1226,7 +1336,7 @@ module.exports = (tests) => {
 
       const app = new Koa()
         .use(errorHandler())
-        .use(bodyParser())
+        .use(bodyParserMiddleware)
         .use(
           execute({
             schema: new GraphQLSchema({
@@ -1255,7 +1365,7 @@ module.exports = (tests) => {
       const { port, close } = await listen(app);
 
       try {
-        const response = await fetchJsonAtPort(port, {
+        const response = await fetchGraphQL(port, {
           body: JSON.stringify({ query: '{ test }' }),
         });
 
@@ -1275,6 +1385,10 @@ module.exports = (tests) => {
         deepStrictEqual(koaError.graphqlErrors[0].extensions, { a: true });
         deepStrictEqual(koaError.graphqlErrors[0].originalError, resolverError);
         strictEqual(response.status, 200);
+        strictEqual(
+          response.headers.get('Content-Type'),
+          'application/graphql+json'
+        );
         deepStrictEqual(await response.json(), {
           errors: [
             {

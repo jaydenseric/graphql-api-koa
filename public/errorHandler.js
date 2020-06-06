@@ -101,6 +101,9 @@ module.exports = function errorHandler() {
         ctx.response.status = httpError.status;
       }
 
+      // Set the content-type.
+      ctx.response.type = 'application/graphql+json';
+
       // Support Koa app error listeners.
       ctx.app.emit('error', error, ctx);
     }

@@ -3,20 +3,20 @@
 const fetch = require('node-fetch');
 
 /**
- * Fetches JSON at a given localhost port.
+ * Fetches GraphQL.
  * @kind function
- * @name fetchJsonAtPort
+ * @name fetchGraphQL
  * @param {number} port Localhost port.
  * @param {object} options Fetch options.
  * @returns {Promise<Response>} Fetch response.
  * @ignore
  */
-module.exports = function fetchJsonAtPort(port, options = {}) {
+module.exports = function fetchGraphQL(port, options = {}) {
   return fetch(`http://localhost:${port}`, {
     method: 'POST',
     headers: {
-      'Content-Type': 'application/json',
-      Accept: 'application/json',
+      'Content-Type': 'application/graphql+json',
+      Accept: 'application/graphql+json',
     },
     ...options,
   });

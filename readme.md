@@ -105,7 +105,13 @@ _A basic GraphQL API._
 >
 > const app = new Koa()
 >   .use(errorHandler())
->   .use(bodyParser())
+>   .use(
+>     bodyParser({
+>       extendTypes: {
+>         json: 'application/graphql+json',
+>       },
+>     })
+>   )
 >   .use(execute({ schema }));
 > ```
 
