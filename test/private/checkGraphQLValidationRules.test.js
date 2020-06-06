@@ -2,7 +2,7 @@
 
 const { doesNotThrow, throws } = require('assert');
 const { specifiedRules } = require('graphql');
-const checkGraphQLValidationRules = require('../../lib/checkGraphQLValidationRules');
+const checkGraphQLValidationRules = require('../../private/checkGraphQLValidationRules');
 
 module.exports = (tests) => {
   tests.add(

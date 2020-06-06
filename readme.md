@@ -39,6 +39,28 @@ Additional custom Koa middleware can be used to customize the response.
 
 **Returns:** Function — Koa middleware.
 
+#### Examples
+
+_Ways to `import`._
+
+> ```js
+> import { errorHandler } from 'graphql-api-koa';
+> ```
+>
+> ```js
+> import errorHandler from 'graphql-api-koa/public/errorHandler.js';
+> ```
+
+_Ways to `require`._
+
+> ```js
+> const { errorHandler } = require('graphql-api-koa');
+> ```
+>
+> ```js
+> const errorHandler = require('graphql-api-koa/public/errorHandler');
+> ```
+
 ---
 
 ### function execute
@@ -52,6 +74,26 @@ Creates Koa middleware to execute GraphQL. Use after the [`errorHandler`](#funct
 **Returns:** Function — Koa middleware.
 
 #### Examples
+
+_Ways to `import`._
+
+> ```js
+> import { execute } from 'graphql-api-koa';
+> ```
+>
+> ```js
+> import execute from 'graphql-api-koa/public/execute.js';
+> ```
+
+_Ways to `require`._
+
+> ```js
+> const { execute } = require('graphql-api-koa');
+> ```
+>
+> ```js
+> const execute = require('graphql-api-koa/public/execute');
+> ```
 
 _A basic GraphQL API._
 

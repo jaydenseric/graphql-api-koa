@@ -7,7 +7,7 @@ const {
   GraphQLSchema,
   GraphQLString,
 } = require('graphql');
-const checkGraphQLSchema = require('../../lib/checkGraphQLSchema');
+const checkGraphQLSchema = require('../../private/checkGraphQLSchema');
 
 module.exports = (tests) => {
   tests.add('`checkGraphQLSchema` with a valid GraphQL schema.', () => {

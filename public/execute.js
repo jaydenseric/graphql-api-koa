@@ -9,9 +9,9 @@ const {
 } = require('graphql');
 const createHttpError = require('http-errors');
 const isObject = require('isobject');
-const checkGraphQLSchema = require('./checkGraphQLSchema');
-const checkGraphQLValidationRules = require('./checkGraphQLValidationRules');
-const checkOptions = require('./checkOptions');
+const checkGraphQLSchema = require('../private/checkGraphQLSchema');
+const checkGraphQLValidationRules = require('../private/checkGraphQLValidationRules');
+const checkOptions = require('../private/checkOptions');
 
 /**
  * List of [`ExecuteOptions`]{@link ExecuteOptions} keys allowed for static
@@ -51,6 +51,22 @@ const ALLOWED_EXECUTE_OPTIONS_OVERRIDE = ALLOWED_EXECUTE_OPTIONS_STATIC.filter(
  * @name execute
  * @param {ExecuteOptions} options Options.
  * @returns {Function} Koa middleware.
+ * @example <caption>Ways to `import`.</caption>
+ * ```js
+ * import { execute } from 'graphql-api-koa';
+ * ```
+ *
+ * ```js
+ * import execute from 'graphql-api-koa/public/execute.js';
+ * ```
+ * @example <caption>Ways to `require`.</caption>
+ * ```js
+ * const { execute } = require('graphql-api-koa');
+ * ```
+ *
+ * ```js
+ * const execute = require('graphql-api-koa/public/execute');
+ * ```
  * @example <caption>A basic GraphQL API.</caption>
  * ```js
  * const Koa = require('koa');

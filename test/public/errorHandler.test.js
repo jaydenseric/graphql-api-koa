@@ -3,7 +3,7 @@
 const { deepStrictEqual, ok, strictEqual } = require('assert');
 const createHttpError = require('http-errors');
 const Koa = require('koa');
-const errorHandler = require('../../lib/errorHandler');
+const errorHandler = require('../../public/errorHandler');
 const fetchJsonAtPort = require('../fetchJsonAtPort');
 const listen = require('../listen');
 

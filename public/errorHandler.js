@@ -19,6 +19,22 @@ const createHttpError = require('http-errors');
  * @kind function
  * @name errorHandler
  * @returns {Function} Koa middleware.
+ * @example <caption>Ways to `import`.</caption>
+ * ```js
+ * import { errorHandler } from 'graphql-api-koa';
+ * ```
+ *
+ * ```js
+ * import errorHandler from 'graphql-api-koa/public/errorHandler.js';
+ * ```
+ * @example <caption>Ways to `require`.</caption>
+ * ```js
+ * const { errorHandler } = require('graphql-api-koa');
+ * ```
+ *
+ * ```js
+ * const errorHandler = require('graphql-api-koa/public/errorHandler');
+ * ```
  */
 module.exports = function errorHandler() {
   return async function errorHandlerMiddleware(ctx, next) {

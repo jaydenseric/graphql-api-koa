@@ -11,8 +11,8 @@ const {
 } = require('graphql');
 const Koa = require('koa');
 const bodyParser = require('koa-bodyparser');
-const errorHandler = require('../../lib/errorHandler');
-const execute = require('../../lib/execute');
+const errorHandler = require('../../public/errorHandler');
+const execute = require('../../public/execute');
 const fetchJsonAtPort = require('../fetchJsonAtPort');
 const listen = require('../listen');
 

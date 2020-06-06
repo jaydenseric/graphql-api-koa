@@ -4,10 +4,10 @@ const { TestDirector } = require('test-director');
 
 const tests = new TestDirector();
 
-require('./lib/checkGraphQLSchema.test')(tests);
-require('./lib/checkGraphQLValidationRules.test')(tests);
-require('./lib/checkOptions.test')(tests);
-require('./lib/errorHandler.test')(tests);
-require('./lib/execute.test')(tests);
+require('./private/checkGraphQLSchema.test')(tests);
+require('./private/checkGraphQLValidationRules.test')(tests);
+require('./private/checkOptions.test')(tests);
+require('./public/errorHandler.test')(tests);
+require('./public/execute.test')(tests);
 
 tests.run();
