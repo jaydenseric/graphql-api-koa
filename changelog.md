@@ -7,6 +7,7 @@
 - Updated dev dependencies.
 - Updated the EditorConfig URL.
 - Stopped testing with Node.js v13.
+- Prettier format JSDoc example code.
 
 ## 5.1.0
 
