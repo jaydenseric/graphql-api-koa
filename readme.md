@@ -8,13 +8,13 @@
 
 ## Setup
 
-To install [`graphql-api-koa`](https://npm.im/graphql-api-koa) and [`graphql`](https://npm.im/graphql) from [npm](https://npmjs.com) run:
+To install [`graphql-api-koa`](https://npm.im/graphql-api-koa) and the [`graphql`](https://npm.im/graphql) peer dependency with [npm](https://npmjs.com/get-npm), run:
 
 ```sh
 npm install graphql-api-koa graphql
 ```
 
-See the [execute middleware](#function-execute) examples to get started.
+See the [`execute`](#function-execute) middleware examples to get started.
 
 ## API
 
