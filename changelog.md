@@ -8,6 +8,7 @@
 
 ### Patch
 
+- Stop using [`hard-rejection`](https://npm.im/hard-rejection) to detect unhandled `Promise` rejections in tests, as Node.js v15+ does this natively.
 - Updated GitHub Actions CI config:
   - Updated the tested Node.js versions to v12, v14, v16.
   - Updated `actions/checkout` to v2.
