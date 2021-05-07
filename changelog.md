@@ -19,6 +19,8 @@
   - Simplify config with the [`npm install-test`](https://docs.npmjs.com/cli/v7/commands/npm-install-test) command.
   - Don’t specify the `CI` environment variable as it’s set by default.
 - Removed `npm-debug.log` from the `.gitignore` file as npm [v4.2.0](https://github.com/npm/npm/releases/tag/v4.2.0)+ doesn’t create it in the current working directory.
+- Simplified JSDoc related package scripts now that [`jsdoc-md`](https://npm.im/jsdoc-md) v10 automatically generates a Prettier formatted readme.
+- Added a package `test:jsdoc` script that checks the readme API docs are up to date with the source JSDoc.
 
 ## 6.0.0
 
