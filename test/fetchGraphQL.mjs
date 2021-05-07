@@ -1,6 +1,4 @@
-'use strict';
-
-const fetch = require('node-fetch');
+import fetch from 'node-fetch';
 
 /**
  * Fetches GraphQL.
@@ -11,7 +9,7 @@ const fetch = require('node-fetch');
  * @returns {Promise<Response>} Fetch response.
  * @ignore
  */
-module.exports = function fetchGraphQL(port, options = {}) {
+export default function fetchGraphQL(port, options = {}) {
   return fetch(`http://localhost:${port}`, {
     method: 'POST',
     headers: {
@@ -20,4 +18,4 @@ module.exports = function fetchGraphQL(port, options = {}) {
     },
     ...options,
   });
-};
+}

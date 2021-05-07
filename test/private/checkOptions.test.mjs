@@ -1,9 +1,7 @@
-'use strict';
+import { doesNotThrow, throws } from 'assert';
+import checkOptions from '../../private/checkOptions.mjs';
 
-const { doesNotThrow, throws } = require('assert');
-const checkOptions = require('../../private/checkOptions');
-
-module.exports = (tests) => {
+export default (tests) => {
   tests.add('`checkOptions` with valid options.', () => {
     doesNotThrow(() => checkOptions({ a: true }, ['a'], 'Test'));
   });

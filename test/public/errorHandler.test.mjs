@@ -1,13 +1,11 @@
-'use strict';
+import { deepStrictEqual, ok, strictEqual } from 'assert';
+import createHttpError from 'http-errors';
+import Koa from 'koa';
+import errorHandler from '../../public/errorHandler.mjs';
+import fetchGraphQL from '../fetchGraphQL.mjs';
+import listen from '../listen.mjs';
 
-const { deepStrictEqual, ok, strictEqual } = require('assert');
-const createHttpError = require('http-errors');
-const Koa = require('koa');
-const errorHandler = require('../../public/errorHandler');
-const fetchGraphQL = require('../fetchGraphQL');
-const listen = require('../listen');
-
-module.exports = (tests) => {
+export default (tests) => {
   tests.add(
     '`errorHandler` middleware handles a non enumerable object error.',
     async () => {

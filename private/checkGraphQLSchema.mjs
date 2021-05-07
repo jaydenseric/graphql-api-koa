@@ -1,7 +1,5 @@
-'use strict';
-
-const { GraphQLSchema, validateSchema } = require('graphql');
-const createHttpError = require('http-errors');
+import { GraphQLSchema, validateSchema } from 'graphql';
+import createHttpError from 'http-errors';
 
 /**
  * Validates a GraphQL schema.
@@ -11,7 +9,7 @@ const createHttpError = require('http-errors');
  * @param {string} errorMessagePrefix Error message prefix.
  * @ignore
  */
-module.exports = function checkGraphQLSchema(schema, errorMessagePrefix) {
+export default function checkGraphQLSchema(schema, errorMessagePrefix) {
   if (!(schema instanceof GraphQLSchema))
     throw createHttpError(
       500,
@@ -26,4 +24,4 @@ module.exports = function checkGraphQLSchema(schema, errorMessagePrefix) {
       `${errorMessagePrefix} has GraphQL schema validation errors.`,
       { graphqlErrors: schemaValidationErrors }
     );
-};
+}

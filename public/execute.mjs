@@ -1,17 +1,15 @@
-'use strict';
-
-const {
+import {
   Source,
-  execute: graphqlExecute,
+  execute as graphqlExecute,
   parse,
   specifiedRules,
   validate,
-} = require('graphql');
-const createHttpError = require('http-errors');
-const isObject = require('isobject');
-const checkGraphQLSchema = require('../private/checkGraphQLSchema');
-const checkGraphQLValidationRules = require('../private/checkGraphQLValidationRules');
-const checkOptions = require('../private/checkOptions');
+} from 'graphql';
+import createHttpError from 'http-errors';
+import isObject from 'isobject';
+import checkGraphQLSchema from '../private/checkGraphQLSchema.mjs';
+import checkGraphQLValidationRules from '../private/checkGraphQLValidationRules.mjs';
+import checkOptions from '../private/checkOptions.mjs';
 
 /**
  * List of [`ExecuteOptions`]{@link ExecuteOptions} keys allowed for static
@@ -57,34 +55,28 @@ const ALLOWED_EXECUTE_OPTIONS_OVERRIDE = ALLOWED_EXECUTE_OPTIONS_STATIC.filter(
  * ```
  *
  * ```js
- * import execute from 'graphql-api-koa/public/execute.js';
- * ```
- * @example <caption>Ways to `require`.</caption>
- * ```js
- * const { execute } = require('graphql-api-koa');
- * ```
- *
- * ```js
- * const execute = require('graphql-api-koa/public/execute');
+ * import execute from 'graphql-api-koa/public/execute.mjs';
  * ```
  * @example <caption>A basic GraphQL API.</caption>
  * ```js
- * const Koa = require('koa');
- * const bodyParser = require('koa-bodyparser');
- * const { errorHandler, execute } = require('graphql-api-koa');
- * const schema = require('./schema');
+ * import Koa from 'koa';
+ * import bodyParser from 'koa-bodyparser';
+ * import { errorHandler, execute } from 'graphql-api-koa';
+ * import schema from './schema.mjs';
  *
  * const app = new Koa()
  *   .use(errorHandler())
- *   .use(bodyParser({
- *     extendTypes: {
- *       json: 'application/graphql+json',
- *     },
- *   }))
+ *   .use(
+ *     bodyParser({
+ *       extendTypes: {
+ *         json: 'application/graphql+json',
+ *       },
+ *     })
+ *   )
  *   .use(execute({ schema }));
  * ```
  */
-module.exports = function execute(options) {
+export default function execute(options) {
   if (typeof options === 'undefined')
     throw createHttpError(500, 'GraphQL execute middleware options missing.');
 
@@ -246,4 +238,4 @@ module.exports = function execute(options) {
 
     await next();
   };
-};
+}

@@ -1,6 +1,4 @@
-'use strict';
-
-const createHttpError = require('http-errors');
+import createHttpError from 'http-errors';
 
 /**
  * Validates GraphQL validation rules.
@@ -10,10 +8,7 @@ const createHttpError = require('http-errors');
  * @param {string} errorMessagePrefix Error message prefix.
  * @ignore
  */
-module.exports = function checkGraphQLValidationRules(
-  rules,
-  errorMessagePrefix
-) {
+export default function checkGraphQLValidationRules(rules, errorMessagePrefix) {
   if (!Array.isArray(rules))
     throw createHttpError(
       500,
@@ -25,4 +20,4 @@ module.exports = function checkGraphQLValidationRules(
       500,
       `${errorMessagePrefix} GraphQL validation rules must be functions.`
     );
-};
+}

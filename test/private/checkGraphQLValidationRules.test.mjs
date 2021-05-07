@@ -1,10 +1,8 @@
-'use strict';
+import { doesNotThrow, throws } from 'assert';
+import { specifiedRules } from 'graphql';
+import checkGraphQLValidationRules from '../../private/checkGraphQLValidationRules.mjs';
 
-const { doesNotThrow, throws } = require('assert');
-const { specifiedRules } = require('graphql');
-const checkGraphQLValidationRules = require('../../private/checkGraphQLValidationRules');
-
-module.exports = (tests) => {
+export default (tests) => {
   tests.add(
     '`checkGraphQLValidationRules` with valid GraphQL validation rules.',
     () => {

@@ -1,20 +1,18 @@
-'use strict';
-
-const { deepStrictEqual, ok, strictEqual, throws } = require('assert');
-const {
-  execute: graphqlExecute,
+import { deepStrictEqual, ok, strictEqual, throws } from 'assert';
+import {
   GraphQLError,
   GraphQLNonNull,
   GraphQLObjectType,
   GraphQLSchema,
   GraphQLString,
-} = require('graphql');
-const Koa = require('koa');
-const bodyParser = require('koa-bodyparser');
-const errorHandler = require('../../public/errorHandler');
-const execute = require('../../public/execute');
-const fetchGraphQL = require('../fetchGraphQL');
-const listen = require('../listen');
+  execute as graphqlExecute,
+} from 'graphql';
+import Koa from 'koa';
+import bodyParser from 'koa-bodyparser';
+import errorHandler from '../../public/errorHandler.mjs';
+import execute from '../../public/execute.mjs';
+import fetchGraphQL from '../fetchGraphQL.mjs';
+import listen from '../listen.mjs';
 
 const schema = new GraphQLSchema({
   query: new GraphQLObjectType({
@@ -33,7 +31,7 @@ const bodyParserMiddleware = bodyParser({
   },
 });
 
-module.exports = (tests) => {
+export default (tests) => {
   tests.add('`execute` middleware options missing.', () => {
     throws(() => execute(), {
       name: 'InternalServerError',

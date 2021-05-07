@@ -1,15 +1,13 @@
-'use strict';
-
-const { doesNotThrow, throws } = require('assert');
-const {
+import { doesNotThrow, throws } from 'assert';
+import {
   GraphQLError,
   GraphQLObjectType,
   GraphQLSchema,
   GraphQLString,
-} = require('graphql');
-const checkGraphQLSchema = require('../../private/checkGraphQLSchema');
+} from 'graphql';
+import checkGraphQLSchema from '../../private/checkGraphQLSchema.mjs';
 
-module.exports = (tests) => {
+export default (tests) => {
   tests.add('`checkGraphQLSchema` with a valid GraphQL schema.', () => {
     doesNotThrow(() =>
       checkGraphQLSchema(

@@ -1,7 +1,5 @@
-'use strict';
-
-const { formatError } = require('graphql');
-const createHttpError = require('http-errors');
+import { formatError } from 'graphql';
+import createHttpError from 'http-errors';
 
 /**
  * Creates Koa middleware to handle errors. Use this before other middleware to
@@ -25,18 +23,10 @@ const createHttpError = require('http-errors');
  * ```
  *
  * ```js
- * import errorHandler from 'graphql-api-koa/public/errorHandler.js';
- * ```
- * @example <caption>Ways to `require`.</caption>
- * ```js
- * const { errorHandler } = require('graphql-api-koa');
- * ```
- *
- * ```js
- * const errorHandler = require('graphql-api-koa/public/errorHandler');
+ * import errorHandler from 'graphql-api-koa/public/errorHandler.mjs';
  * ```
  */
-module.exports = function errorHandler() {
+export default function errorHandler() {
   return async function errorHandlerMiddleware(ctx, next) {
     try {
       // Await all following middleware.
@@ -108,4 +98,4 @@ module.exports = function errorHandler() {
       ctx.app.emit('error', error, ctx);
     }
   };
-};
+}

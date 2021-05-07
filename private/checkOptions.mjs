@@ -1,7 +1,5 @@
-'use strict';
-
-const createHttpError = require('http-errors');
-const isObject = require('isobject');
+import createHttpError from 'http-errors';
+import isObject from 'isobject';
 
 /**
  * Validates options are an enumerable object that conforms to a whitelist of
@@ -13,11 +11,7 @@ const isObject = require('isobject');
  * @param {string} errorMessagePrefix Error message prefix.
  * @ignore
  */
-module.exports = function checkOptions(
-  options,
-  allowedKeys,
-  errorMessagePrefix
-) {
+export default function checkOptions(options, allowedKeys, errorMessagePrefix) {
   if (!isObject(options))
     throw createHttpError(
       500,
@@ -33,4 +27,4 @@ module.exports = function checkOptions(
       500,
       `${errorMessagePrefix} options invalid: \`${invalid.join('`, `')}\`.`
     );
-};
+}

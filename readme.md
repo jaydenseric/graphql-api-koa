@@ -48,17 +48,7 @@ _Ways to `import`._
 > ```
 >
 > ```js
-> import errorHandler from 'graphql-api-koa/public/errorHandler.js';
-> ```
-
-_Ways to `require`._
-
-> ```js
-> const { errorHandler } = require('graphql-api-koa');
-> ```
->
-> ```js
-> const errorHandler = require('graphql-api-koa/public/errorHandler');
+> import errorHandler from 'graphql-api-koa/public/errorHandler.mjs';
 > ```
 
 ---
@@ -82,26 +72,16 @@ _Ways to `import`._
 > ```
 >
 > ```js
-> import execute from 'graphql-api-koa/public/execute.js';
-> ```
-
-_Ways to `require`._
-
-> ```js
-> const { execute } = require('graphql-api-koa');
-> ```
->
-> ```js
-> const execute = require('graphql-api-koa/public/execute');
+> import execute from 'graphql-api-koa/public/execute.mjs';
 > ```
 
 _A basic GraphQL API._
 
 > ```js
-> const Koa = require('koa');
-> const bodyParser = require('koa-bodyparser');
-> const { errorHandler, execute } = require('graphql-api-koa');
-> const schema = require('./schema');
+> import Koa from 'koa';
+> import bodyParser from 'koa-bodyparser';
+> import { errorHandler, execute } from 'graphql-api-koa';
+> import schema from './schema.mjs';
 >
 > const app = new Koa()
 >   .use(errorHandler())
@@ -126,7 +106,7 @@ A GraphQL resolver error may have these special properties for the [`errorHandle
 | Property | Type | Description |
 | :-- | :-- | :-- |
 | `message` | string | Error message. If the error `expose` property isn’t `true`, the message is replaced with `Internal Server Error` in the response payload `errors` array. |
-| `extensions` | object&lt;string, \*>? | A map of custom error data that is exposed to the client in the response payload `errors` array, regardless of the error `expose` or `status` properties. |
+| `extensions` | object<string, \*>? | A map of custom error data that is exposed to the client in the response payload `errors` array, regardless of the error `expose` or `status` properties. |
 | `expose` | boolean? | Should the original error `message` be exposed to the client. |
 
 #### See
@@ -186,7 +166,7 @@ A Koa middleware error may have these special properties for the [`errorHandler`
 | Property | Type | Description |
 | :-- | :-- | :-- |
 | `message` | string | Error message. If the error `status` property >= 500 or the error `expose` property isn’t `true`, the message is replaced with `Internal Server Error` in the response payload `errors` array. |
-| `extensions` | object&lt;string, \*>? | A map of custom error data that is exposed to the client in the response payload `errors` array, regardless of the error `expose` or `status` properties. |
+| `extensions` | object<string, \*>? | A map of custom error data that is exposed to the client in the response payload `errors` array, regardless of the error `expose` or `status` properties. |
 | `status` | number? | Determines the response HTTP status code. |
 | `expose` | boolean? | Should the original error `message` be exposed to the client. |
 
@@ -213,7 +193,8 @@ _A client error thrown in Koa middleware._
 > Error constructed using [`http-errors`](https://npm.im/http-errors):
 >
 > ```js
-> const createHttpError = require('http-errors');
+> import createHttpError from 'http-errors';
+>
 > const error = createHttpError(429, 'Rate limit exceeded.', {
 >   extensions: {
 >     code: 'RATE_LIMIT_EXCEEDED',
@@ -289,7 +270,7 @@ _A server error thrown in Koa middleware, exposed to the client._
 | Property | Type | Description |
 | :-- | :-- | :-- |
 | `schema` | GraphQLSchema | GraphQL schema. |
-| `validationRules` | Array&lt;Function>? | Validation rules for [GraphQL.js `validate`](https://graphql.org/graphql-js/validation/#validate), in addition to the default [GraphQL.js `specifiedRules`](https://graphql.org/graphql-js/validation/#specifiedrules). |
+| `validationRules` | Array<Function>? | Validation rules for [GraphQL.js `validate`](https://graphql.org/graphql-js/validation/#validate), in addition to the default [GraphQL.js `specifiedRules`](https://graphql.org/graphql-js/validation/#specifiedrules). |
 | `rootValue` | \*? | Value passed to the first resolver. |
 | `contextValue` | \*? | Execution context (usually an object) passed to resolvers. |
 | `fieldResolver` | Function? | Custom default field resolver. |
@@ -301,7 +282,7 @@ _A server error thrown in Koa middleware, exposed to the client._
 _[`execute`](#function-execute) middleware options that sets the schema once but populates the user in the GraphQL context from the Koa context each request._
 
 > ```js
-> const schema = require('./schema');
+> import schema from './schema.mjs';
 >
 > const executeOptions = {
 >   schema,
