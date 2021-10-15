@@ -1,5 +1,11 @@
 # graphql-api-koa changelog
 
+## Next
+
+### Patch
+
+- Updated dev dependencies.
+
 ## 7.0.0
 
 ### Major
