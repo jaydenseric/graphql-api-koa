@@ -1,4 +1,3 @@
-import { formatError } from 'graphql';
 import createHttpError from 'http-errors';
 
 /**
@@ -45,7 +44,7 @@ export default function errorHandler() {
         // Error contains GraphQL query validation or execution errors.
 
         ctx.response.body.errors = error.graphqlErrors.map((graphqlError) => {
-          const formattedError = formatError(graphqlError);
+          const formattedError = graphqlError.toJSON();
 
           if (
             // Originally thrown in resolvers (not a GraphQL validation error).
@@ -87,7 +86,16 @@ export default function errorHandler() {
             httpError.extensions = error.extensions;
         }
 
-        ctx.response.body.errors = [formatError(httpError)];
+        const formattedError = {
+          message: httpError.message,
+          locations: httpError.locations,
+          path: httpError.path,
+        };
+
+        if (httpError.extensions)
+          formattedError.extensions = httpError.extensions;
+
+        ctx.response.body.errors = [formattedError];
         ctx.response.status = httpError.status;
       }
 
