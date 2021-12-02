@@ -14,6 +14,7 @@
 ### Patch
 
 - Updated dependencies.
+- Simplified package scripts.
 - Reorganized the test file structure.
 - Configured Prettier option `singleQuote` to the default, `false`.
 
