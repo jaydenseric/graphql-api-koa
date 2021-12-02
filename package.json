@@ -38,24 +38,24 @@
     "graphql": "^16.0.0"
   },
   "dependencies": {
-    "http-errors": "^1.8.0",
+    "http-errors": "^1.8.1",
     "isobject": "^4.0.0"
   },
   "devDependencies": {
     "coverage-node": "^5.0.1",
-    "eslint": "^7.32.0",
-    "eslint-config-env": "^22.0.0",
+    "eslint": "^8.3.0",
+    "eslint-config-env": "^23.0.0",
     "eslint-config-prettier": "^8.3.0",
-    "eslint-plugin-import": "^2.25.2",
-    "eslint-plugin-jsdoc": "^36.1.1",
+    "eslint-plugin-import": "^2.25.3",
+    "eslint-plugin-jsdoc": "^37.1.0",
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-prettier": "^4.0.0",
     "graphql": "^16.0.1",
     "jsdoc-md": "^11.0.2",
     "koa": "^2.13.4",
     "koa-bodyparser": "^4.3.0",
-    "node-fetch": "^3.0.0",
-    "prettier": "^2.4.1",
+    "node-fetch": "^3.1.0",
+    "prettier": "^2.5.0",
     "test-director": "^7.0.0"
   },
   "scripts": {
