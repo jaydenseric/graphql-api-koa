@@ -1,4 +1,4 @@
-import createHttpError from 'http-errors';
+import createHttpError from "http-errors";
 
 /**
  * Creates Koa middleware to handle errors. Use this before other middleware to
@@ -18,7 +18,7 @@ import createHttpError from 'http-errors';
  * @returns {Function} Koa middleware.
  * @example <caption>How to import.</caption>
  * ```js
- * import errorHandler from 'graphql-api-koa/errorHandler.mjs';
+ * import errorHandler from "graphql-api-koa/errorHandler.mjs";
  * ```
  */
 export default function errorHandler() {
@@ -50,7 +50,7 @@ export default function errorHandler() {
           )
             // Overwrite the message to prevent client exposure. Wording is
             // consistent with the http-errors 500 server error message.
-            formattedError.message = 'Internal Server Error';
+            formattedError.message = "Internal Server Error";
 
           return formattedError;
         });
@@ -96,10 +96,10 @@ export default function errorHandler() {
       }
 
       // Set the content-type.
-      ctx.response.type = 'application/graphql+json';
+      ctx.response.type = "application/graphql+json";
 
       // Support Koa app error listeners.
-      ctx.app.emit('error', error, ctx);
+      ctx.app.emit("error", error, ctx);
     }
   };
 }

@@ -4,12 +4,12 @@ import {
   parse,
   specifiedRules,
   validate,
-} from 'graphql';
-import createHttpError from 'http-errors';
-import isObject from 'isobject';
-import checkGraphQLSchema from './checkGraphQLSchema.mjs';
-import checkGraphQLValidationRules from './checkGraphQLValidationRules.mjs';
-import checkOptions from './checkOptions.mjs';
+} from "graphql";
+import createHttpError from "http-errors";
+import isObject from "isobject";
+import checkGraphQLSchema from "./checkGraphQLSchema.mjs";
+import checkGraphQLValidationRules from "./checkGraphQLValidationRules.mjs";
+import checkOptions from "./checkOptions.mjs";
 
 /**
  * List of [`ExecuteOptions`]{@link ExecuteOptions} keys allowed for static
@@ -20,13 +20,13 @@ import checkOptions from './checkOptions.mjs';
  * @ignore
  */
 const ALLOWED_EXECUTE_OPTIONS_STATIC = [
-  'schema',
-  'validationRules',
-  'rootValue',
-  'contextValue',
-  'fieldResolver',
-  'execute',
-  'override',
+  "schema",
+  "validationRules",
+  "rootValue",
+  "contextValue",
+  "fieldResolver",
+  "execute",
+  "override",
 ];
 
 /**
@@ -38,7 +38,7 @@ const ALLOWED_EXECUTE_OPTIONS_STATIC = [
  * @ignore
  */
 const ALLOWED_EXECUTE_OPTIONS_OVERRIDE = ALLOWED_EXECUTE_OPTIONS_STATIC.filter(
-  (option) => option !== 'override'
+  (option) => option !== "override"
 );
 
 /**
@@ -51,22 +51,22 @@ const ALLOWED_EXECUTE_OPTIONS_OVERRIDE = ALLOWED_EXECUTE_OPTIONS_STATIC.filter(
  * @returns {Function} Koa middleware.
  * @example <caption>How to import.</caption>
  * ```js
- * import execute from 'graphql-api-koa/execute.mjs';
+ * import execute from "graphql-api-koa/execute.mjs";
  * ```
  * @example <caption>A basic GraphQL API.</caption>
  * ```js
- * import Koa from 'koa';
- * import bodyParser from 'koa-bodyparser';
- * import errorHandler from 'graphql-api-koa/errorHandler.mjs';
- * import execute from 'graphql-api-koa/execute.mjs';
- * import schema from './schema.mjs';
+ * import Koa from "koa";
+ * import bodyParser from "koa-bodyparser";
+ * import errorHandler from "graphql-api-koa/errorHandler.mjs";
+ * import execute from "graphql-api-koa/execute.mjs";
+ * import schema from "./schema.mjs";
  *
  * const app = new Koa()
  *   .use(errorHandler())
  *   .use(
  *     bodyParser({
  *       extendTypes: {
- *         json: 'application/graphql+json',
+ *         json: "application/graphql+json",
  *       },
  *     })
  *   )
@@ -74,67 +74,67 @@ const ALLOWED_EXECUTE_OPTIONS_OVERRIDE = ALLOWED_EXECUTE_OPTIONS_STATIC.filter(
  * ```
  */
 export default function execute(options) {
-  if (typeof options === 'undefined')
-    throw createHttpError(500, 'GraphQL execute middleware options missing.');
+  if (typeof options === "undefined")
+    throw createHttpError(500, "GraphQL execute middleware options missing.");
 
   checkOptions(
     options,
     ALLOWED_EXECUTE_OPTIONS_STATIC,
-    'GraphQL execute middleware'
+    "GraphQL execute middleware"
   );
 
-  if (typeof options.schema !== 'undefined')
+  if (typeof options.schema !== "undefined")
     checkGraphQLSchema(
       options.schema,
-      'GraphQL execute middleware `schema` option'
+      "GraphQL execute middleware `schema` option"
     );
 
-  if (typeof options.validationRules !== 'undefined')
+  if (typeof options.validationRules !== "undefined")
     checkGraphQLValidationRules(
       options.validationRules,
-      'GraphQL execute middleware `validationRules` option'
+      "GraphQL execute middleware `validationRules` option"
     );
 
   if (
-    typeof options.execute !== 'undefined' &&
-    typeof options.execute !== 'function'
+    typeof options.execute !== "undefined" &&
+    typeof options.execute !== "function"
   )
     throw createHttpError(
       500,
-      'GraphQL execute middleware `execute` option must be a function.'
+      "GraphQL execute middleware `execute` option must be a function."
     );
 
   const { override, ...staticOptions } = options;
 
-  if (typeof override !== 'undefined' && typeof override !== 'function')
+  if (typeof override !== "undefined" && typeof override !== "function")
     throw createHttpError(
       500,
-      'GraphQL execute middleware `override` option must be a function.'
+      "GraphQL execute middleware `override` option must be a function."
     );
 
   return async (ctx, next) => {
-    if (typeof ctx.request.body === 'undefined')
-      throw createHttpError(500, 'Request body missing.');
+    if (typeof ctx.request.body === "undefined")
+      throw createHttpError(500, "Request body missing.");
 
     if (!isObject(ctx.request.body))
-      throw createHttpError(400, 'Request body must be a JSON object.');
+      throw createHttpError(400, "Request body must be a JSON object.");
 
-    if (!('query' in ctx.request.body))
-      throw createHttpError(400, 'GraphQL operation field `query` missing.');
+    if (!("query" in ctx.request.body))
+      throw createHttpError(400, "GraphQL operation field `query` missing.");
 
-    if (typeof ctx.request.body.query !== 'string')
+    if (typeof ctx.request.body.query !== "string")
       throw createHttpError(
         400,
-        'GraphQL operation field `query` must be a string.'
+        "GraphQL operation field `query` must be a string."
       );
 
     if (
-      'variables' in ctx.request.body &&
+      "variables" in ctx.request.body &&
       !isObject(ctx.request.body.variables)
     )
       throw createHttpError(
         400,
-        'Request body JSON `variables` field must be an object.'
+        "Request body JSON `variables` field must be an object."
       );
 
     let document;
@@ -142,7 +142,7 @@ export default function execute(options) {
     try {
       document = parse(new Source(ctx.request.body.query));
     } catch (error) {
-      throw createHttpError(400, 'GraphQL query syntax errors.', {
+      throw createHttpError(400, "GraphQL query syntax errors.", {
         graphqlErrors: [error],
       });
     }
@@ -155,28 +155,28 @@ export default function execute(options) {
       checkOptions(
         overrideOptions,
         ALLOWED_EXECUTE_OPTIONS_OVERRIDE,
-        'GraphQL execute middleware `override` option resolved'
+        "GraphQL execute middleware `override` option resolved"
       );
 
-      if (typeof overrideOptions.schema !== 'undefined')
+      if (typeof overrideOptions.schema !== "undefined")
         checkGraphQLSchema(
           overrideOptions.schema,
-          'GraphQL execute middleware `override` option resolved `schema` option'
+          "GraphQL execute middleware `override` option resolved `schema` option"
         );
 
-      if (typeof overrideOptions.validationRules !== 'undefined')
+      if (typeof overrideOptions.validationRules !== "undefined")
         checkGraphQLValidationRules(
           overrideOptions.validationRules,
-          'GraphQL execute middleware `override` option resolved `validationRules` option'
+          "GraphQL execute middleware `override` option resolved `validationRules` option"
         );
 
       if (
-        typeof overrideOptions.execute !== 'undefined' &&
-        typeof overrideOptions.execute !== 'function'
+        typeof overrideOptions.execute !== "undefined" &&
+        typeof overrideOptions.execute !== "function"
       )
         throw createHttpError(
           500,
-          'GraphQL execute middleware `override` option resolved `execute` option must be a function.'
+          "GraphQL execute middleware `override` option resolved `execute` option must be a function."
         );
     }
 
@@ -187,10 +187,10 @@ export default function execute(options) {
       ...overrideOptions,
     };
 
-    if (typeof requestOptions.schema === 'undefined')
+    if (typeof requestOptions.schema === "undefined")
       throw createHttpError(
         500,
-        'GraphQL execute middleware requires a GraphQL schema.'
+        "GraphQL execute middleware requires a GraphQL schema."
       );
 
     const queryValidationErrors = validate(requestOptions.schema, document, [
@@ -199,7 +199,7 @@ export default function execute(options) {
     ]);
 
     if (queryValidationErrors.length)
-      throw createHttpError(400, 'GraphQL query validation errors.', {
+      throw createHttpError(400, "GraphQL query validation errors.", {
         graphqlErrors: queryValidationErrors,
       });
 
@@ -222,7 +222,7 @@ export default function execute(options) {
       // HTTP status code. `http-errors` can’t be used to create this error
       // because it doesn’t allow a non-error 200 status, see:
       // https://github.com/jshttp/http-errors/issues/50#issuecomment-395107925
-      const error = new Error('GraphQL execution errors.');
+      const error = new Error("GraphQL execution errors.");
       error.graphqlErrors = errors;
       error.status = 200;
       error.expose = true;
@@ -231,7 +231,7 @@ export default function execute(options) {
     }
 
     // Set the content-type.
-    ctx.response.type = 'application/graphql+json';
+    ctx.response.type = "application/graphql+json";
 
     await next();
   };

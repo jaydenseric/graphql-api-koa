@@ -1,4 +1,4 @@
-import fetch from 'node-fetch';
+import fetch from "node-fetch";
 
 /**
  * Fetches GraphQL.
@@ -11,10 +11,10 @@ import fetch from 'node-fetch';
  */
 export default function fetchGraphQL(port, options = {}) {
   return fetch(`http://localhost:${port}`, {
-    method: 'POST',
+    method: "POST",
     headers: {
-      'Content-Type': 'application/graphql+json',
-      Accept: 'application/graphql+json',
+      "Content-Type": "application/graphql+json",
+      Accept: "application/graphql+json",
     },
     ...options,
   });

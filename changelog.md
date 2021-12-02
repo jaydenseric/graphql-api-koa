@@ -15,6 +15,7 @@
 
 - Updated dependencies.
 - Reorganized the test file structure.
+- Configured Prettier option `singleQuote` to the default, `false`.
 
 ## 8.0.0
 

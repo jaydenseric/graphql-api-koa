@@ -1,4 +1,4 @@
-import { deepStrictEqual, ok, strictEqual, throws } from 'assert';
+import { deepStrictEqual, ok, strictEqual, throws } from "assert";
 import {
   GraphQLError,
   GraphQLNonNull,
@@ -6,17 +6,17 @@ import {
   GraphQLSchema,
   GraphQLString,
   execute as graphqlExecute,
-} from 'graphql';
-import Koa from 'koa';
-import bodyParser from 'koa-bodyparser';
-import errorHandler from './errorHandler.mjs';
-import execute from './execute.mjs';
-import fetchGraphQL from './test/fetchGraphQL.mjs';
-import listen from './test/listen.mjs';
+} from "graphql";
+import Koa from "koa";
+import bodyParser from "koa-bodyparser";
+import errorHandler from "./errorHandler.mjs";
+import execute from "./execute.mjs";
+import fetchGraphQL from "./test/fetchGraphQL.mjs";
+import listen from "./test/listen.mjs";
 
 const schema = new GraphQLSchema({
   query: new GraphQLObjectType({
-    name: 'Query',
+    name: "Query",
     fields: {
       test: {
         type: GraphQLString,
@@ -27,52 +27,52 @@ const schema = new GraphQLSchema({
 
 const bodyParserMiddleware = bodyParser({
   extendTypes: {
-    json: 'application/graphql+json',
+    json: "application/graphql+json",
   },
 });
 
 export default (tests) => {
-  tests.add('`execute` middleware options missing.', () => {
+  tests.add("`execute` middleware options missing.", () => {
     throws(() => execute(), {
-      name: 'InternalServerError',
-      message: 'GraphQL execute middleware options missing.',
+      name: "InternalServerError",
+      message: "GraphQL execute middleware options missing.",
       status: 500,
       expose: false,
     });
   });
 
-  tests.add('`execute` middleware options not an object.', () => {
+  tests.add("`execute` middleware options not an object.", () => {
     throws(() => execute(true), {
-      name: 'InternalServerError',
+      name: "InternalServerError",
       message:
-        'GraphQL execute middleware options must be an enumerable object.',
+        "GraphQL execute middleware options must be an enumerable object.",
       status: 500,
       expose: false,
     });
   });
 
-  tests.add('`execute` middleware options invalid.', () => {
+  tests.add("`execute` middleware options invalid.", () => {
     throws(() => execute({ schema, invalid1: true, invalid2: true }), {
-      name: 'InternalServerError',
+      name: "InternalServerError",
       message:
-        'GraphQL execute middleware options invalid: `invalid1`, `invalid2`.',
+        "GraphQL execute middleware options invalid: `invalid1`, `invalid2`.",
       status: 500,
       expose: false,
     });
   });
 
-  tests.add('`execute` middleware option `override` not a function.', () => {
+  tests.add("`execute` middleware option `override` not a function.", () => {
     throws(() => execute({ schema, override: true }), {
-      name: 'InternalServerError',
+      name: "InternalServerError",
       message:
-        'GraphQL execute middleware `override` option must be a function.',
+        "GraphQL execute middleware `override` option must be a function.",
       status: 500,
       expose: false,
     });
   });
 
   tests.add(
-    '`execute` middleware option `override` returning not an object.',
+    "`execute` middleware option `override` returning not an object.",
     async () => {
       let koaError;
 
@@ -85,7 +85,7 @@ export default (tests) => {
             override: () => true,
           })
         )
-        .on('error', (error) => {
+        .on("error", (error) => {
           koaError = error;
         });
 
@@ -93,24 +93,24 @@ export default (tests) => {
 
       try {
         const response = await fetchGraphQL(port, {
-          body: JSON.stringify({ query: '{ test }' }),
+          body: JSON.stringify({ query: "{ test }" }),
         });
 
         ok(koaError instanceof Error);
-        strictEqual(koaError.name, 'InternalServerError');
+        strictEqual(koaError.name, "InternalServerError");
         strictEqual(
           koaError.message,
-          'GraphQL execute middleware `override` option resolved options must be an enumerable object.'
+          "GraphQL execute middleware `override` option resolved options must be an enumerable object."
         );
         strictEqual(koaError.status, 500);
         strictEqual(koaError.expose, false);
         strictEqual(response.status, 500);
         strictEqual(
-          response.headers.get('Content-Type'),
-          'application/graphql+json'
+          response.headers.get("Content-Type"),
+          "application/graphql+json"
         );
         deepStrictEqual(await response.json(), {
-          errors: [{ message: 'Internal Server Error' }],
+          errors: [{ message: "Internal Server Error" }],
         });
       } finally {
         close();
@@ -119,7 +119,7 @@ export default (tests) => {
   );
 
   tests.add(
-    '`execute` middleware option `override` returning options invalid.',
+    "`execute` middleware option `override` returning options invalid.",
     async () => {
       let koaError;
 
@@ -135,7 +135,7 @@ export default (tests) => {
             }),
           })
         )
-        .on('error', (error) => {
+        .on("error", (error) => {
           koaError = error;
         });
 
@@ -143,24 +143,24 @@ export default (tests) => {
 
       try {
         const response = await fetchGraphQL(port, {
-          body: JSON.stringify({ query: '{ test }' }),
+          body: JSON.stringify({ query: "{ test }" }),
         });
 
         ok(koaError instanceof Error);
-        strictEqual(koaError.name, 'InternalServerError');
+        strictEqual(koaError.name, "InternalServerError");
         strictEqual(
           koaError.message,
-          'GraphQL execute middleware `override` option resolved options invalid: `invalid`, `override`.'
+          "GraphQL execute middleware `override` option resolved options invalid: `invalid`, `override`."
         );
         strictEqual(koaError.status, 500);
         strictEqual(koaError.expose, false);
         strictEqual(response.status, 500);
         strictEqual(
-          response.headers.get('Content-Type'),
-          'application/graphql+json'
+          response.headers.get("Content-Type"),
+          "application/graphql+json"
         );
         deepStrictEqual(await response.json(), {
-          errors: [{ message: 'Internal Server Error' }],
+          errors: [{ message: "Internal Server Error" }],
         });
       } finally {
         close();
@@ -169,12 +169,12 @@ export default (tests) => {
   );
 
   tests.add(
-    '`execute` middleware option `schema` not a GraphQLSchema instance.',
+    "`execute` middleware option `schema` not a GraphQLSchema instance.",
     () => {
       throws(() => execute({ schema: true }), {
-        name: 'InternalServerError',
+        name: "InternalServerError",
         message:
-          'GraphQL execute middleware `schema` option GraphQL schema must be a `GraphQLSchema` instance.',
+          "GraphQL execute middleware `schema` option GraphQL schema must be a `GraphQLSchema` instance.",
         status: 500,
         expose: false,
       });
@@ -182,7 +182,7 @@ export default (tests) => {
   );
 
   tests.add(
-    '`execute` middleware option `schema` undefined, without an override.',
+    "`execute` middleware option `schema` undefined, without an override.",
     async () => {
       let koaError;
 
@@ -190,7 +190,7 @@ export default (tests) => {
         .use(errorHandler())
         .use(bodyParserMiddleware)
         .use(execute({ schema: undefined }))
-        .on('error', (error) => {
+        .on("error", (error) => {
           koaError = error;
         });
 
@@ -198,24 +198,24 @@ export default (tests) => {
 
       try {
         const response = await fetchGraphQL(port, {
-          body: JSON.stringify({ query: '{ test }' }),
+          body: JSON.stringify({ query: "{ test }" }),
         });
 
         ok(koaError instanceof Error);
-        strictEqual(koaError.name, 'InternalServerError');
+        strictEqual(koaError.name, "InternalServerError");
         strictEqual(
           koaError.message,
-          'GraphQL execute middleware requires a GraphQL schema.'
+          "GraphQL execute middleware requires a GraphQL schema."
         );
         strictEqual(koaError.status, 500);
         strictEqual(koaError.expose, false);
         strictEqual(response.status, 500);
         strictEqual(
-          response.headers.get('Content-Type'),
-          'application/graphql+json'
+          response.headers.get("Content-Type"),
+          "application/graphql+json"
         );
         deepStrictEqual(await response.json(), {
-          errors: [{ message: 'Internal Server Error' }],
+          errors: [{ message: "Internal Server Error" }],
         });
       } finally {
         close();
@@ -224,7 +224,7 @@ export default (tests) => {
   );
 
   tests.add(
-    '`execute` middleware option `schema` not a GraphQLSchema instance override.',
+    "`execute` middleware option `schema` not a GraphQLSchema instance override.",
     async () => {
       let koaError;
 
@@ -237,7 +237,7 @@ export default (tests) => {
             override: () => ({ schema: true }),
           })
         )
-        .on('error', (error) => {
+        .on("error", (error) => {
           koaError = error;
         });
 
@@ -245,24 +245,24 @@ export default (tests) => {
 
       try {
         const response = await fetchGraphQL(port, {
-          body: JSON.stringify({ query: '{ test }' }),
+          body: JSON.stringify({ query: "{ test }" }),
         });
 
         ok(koaError instanceof Error);
-        strictEqual(koaError.name, 'InternalServerError');
+        strictEqual(koaError.name, "InternalServerError");
         strictEqual(
           koaError.message,
-          'GraphQL execute middleware `override` option resolved `schema` option GraphQL schema must be a `GraphQLSchema` instance.'
+          "GraphQL execute middleware `override` option resolved `schema` option GraphQL schema must be a `GraphQLSchema` instance."
         );
         strictEqual(koaError.status, 500);
         strictEqual(koaError.expose, false);
         strictEqual(response.status, 500);
         strictEqual(
-          response.headers.get('Content-Type'),
-          'application/graphql+json'
+          response.headers.get("Content-Type"),
+          "application/graphql+json"
         );
         deepStrictEqual(await response.json(), {
-          errors: [{ message: 'Internal Server Error' }],
+          errors: [{ message: "Internal Server Error" }],
         });
       } finally {
         close();
@@ -270,19 +270,19 @@ export default (tests) => {
     }
   );
 
-  tests.add('`execute` middleware option `schema` invalid GraphQL.', () => {
+  tests.add("`execute` middleware option `schema` invalid GraphQL.", () => {
     throws(() => execute({ schema: new GraphQLSchema({}) }), {
-      name: 'InternalServerError',
+      name: "InternalServerError",
       message:
-        'GraphQL execute middleware `schema` option has GraphQL schema validation errors.',
+        "GraphQL execute middleware `schema` option has GraphQL schema validation errors.",
       status: 500,
       expose: false,
-      graphqlErrors: [new GraphQLError('Query root type must be provided.')],
+      graphqlErrors: [new GraphQLError("Query root type must be provided.")],
     });
   });
 
   tests.add(
-    '`execute` middleware option `schema` invalid GraphQL override.',
+    "`execute` middleware option `schema` invalid GraphQL override.",
     async () => {
       let koaError;
 
@@ -295,7 +295,7 @@ export default (tests) => {
             override: () => ({ schema: new GraphQLSchema({}) }),
           })
         )
-        .on('error', (error) => {
+        .on("error", (error) => {
           koaError = error;
         });
 
@@ -303,31 +303,31 @@ export default (tests) => {
 
       try {
         const response = await fetchGraphQL(port, {
-          body: JSON.stringify({ query: '{ test }' }),
+          body: JSON.stringify({ query: "{ test }" }),
         });
 
         ok(koaError instanceof Error);
-        strictEqual(koaError.name, 'InternalServerError');
+        strictEqual(koaError.name, "InternalServerError");
         strictEqual(
           koaError.message,
-          'GraphQL execute middleware `override` option resolved `schema` option has GraphQL schema validation errors.'
+          "GraphQL execute middleware `override` option resolved `schema` option has GraphQL schema validation errors."
         );
         strictEqual(koaError.status, 500);
         strictEqual(koaError.expose, false);
         strictEqual(Array.isArray(koaError.graphqlErrors), true);
         strictEqual(koaError.graphqlErrors.length, 1);
-        strictEqual(koaError.graphqlErrors[0].name, 'GraphQLError');
+        strictEqual(koaError.graphqlErrors[0].name, "GraphQLError");
         strictEqual(
           koaError.graphqlErrors[0].message,
-          'Query root type must be provided.'
+          "Query root type must be provided."
         );
         strictEqual(response.status, 500);
         strictEqual(
-          response.headers.get('Content-Type'),
-          'application/graphql+json'
+          response.headers.get("Content-Type"),
+          "application/graphql+json"
         );
         deepStrictEqual(await response.json(), {
-          errors: [{ message: 'Internal Server Error' }],
+          errors: [{ message: "Internal Server Error" }],
         });
       } finally {
         close();
@@ -335,11 +335,11 @@ export default (tests) => {
     }
   );
 
-  tests.add('`execute` middleware option `validationRules`.', async () => {
+  tests.add("`execute` middleware option `validationRules`.", async () => {
     let koaError;
 
     const error1 = {
-      message: 'Message.',
+      message: "Message.",
       locations: [{ line: 1, column: 1 }],
     };
     const error2 = {
@@ -362,7 +362,7 @@ export default (tests) => {
           ],
         })
       )
-      .on('error', (error) => {
+      .on("error", (error) => {
         koaError = error;
       });
 
@@ -370,26 +370,26 @@ export default (tests) => {
 
     try {
       const response = await fetchGraphQL(port, {
-        body: JSON.stringify({ query: '{ wrong }' }),
+        body: JSON.stringify({ query: "{ wrong }" }),
       });
 
       ok(koaError instanceof Error);
-      strictEqual(koaError.name, 'BadRequestError');
-      strictEqual(koaError.message, 'GraphQL query validation errors.');
+      strictEqual(koaError.name, "BadRequestError");
+      strictEqual(koaError.message, "GraphQL query validation errors.");
       strictEqual(koaError.status, 400);
       strictEqual(koaError.expose, true);
       strictEqual(Array.isArray(koaError.graphqlErrors), true);
       strictEqual(koaError.graphqlErrors.length, 2);
-      strictEqual(koaError.graphqlErrors[0].name, 'GraphQLError');
+      strictEqual(koaError.graphqlErrors[0].name, "GraphQLError");
       strictEqual(koaError.graphqlErrors[0].message, error1.message);
       deepStrictEqual(koaError.graphqlErrors[0].locations, error1.locations);
-      strictEqual(koaError.graphqlErrors[1].name, 'GraphQLError');
+      strictEqual(koaError.graphqlErrors[1].name, "GraphQLError");
       strictEqual(koaError.graphqlErrors[1].message, error2.message);
       deepStrictEqual(koaError.graphqlErrors[1].locations, error2.locations);
       strictEqual(response.status, 400);
       strictEqual(
-        response.headers.get('Content-Type'),
-        'application/graphql+json'
+        response.headers.get("Content-Type"),
+        "application/graphql+json"
       );
       deepStrictEqual(await response.json(), {
         errors: [error1, error2],
@@ -400,12 +400,12 @@ export default (tests) => {
   });
 
   tests.add(
-    '`execute` middleware option `validationRules` override.',
+    "`execute` middleware option `validationRules` override.",
     async () => {
       let koaError;
 
       const error1 = {
-        message: 'Message overridden.',
+        message: "Message overridden.",
         locations: [{ line: 1, column: 1 }],
       };
       const error2 = {
@@ -422,7 +422,7 @@ export default (tests) => {
             validationRules: [
               (context) => ({
                 OperationDefinition(node) {
-                  context.reportError(new GraphQLError('Message.', [node]));
+                  context.reportError(new GraphQLError("Message.", [node]));
                 },
               }),
             ],
@@ -431,7 +431,7 @@ export default (tests) => {
                 (context) => ({
                   OperationDefinition(node) {
                     context.reportError(
-                      new GraphQLError('Message overridden.', [node])
+                      new GraphQLError("Message overridden.", [node])
                     );
                   },
                 }),
@@ -439,7 +439,7 @@ export default (tests) => {
             }),
           })
         )
-        .on('error', (error) => {
+        .on("error", (error) => {
           koaError = error;
         });
 
@@ -447,26 +447,26 @@ export default (tests) => {
 
       try {
         const response = await fetchGraphQL(port, {
-          body: JSON.stringify({ query: '{ wrong }' }),
+          body: JSON.stringify({ query: "{ wrong }" }),
         });
 
         ok(koaError instanceof Error);
-        strictEqual(koaError.name, 'BadRequestError');
-        strictEqual(koaError.message, 'GraphQL query validation errors.');
+        strictEqual(koaError.name, "BadRequestError");
+        strictEqual(koaError.message, "GraphQL query validation errors.");
         strictEqual(koaError.status, 400);
         strictEqual(koaError.expose, true);
         strictEqual(Array.isArray(koaError.graphqlErrors), true);
         strictEqual(koaError.graphqlErrors.length, 2);
-        strictEqual(koaError.graphqlErrors[0].name, 'GraphQLError');
+        strictEqual(koaError.graphqlErrors[0].name, "GraphQLError");
         strictEqual(koaError.graphqlErrors[0].message, error1.message);
         deepStrictEqual(koaError.graphqlErrors[0].locations, error1.locations);
-        strictEqual(koaError.graphqlErrors[1].name, 'GraphQLError');
+        strictEqual(koaError.graphqlErrors[1].name, "GraphQLError");
         strictEqual(koaError.graphqlErrors[1].message, error2.message);
         deepStrictEqual(koaError.graphqlErrors[1].locations, error2.locations);
         strictEqual(response.status, 400);
         strictEqual(
-          response.headers.get('Content-Type'),
-          'application/graphql+json'
+          response.headers.get("Content-Type"),
+          "application/graphql+json"
         );
         deepStrictEqual(await response.json(), {
           errors: [error1, error2],
@@ -477,7 +477,7 @@ export default (tests) => {
     }
   );
 
-  tests.add('`execute` middleware option `rootValue`.', async () => {
+  tests.add("`execute` middleware option `rootValue`.", async () => {
     const app = new Koa()
       .use(errorHandler())
       .use(bodyParserMiddleware)
@@ -485,7 +485,7 @@ export default (tests) => {
         execute({
           schema: new GraphQLSchema({
             query: new GraphQLObjectType({
-              name: 'Query',
+              name: "Query",
               fields: {
                 test: {
                   type: GraphQLString,
@@ -494,7 +494,7 @@ export default (tests) => {
               },
             }),
           }),
-          rootValue: 'rootValue',
+          rootValue: "rootValue",
         })
       );
 
@@ -502,35 +502,35 @@ export default (tests) => {
 
     try {
       const response = await fetchGraphQL(port, {
-        body: JSON.stringify({ query: '{ test }' }),
+        body: JSON.stringify({ query: "{ test }" }),
       });
 
       strictEqual(response.status, 200);
       strictEqual(
-        response.headers.get('Content-Type'),
-        'application/graphql+json'
+        response.headers.get("Content-Type"),
+        "application/graphql+json"
       );
-      deepStrictEqual(await response.json(), { data: { test: 'rootValue' } });
+      deepStrictEqual(await response.json(), { data: { test: "rootValue" } });
     } finally {
       close();
     }
   });
 
   tests.add(
-    '`execute` middleware option `rootValue` override using Koa ctx.',
+    "`execute` middleware option `rootValue` override using Koa ctx.",
     async () => {
       const app = new Koa()
         .use(errorHandler())
         .use(bodyParserMiddleware)
         .use(async (ctx, next) => {
-          ctx.state.test = 'rootValueOverridden';
+          ctx.state.test = "rootValueOverridden";
           await next();
         })
         .use(
           execute({
             schema: new GraphQLSchema({
               query: new GraphQLObjectType({
-                name: 'Query',
+                name: "Query",
                 fields: {
                   test: {
                     type: GraphQLString,
@@ -539,7 +539,7 @@ export default (tests) => {
                 },
               }),
             }),
-            rootValue: 'rootValue',
+            rootValue: "rootValue",
             override: (ctx) => ({ rootValue: ctx.state.test }),
           })
         );
@@ -548,16 +548,16 @@ export default (tests) => {
 
       try {
         const response = await fetchGraphQL(port, {
-          body: JSON.stringify({ query: '{ test }' }),
+          body: JSON.stringify({ query: "{ test }" }),
         });
 
         strictEqual(response.status, 200);
         strictEqual(
-          response.headers.get('Content-Type'),
-          'application/graphql+json'
+          response.headers.get("Content-Type"),
+          "application/graphql+json"
         );
         deepStrictEqual(await response.json(), {
-          data: { test: 'rootValueOverridden' },
+          data: { test: "rootValueOverridden" },
         });
       } finally {
         close();
@@ -565,7 +565,7 @@ export default (tests) => {
     }
   );
 
-  tests.add('`execute` middleware option `contextValue`.', async () => {
+  tests.add("`execute` middleware option `contextValue`.", async () => {
     const app = new Koa()
       .use(errorHandler())
       .use(bodyParserMiddleware)
@@ -573,7 +573,7 @@ export default (tests) => {
         execute({
           schema: new GraphQLSchema({
             query: new GraphQLObjectType({
-              name: 'Query',
+              name: "Query",
               fields: {
                 test: {
                   type: GraphQLString,
@@ -582,7 +582,7 @@ export default (tests) => {
               },
             }),
           }),
-          contextValue: 'contextValue',
+          contextValue: "contextValue",
         })
       );
 
@@ -590,16 +590,16 @@ export default (tests) => {
 
     try {
       const response = await fetchGraphQL(port, {
-        body: JSON.stringify({ query: '{ test }' }),
+        body: JSON.stringify({ query: "{ test }" }),
       });
 
       strictEqual(response.status, 200);
       strictEqual(
-        response.headers.get('Content-Type'),
-        'application/graphql+json'
+        response.headers.get("Content-Type"),
+        "application/graphql+json"
       );
       deepStrictEqual(await response.json(), {
-        data: { test: 'contextValue' },
+        data: { test: "contextValue" },
       });
     } finally {
       close();
@@ -607,20 +607,20 @@ export default (tests) => {
   });
 
   tests.add(
-    '`execute` middleware option `contextValue` override using Koa ctx.',
+    "`execute` middleware option `contextValue` override using Koa ctx.",
     async () => {
       const app = new Koa()
         .use(errorHandler())
         .use(bodyParserMiddleware)
         .use(async (ctx, next) => {
-          ctx.state.test = 'contextValueOverridden';
+          ctx.state.test = "contextValueOverridden";
           await next();
         })
         .use(
           execute({
             schema: new GraphQLSchema({
               query: new GraphQLObjectType({
-                name: 'Query',
+                name: "Query",
                 fields: {
                   test: {
                     type: GraphQLString,
@@ -629,7 +629,7 @@ export default (tests) => {
                 },
               }),
             }),
-            contextValue: 'contextValue',
+            contextValue: "contextValue",
             override: (ctx) => ({
               contextValue: ctx.state.test,
             }),
@@ -640,16 +640,16 @@ export default (tests) => {
 
       try {
         const response = await fetchGraphQL(port, {
-          body: JSON.stringify({ query: '{ test }' }),
+          body: JSON.stringify({ query: "{ test }" }),
         });
 
         strictEqual(response.status, 200);
         strictEqual(
-          response.headers.get('Content-Type'),
-          'application/graphql+json'
+          response.headers.get("Content-Type"),
+          "application/graphql+json"
         );
         deepStrictEqual(await response.json(), {
-          data: { test: 'contextValueOverridden' },
+          data: { test: "contextValueOverridden" },
         });
       } finally {
         close();
@@ -658,20 +658,20 @@ export default (tests) => {
   );
 
   tests.add(
-    '`execute` middleware option `contextValue` override using Koa ctx async.',
+    "`execute` middleware option `contextValue` override using Koa ctx async.",
     async () => {
       const app = new Koa()
         .use(errorHandler())
         .use(bodyParserMiddleware)
         .use(async (ctx, next) => {
-          ctx.state.test = 'contextValueOverridden';
+          ctx.state.test = "contextValueOverridden";
           await next();
         })
         .use(
           execute({
             schema: new GraphQLSchema({
               query: new GraphQLObjectType({
-                name: 'Query',
+                name: "Query",
                 fields: {
                   test: {
                     type: GraphQLString,
@@ -680,7 +680,7 @@ export default (tests) => {
                 },
               }),
             }),
-            contextValue: 'contextValue',
+            contextValue: "contextValue",
             override: async (ctx) => ({ contextValue: ctx.state.test }),
           })
         );
@@ -689,16 +689,16 @@ export default (tests) => {
 
       try {
         const response = await fetchGraphQL(port, {
-          body: JSON.stringify({ query: '{ test }' }),
+          body: JSON.stringify({ query: "{ test }" }),
         });
 
         strictEqual(response.status, 200);
         strictEqual(
-          response.headers.get('Content-Type'),
-          'application/graphql+json'
+          response.headers.get("Content-Type"),
+          "application/graphql+json"
         );
         deepStrictEqual(await response.json(), {
-          data: { test: 'contextValueOverridden' },
+          data: { test: "contextValueOverridden" },
         });
       } finally {
         close();
@@ -706,14 +706,14 @@ export default (tests) => {
     }
   );
 
-  tests.add('`execute` middleware option `fieldResolver`.', async () => {
+  tests.add("`execute` middleware option `fieldResolver`.", async () => {
     const app = new Koa()
       .use(errorHandler())
       .use(bodyParserMiddleware)
       .use(
         execute({
           schema,
-          fieldResolver: () => 'fieldResolver',
+          fieldResolver: () => "fieldResolver",
         })
       );
 
@@ -721,16 +721,16 @@ export default (tests) => {
 
     try {
       const response = await fetchGraphQL(port, {
-        body: JSON.stringify({ query: '{ test }' }),
+        body: JSON.stringify({ query: "{ test }" }),
       });
 
       strictEqual(response.status, 200);
       strictEqual(
-        response.headers.get('Content-Type'),
-        'application/graphql+json'
+        response.headers.get("Content-Type"),
+        "application/graphql+json"
       );
       deepStrictEqual(await response.json(), {
-        data: { test: 'fieldResolver' },
+        data: { test: "fieldResolver" },
       });
     } finally {
       close();
@@ -738,19 +738,19 @@ export default (tests) => {
   });
 
   tests.add(
-    '`execute` middleware option `fieldResolver` override using Koa ctx.',
+    "`execute` middleware option `fieldResolver` override using Koa ctx.",
     async () => {
       const app = new Koa()
         .use(errorHandler())
         .use(bodyParserMiddleware)
         .use(async (ctx, next) => {
-          ctx.state.test = 'fieldResolverOverridden';
+          ctx.state.test = "fieldResolverOverridden";
           await next();
         })
         .use(
           execute({
             schema,
-            fieldResolver: () => 'fieldResolver',
+            fieldResolver: () => "fieldResolver",
             override: (ctx) => ({
               fieldResolver: () => ctx.state.test,
             }),
@@ -761,16 +761,16 @@ export default (tests) => {
 
       try {
         const response = await fetchGraphQL(port, {
-          body: JSON.stringify({ query: '{ test }' }),
+          body: JSON.stringify({ query: "{ test }" }),
         });
 
         strictEqual(response.status, 200);
         strictEqual(
-          response.headers.get('Content-Type'),
-          'application/graphql+json'
+          response.headers.get("Content-Type"),
+          "application/graphql+json"
         );
         deepStrictEqual(await response.json(), {
-          data: { test: 'fieldResolverOverridden' },
+          data: { test: "fieldResolverOverridden" },
         });
       } finally {
         close();
@@ -778,7 +778,7 @@ export default (tests) => {
     }
   );
 
-  tests.add('`execute` middleware option `execute`.', async () => {
+  tests.add("`execute` middleware option `execute`.", async () => {
     let executeRan;
 
     const app = new Koa()
@@ -798,14 +798,14 @@ export default (tests) => {
 
     try {
       const response = await fetchGraphQL(port, {
-        body: JSON.stringify({ query: '{ test }' }),
+        body: JSON.stringify({ query: "{ test }" }),
       });
 
       ok(executeRan);
       strictEqual(response.status, 200);
       strictEqual(
-        response.headers.get('Content-Type'),
-        'application/graphql+json'
+        response.headers.get("Content-Type"),
+        "application/graphql+json"
       );
       deepStrictEqual(await response.json(), { data: { test: null } });
     } finally {
@@ -813,17 +813,17 @@ export default (tests) => {
     }
   });
 
-  tests.add('`execute` middleware option `execute` not a function.', () => {
+  tests.add("`execute` middleware option `execute` not a function.", () => {
     throws(() => execute({ schema, execute: true }), {
-      name: 'InternalServerError',
+      name: "InternalServerError",
       message:
-        'GraphQL execute middleware `execute` option must be a function.',
+        "GraphQL execute middleware `execute` option must be a function.",
       status: 500,
       expose: false,
     });
   });
 
-  tests.add('`execute` middleware option `execute` override.', async () => {
+  tests.add("`execute` middleware option `execute` override.", async () => {
     let executeRan;
 
     const app = new Koa()
@@ -845,14 +845,14 @@ export default (tests) => {
 
     try {
       const response = await fetchGraphQL(port, {
-        body: JSON.stringify({ query: '{ test }' }),
+        body: JSON.stringify({ query: "{ test }" }),
       });
 
       ok(executeRan);
       strictEqual(response.status, 200);
       strictEqual(
-        response.headers.get('Content-Type'),
-        'application/graphql+json'
+        response.headers.get("Content-Type"),
+        "application/graphql+json"
       );
       deepStrictEqual(await response.json(), { data: { test: null } });
     } finally {
@@ -861,7 +861,7 @@ export default (tests) => {
   });
 
   tests.add(
-    '`execute` middleware option `execute` override not a function.',
+    "`execute` middleware option `execute` override not a function.",
     async () => {
       let koaError;
 
@@ -869,7 +869,7 @@ export default (tests) => {
         .use(errorHandler())
         .use(bodyParserMiddleware)
         .use(execute({ schema, override: () => ({ execute: true }) }))
-        .on('error', (error) => {
+        .on("error", (error) => {
           koaError = error;
         });
 
@@ -877,24 +877,24 @@ export default (tests) => {
 
       try {
         const response = await fetchGraphQL(port, {
-          body: JSON.stringify({ query: '{ test }' }),
+          body: JSON.stringify({ query: "{ test }" }),
         });
 
         ok(koaError instanceof Error);
-        strictEqual(koaError.name, 'InternalServerError');
+        strictEqual(koaError.name, "InternalServerError");
         strictEqual(
           koaError.message,
-          'GraphQL execute middleware `override` option resolved `execute` option must be a function.'
+          "GraphQL execute middleware `override` option resolved `execute` option must be a function."
         );
         strictEqual(koaError.status, 500);
         strictEqual(koaError.expose, false);
         strictEqual(response.status, 500);
         strictEqual(
-          response.headers.get('Content-Type'),
-          'application/graphql+json'
+          response.headers.get("Content-Type"),
+          "application/graphql+json"
         );
         deepStrictEqual(await response.json(), {
-          errors: [{ message: 'Internal Server Error' }],
+          errors: [{ message: "Internal Server Error" }],
         });
       } finally {
         close();
@@ -903,14 +903,14 @@ export default (tests) => {
   );
 
   tests.add(
-    '`execute` middleware with request body missing due to absent body parser middleware.',
+    "`execute` middleware with request body missing due to absent body parser middleware.",
     async () => {
       let koaError;
 
       const app = new Koa()
         .use(errorHandler())
         .use(execute({ schema }))
-        .on('error', (error) => {
+        .on("error", (error) => {
           koaError = error;
         });
 
@@ -920,17 +920,17 @@ export default (tests) => {
         const response = await fetchGraphQL(port);
 
         ok(koaError instanceof Error);
-        strictEqual(koaError.name, 'InternalServerError');
-        strictEqual(koaError.message, 'Request body missing.');
+        strictEqual(koaError.name, "InternalServerError");
+        strictEqual(koaError.message, "Request body missing.");
         strictEqual(koaError.status, 500);
         strictEqual(koaError.expose, false);
         strictEqual(response.status, 500);
         strictEqual(
-          response.headers.get('Content-Type'),
-          'application/graphql+json'
+          response.headers.get("Content-Type"),
+          "application/graphql+json"
         );
         deepStrictEqual(await response.json(), {
-          errors: [{ message: 'Internal Server Error' }],
+          errors: [{ message: "Internal Server Error" }],
         });
       } finally {
         close();
@@ -938,33 +938,33 @@ export default (tests) => {
     }
   );
 
-  tests.add('`execute` middleware with request body invalid.', async () => {
+  tests.add("`execute` middleware with request body invalid.", async () => {
     let koaError;
 
-    const errorMessage = 'Request body must be a JSON object.';
+    const errorMessage = "Request body must be a JSON object.";
 
     const app = new Koa()
       .use(errorHandler())
       .use(bodyParserMiddleware)
       .use(execute({ schema }))
-      .on('error', (error) => {
+      .on("error", (error) => {
         koaError = error;
       });
 
     const { port, close } = await listen(app);
 
     try {
-      const response = await fetchGraphQL(port, { body: '[]' });
+      const response = await fetchGraphQL(port, { body: "[]" });
 
       ok(koaError instanceof Error);
-      strictEqual(koaError.name, 'BadRequestError');
+      strictEqual(koaError.name, "BadRequestError");
       strictEqual(koaError.message, errorMessage);
       strictEqual(koaError.status, 400);
       strictEqual(koaError.expose, true);
       strictEqual(response.status, 400);
       strictEqual(
-        response.headers.get('Content-Type'),
-        'application/graphql+json'
+        response.headers.get("Content-Type"),
+        "application/graphql+json"
       );
       deepStrictEqual(await response.json(), {
         errors: [{ message: errorMessage }],
@@ -975,34 +975,34 @@ export default (tests) => {
   });
 
   tests.add(
-    '`execute` middleware with operation field `query` missing.',
+    "`execute` middleware with operation field `query` missing.",
     async () => {
       let koaError;
 
-      const errorMessage = 'GraphQL operation field `query` missing.';
+      const errorMessage = "GraphQL operation field `query` missing.";
 
       const app = new Koa()
         .use(errorHandler())
         .use(bodyParserMiddleware)
         .use(execute({ schema }))
-        .on('error', (error) => {
+        .on("error", (error) => {
           koaError = error;
         });
 
       const { port, close } = await listen(app);
 
       try {
-        const response = await fetchGraphQL(port, { body: '{}' });
+        const response = await fetchGraphQL(port, { body: "{}" });
 
         ok(koaError instanceof Error);
-        strictEqual(koaError.name, 'BadRequestError');
+        strictEqual(koaError.name, "BadRequestError");
         strictEqual(koaError.message, errorMessage);
         strictEqual(koaError.status, 400);
         strictEqual(koaError.expose, true);
         strictEqual(response.status, 400);
         strictEqual(
-          response.headers.get('Content-Type'),
-          'application/graphql+json'
+          response.headers.get("Content-Type"),
+          "application/graphql+json"
         );
         deepStrictEqual(await response.json(), {
           errors: [{ message: errorMessage }],
@@ -1014,17 +1014,17 @@ export default (tests) => {
   );
 
   tests.add(
-    '`execute` middleware with operation field `query` not a string.',
+    "`execute` middleware with operation field `query` not a string.",
     async () => {
       let koaError;
 
-      const errorMessage = 'GraphQL operation field `query` must be a string.';
+      const errorMessage = "GraphQL operation field `query` must be a string.";
 
       const app = new Koa()
         .use(errorHandler())
         .use(bodyParserMiddleware)
         .use(execute({ schema }))
-        .on('error', (error) => {
+        .on("error", (error) => {
           koaError = error;
         });
 
@@ -1036,14 +1036,14 @@ export default (tests) => {
         });
 
         ok(koaError instanceof Error);
-        strictEqual(koaError.name, 'BadRequestError');
+        strictEqual(koaError.name, "BadRequestError");
         strictEqual(koaError.message, errorMessage);
         strictEqual(koaError.status, 400);
         strictEqual(koaError.expose, true);
         strictEqual(response.status, 400);
         strictEqual(
-          response.headers.get('Content-Type'),
-          'application/graphql+json'
+          response.headers.get("Content-Type"),
+          "application/graphql+json"
         );
         deepStrictEqual(await response.json(), {
           errors: [{ message: errorMessage }],
@@ -1055,7 +1055,7 @@ export default (tests) => {
   );
 
   tests.add(
-    '`execute` middleware with operation field `query` syntax errors.',
+    "`execute` middleware with operation field `query` syntax errors.",
     async () => {
       let koaError;
 
@@ -1068,7 +1068,7 @@ export default (tests) => {
         .use(errorHandler())
         .use(bodyParserMiddleware)
         .use(execute({ schema }))
-        .on('error', (error) => {
+        .on("error", (error) => {
           koaError = error;
         });
 
@@ -1076,23 +1076,23 @@ export default (tests) => {
 
       try {
         const response = await fetchGraphQL(port, {
-          body: JSON.stringify({ query: '{{ test }' }),
+          body: JSON.stringify({ query: "{{ test }" }),
         });
 
         ok(koaError instanceof Error);
-        strictEqual(koaError.name, 'BadRequestError');
-        strictEqual(koaError.message, 'GraphQL query syntax errors.');
+        strictEqual(koaError.name, "BadRequestError");
+        strictEqual(koaError.message, "GraphQL query syntax errors.");
         strictEqual(koaError.status, 400);
         strictEqual(koaError.expose, true);
         strictEqual(Array.isArray(koaError.graphqlErrors), true);
         strictEqual(koaError.graphqlErrors.length, 1);
-        strictEqual(koaError.graphqlErrors[0].name, 'GraphQLError');
+        strictEqual(koaError.graphqlErrors[0].name, "GraphQLError");
         strictEqual(koaError.graphqlErrors[0].message, error.message);
         deepStrictEqual(koaError.graphqlErrors[0].locations, error.locations);
         strictEqual(response.status, 400);
         strictEqual(
-          response.headers.get('Content-Type'),
-          'application/graphql+json'
+          response.headers.get("Content-Type"),
+          "application/graphql+json"
         );
         deepStrictEqual(await response.json(), {
           errors: [error],
@@ -1104,7 +1104,7 @@ export default (tests) => {
   );
 
   tests.add(
-    '`execute` middleware with operation field `query` validation type errors.',
+    "`execute` middleware with operation field `query` validation type errors.",
     async () => {
       let koaError;
 
@@ -1121,7 +1121,7 @@ export default (tests) => {
         .use(errorHandler())
         .use(bodyParserMiddleware)
         .use(execute({ schema }))
-        .on('error', (error) => {
+        .on("error", (error) => {
           koaError = error;
         });
 
@@ -1129,26 +1129,26 @@ export default (tests) => {
 
       try {
         const response = await fetchGraphQL(port, {
-          body: JSON.stringify({ query: '{ test, wrongOne, wrongTwo }' }),
+          body: JSON.stringify({ query: "{ test, wrongOne, wrongTwo }" }),
         });
 
         ok(koaError instanceof Error);
-        strictEqual(koaError.name, 'BadRequestError');
-        strictEqual(koaError.message, 'GraphQL query validation errors.');
+        strictEqual(koaError.name, "BadRequestError");
+        strictEqual(koaError.message, "GraphQL query validation errors.");
         strictEqual(koaError.status, 400);
         strictEqual(koaError.expose, true);
         strictEqual(Array.isArray(koaError.graphqlErrors), true);
         strictEqual(koaError.graphqlErrors.length, 2);
-        strictEqual(koaError.graphqlErrors[0].name, 'GraphQLError');
+        strictEqual(koaError.graphqlErrors[0].name, "GraphQLError");
         strictEqual(koaError.graphqlErrors[0].message, error1.message);
         deepStrictEqual(koaError.graphqlErrors[0].locations, error1.locations);
-        strictEqual(koaError.graphqlErrors[1].name, 'GraphQLError');
+        strictEqual(koaError.graphqlErrors[1].name, "GraphQLError");
         strictEqual(koaError.graphqlErrors[1].message, error2.message);
         deepStrictEqual(koaError.graphqlErrors[1].locations, error2.locations);
         strictEqual(response.status, 400);
         strictEqual(
-          response.headers.get('Content-Type'),
-          'application/graphql+json'
+          response.headers.get("Content-Type"),
+          "application/graphql+json"
         );
         deepStrictEqual(await response.json(), {
           errors: [error1, error2],
@@ -1160,18 +1160,18 @@ export default (tests) => {
   );
 
   tests.add(
-    '`execute` middleware with operation field `variables` invalid.',
+    "`execute` middleware with operation field `variables` invalid.",
     async () => {
       let koaError;
 
       const errorMessage =
-        'Request body JSON `variables` field must be an object.';
+        "Request body JSON `variables` field must be an object.";
 
       const app = new Koa()
         .use(errorHandler())
         .use(bodyParserMiddleware)
         .use(execute({ schema }))
-        .on('error', (error) => {
+        .on("error", (error) => {
           koaError = error;
         });
 
@@ -1179,18 +1179,18 @@ export default (tests) => {
 
       try {
         const response = await fetchGraphQL(port, {
-          body: JSON.stringify({ query: '{ test }', variables: '[]' }),
+          body: JSON.stringify({ query: "{ test }", variables: "[]" }),
         });
 
         ok(koaError instanceof Error);
-        strictEqual(koaError.name, 'BadRequestError');
+        strictEqual(koaError.name, "BadRequestError");
         strictEqual(koaError.message, errorMessage);
         strictEqual(koaError.status, 400);
         strictEqual(koaError.expose, true);
         strictEqual(response.status, 400);
         strictEqual(
-          response.headers.get('Content-Type'),
-          'application/graphql+json'
+          response.headers.get("Content-Type"),
+          "application/graphql+json"
         );
         deepStrictEqual(await response.json(), {
           errors: [{ message: errorMessage }],
@@ -1202,11 +1202,11 @@ export default (tests) => {
   );
 
   tests.add(
-    '`execute` middleware with a GraphQL execution error.',
+    "`execute` middleware with a GraphQL execution error.",
     async () => {
       let koaError;
 
-      const errorMessage = 'Message.';
+      const errorMessage = "Message.";
 
       const app = new Koa()
         .use(errorHandler())
@@ -1219,7 +1219,7 @@ export default (tests) => {
             },
           })
         )
-        .on('error', (error) => {
+        .on("error", (error) => {
           koaError = error;
         });
 
@@ -1227,21 +1227,21 @@ export default (tests) => {
 
       try {
         const response = await fetchGraphQL(port, {
-          body: JSON.stringify({ query: '{ test }' }),
+          body: JSON.stringify({ query: "{ test }" }),
         });
 
         ok(koaError instanceof Error);
-        strictEqual(koaError.name, 'Error');
+        strictEqual(koaError.name, "Error");
         strictEqual(koaError.message, errorMessage);
         strictEqual(koaError.status, 500);
         strictEqual(koaError.expose, false);
         strictEqual(response.status, 500);
         strictEqual(
-          response.headers.get('Content-Type'),
-          'application/graphql+json'
+          response.headers.get("Content-Type"),
+          "application/graphql+json"
         );
         deepStrictEqual(await response.json(), {
-          errors: [{ message: 'Internal Server Error' }],
+          errors: [{ message: "Internal Server Error" }],
         });
       } finally {
         close();
@@ -1250,7 +1250,7 @@ export default (tests) => {
   );
 
   tests.add(
-    '`execute` middleware with a GraphQL resolver error unexposed.',
+    "`execute` middleware with a GraphQL resolver error unexposed.",
     async () => {
       let koaError;
       let resolverError;
@@ -1262,12 +1262,12 @@ export default (tests) => {
           execute({
             schema: new GraphQLSchema({
               query: new GraphQLObjectType({
-                name: 'Query',
+                name: "Query",
                 fields: {
                   test: {
                     type: new GraphQLNonNull(GraphQLString),
                     resolve() {
-                      resolverError = new Error('Unexposed message.');
+                      resolverError = new Error("Unexposed message.");
                       resolverError.extensions = {
                         a: true,
                       };
@@ -1279,7 +1279,7 @@ export default (tests) => {
             }),
           })
         )
-        .on('error', (error) => {
+        .on("error", (error) => {
           koaError = error;
         });
 
@@ -1287,35 +1287,35 @@ export default (tests) => {
 
       try {
         const response = await fetchGraphQL(port, {
-          body: JSON.stringify({ query: '{ test }' }),
+          body: JSON.stringify({ query: "{ test }" }),
         });
 
         ok(koaError instanceof Error);
-        strictEqual(koaError.name, 'Error');
-        strictEqual(koaError.message, 'GraphQL execution errors.');
+        strictEqual(koaError.name, "Error");
+        strictEqual(koaError.message, "GraphQL execution errors.");
         strictEqual(koaError.status, 200);
         strictEqual(koaError.expose, true);
         strictEqual(Array.isArray(koaError.graphqlErrors), true);
         strictEqual(koaError.graphqlErrors.length, 1);
-        strictEqual(koaError.graphqlErrors[0].name, 'GraphQLError');
-        strictEqual(koaError.graphqlErrors[0].message, 'Unexposed message.');
+        strictEqual(koaError.graphqlErrors[0].name, "GraphQLError");
+        strictEqual(koaError.graphqlErrors[0].message, "Unexposed message.");
         deepStrictEqual(koaError.graphqlErrors[0].locations, [
           { line: 1, column: 3 },
         ]);
-        deepStrictEqual(koaError.graphqlErrors[0].path, ['test']);
+        deepStrictEqual(koaError.graphqlErrors[0].path, ["test"]);
         deepStrictEqual(koaError.graphqlErrors[0].extensions, { a: true });
         deepStrictEqual(koaError.graphqlErrors[0].originalError, resolverError);
         strictEqual(response.status, 200);
         strictEqual(
-          response.headers.get('Content-Type'),
-          'application/graphql+json'
+          response.headers.get("Content-Type"),
+          "application/graphql+json"
         );
         deepStrictEqual(await response.json(), {
           errors: [
             {
-              message: 'Internal Server Error',
+              message: "Internal Server Error",
               locations: [{ line: 1, column: 3 }],
-              path: ['test'],
+              path: ["test"],
               extensions: { a: true },
             },
           ],
@@ -1327,7 +1327,7 @@ export default (tests) => {
   );
 
   tests.add(
-    '`execute` middleware with a GraphQL resolver error exposed.',
+    "`execute` middleware with a GraphQL resolver error exposed.",
     async () => {
       let koaError;
       let resolverError;
@@ -1339,12 +1339,12 @@ export default (tests) => {
           execute({
             schema: new GraphQLSchema({
               query: new GraphQLObjectType({
-                name: 'Query',
+                name: "Query",
                 fields: {
                   test: {
                     type: new GraphQLNonNull(GraphQLString),
                     resolve() {
-                      resolverError = new Error('Exposed message.');
+                      resolverError = new Error("Exposed message.");
                       resolverError.expose = true;
                       resolverError.extensions = { a: true };
 
@@ -1356,7 +1356,7 @@ export default (tests) => {
             }),
           })
         )
-        .on('error', (error) => {
+        .on("error", (error) => {
           koaError = error;
         });
 
@@ -1364,35 +1364,35 @@ export default (tests) => {
 
       try {
         const response = await fetchGraphQL(port, {
-          body: JSON.stringify({ query: '{ test }' }),
+          body: JSON.stringify({ query: "{ test }" }),
         });
 
         ok(koaError instanceof Error);
-        strictEqual(koaError.name, 'Error');
-        strictEqual(koaError.message, 'GraphQL execution errors.');
+        strictEqual(koaError.name, "Error");
+        strictEqual(koaError.message, "GraphQL execution errors.");
         strictEqual(koaError.status, 200);
         strictEqual(koaError.expose, true);
         strictEqual(Array.isArray(koaError.graphqlErrors), true);
         strictEqual(koaError.graphqlErrors.length, 1);
-        strictEqual(koaError.graphqlErrors[0].name, 'GraphQLError');
-        strictEqual(koaError.graphqlErrors[0].message, 'Exposed message.');
+        strictEqual(koaError.graphqlErrors[0].name, "GraphQLError");
+        strictEqual(koaError.graphqlErrors[0].message, "Exposed message.");
         deepStrictEqual(koaError.graphqlErrors[0].locations, [
           { line: 1, column: 3 },
         ]);
-        deepStrictEqual(koaError.graphqlErrors[0].path, ['test']);
+        deepStrictEqual(koaError.graphqlErrors[0].path, ["test"]);
         deepStrictEqual(koaError.graphqlErrors[0].extensions, { a: true });
         deepStrictEqual(koaError.graphqlErrors[0].originalError, resolverError);
         strictEqual(response.status, 200);
         strictEqual(
-          response.headers.get('Content-Type'),
-          'application/graphql+json'
+          response.headers.get("Content-Type"),
+          "application/graphql+json"
         );
         deepStrictEqual(await response.json(), {
           errors: [
             {
-              message: 'Exposed message.',
+              message: "Exposed message.",
               locations: [{ line: 1, column: 3 }],
-              path: ['test'],
+              path: ["test"],
               extensions: { a: true },
             },
           ],

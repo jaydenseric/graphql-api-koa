@@ -1,5 +1,5 @@
-import createHttpError from 'http-errors';
-import isObject from 'isobject';
+import createHttpError from "http-errors";
+import isObject from "isobject";
 
 /**
  * Validates options are an enumerable object that conforms to a whitelist of
@@ -25,6 +25,6 @@ export default function checkOptions(options, allowedKeys, errorMessagePrefix) {
   if (invalid.length)
     throw createHttpError(
       500,
-      `${errorMessagePrefix} options invalid: \`${invalid.join('`, `')}\`.`
+      `${errorMessagePrefix} options invalid: \`${invalid.join("`, `")}\`.`
     );
 }

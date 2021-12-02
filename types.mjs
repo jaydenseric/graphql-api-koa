@@ -24,7 +24,7 @@
  * Error thrown in the `User.email` resolver:
  *
  * ```js
- * const error = new Error('Unauthorized access to user data.');
+ * const error = new Error("Unauthorized access to user data.");
  * error.expose = true;
  * ```
  *
@@ -68,9 +68,9 @@
  * Error constructed manually:
  *
  * ```js
- * const error = new Error('Rate limit exceeded.');
+ * const error = new Error("Rate limit exceeded.");
  * error.extensions = {
- *   code: 'RATE_LIMIT_EXCEEDED',
+ *   code: "RATE_LIMIT_EXCEEDED",
  * };
  * error.status = 429;
  * ```
@@ -78,11 +78,11 @@
  * Error constructed using [`http-errors`](https://npm.im/http-errors):
  *
  * ```js
- * import createHttpError from 'http-errors';
+ * import createHttpError from "http-errors";
  *
- * const error = createHttpError(429, 'Rate limit exceeded.', {
+ * const error = createHttpError(429, "Rate limit exceeded.", {
  *   extensions: {
- *     code: 'RATE_LIMIT_EXCEEDED',
+ *     code: "RATE_LIMIT_EXCEEDED",
  *   },
  * });
  * ```
@@ -105,7 +105,7 @@
  * Error:
  *
  * ```js
- * const error = new Error('Database connection failed.');
+ * const error = new Error("Database connection failed.");
  * ```
  *
  * Response has a 500 HTTP status code, with this payload:
@@ -123,7 +123,7 @@
  * Error:
  *
  * ```js
- * const error = new Error('Service unavailable due to maintenance.');
+ * const error = new Error("Service unavailable due to maintenance.");
  * error.status = 503;
  * error.expose = true;
  * ```
@@ -155,7 +155,7 @@
  * @prop {ExecuteOptionsOverride} [override] Override any [`ExecuteOptions`]{@link ExecuteOptions} (except `override`) per request.
  * @example <caption>[`execute`]{@link execute} middleware options that sets the schema once but populates the user in the GraphQL context from the Koa context each request.</caption>
  * ```js
- * import schema from './schema.mjs';
+ * import schema from "./schema.mjs";
  *
  * const executeOptions = {
  *   schema,

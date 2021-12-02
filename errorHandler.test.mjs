@@ -1,13 +1,13 @@
-import { deepStrictEqual, ok, strictEqual } from 'assert';
-import createHttpError from 'http-errors';
-import Koa from 'koa';
-import errorHandler from './errorHandler.mjs';
-import fetchGraphQL from './test/fetchGraphQL.mjs';
-import listen from './test/listen.mjs';
+import { deepStrictEqual, ok, strictEqual } from "assert";
+import createHttpError from "http-errors";
+import Koa from "koa";
+import errorHandler from "./errorHandler.mjs";
+import fetchGraphQL from "./test/fetchGraphQL.mjs";
+import listen from "./test/listen.mjs";
 
 export default (tests) => {
   tests.add(
-    '`errorHandler` middleware handles a non enumerable object error.',
+    "`errorHandler` middleware handles a non enumerable object error.",
     async () => {
       let koaError;
 
@@ -16,7 +16,7 @@ export default (tests) => {
         .use(() => {
           throw null;
         })
-        .on('error', (error) => {
+        .on("error", (error) => {
           koaError = error;
         });
 
@@ -27,11 +27,11 @@ export default (tests) => {
 
         strictEqual(koaError, null);
         strictEqual(
-          response.headers.get('Content-Type'),
-          'application/graphql+json'
+          response.headers.get("Content-Type"),
+          "application/graphql+json"
         );
         deepStrictEqual(await response.json(), {
-          errors: [{ message: 'Internal Server Error' }],
+          errors: [{ message: "Internal Server Error" }],
         });
       } finally {
         close();
@@ -39,17 +39,17 @@ export default (tests) => {
     }
   );
 
-  tests.add('`errorHandler` middleware handles a standard error.', async () => {
+  tests.add("`errorHandler` middleware handles a standard error.", async () => {
     let koaError;
 
     const app = new Koa()
       .use(errorHandler())
       .use(() => {
-        const error = new Error('Message.');
+        const error = new Error("Message.");
         error.extensions = { a: true };
         throw error;
       })
-      .on('error', (error) => {
+      .on("error", (error) => {
         koaError = error;
       });
 
@@ -59,19 +59,19 @@ export default (tests) => {
       const response = await fetchGraphQL(port);
 
       ok(koaError instanceof Error);
-      strictEqual(koaError.name, 'Error');
-      strictEqual(koaError.message, 'Message.');
+      strictEqual(koaError.name, "Error");
+      strictEqual(koaError.message, "Message.");
       strictEqual(koaError.status, 500);
       strictEqual(koaError.expose, false);
       strictEqual(response.status, 500);
       strictEqual(
-        response.headers.get('Content-Type'),
-        'application/graphql+json'
+        response.headers.get("Content-Type"),
+        "application/graphql+json"
       );
       deepStrictEqual(await response.json(), {
         errors: [
           {
-            message: 'Internal Server Error',
+            message: "Internal Server Error",
             extensions: { a: true },
           },
         ],
@@ -81,15 +81,15 @@ export default (tests) => {
     }
   });
 
-  tests.add('`errorHandler` middleware handles a HTTP error.', async () => {
+  tests.add("`errorHandler` middleware handles a HTTP error.", async () => {
     let koaError;
 
     const app = new Koa()
       .use(errorHandler())
       .use(() => {
-        throw createHttpError(403, 'Message.', { extensions: { a: true } });
+        throw createHttpError(403, "Message.", { extensions: { a: true } });
       })
-      .on('error', (error) => {
+      .on("error", (error) => {
         koaError = error;
       });
 
@@ -99,19 +99,19 @@ export default (tests) => {
       const response = await fetchGraphQL(port);
 
       ok(koaError instanceof Error);
-      strictEqual(koaError.name, 'ForbiddenError');
-      strictEqual(koaError.message, 'Message.');
+      strictEqual(koaError.name, "ForbiddenError");
+      strictEqual(koaError.message, "Message.");
       strictEqual(koaError.status, 403);
       strictEqual(koaError.expose, true);
       strictEqual(response.status, 403);
       strictEqual(
-        response.headers.get('Content-Type'),
-        'application/graphql+json'
+        response.headers.get("Content-Type"),
+        "application/graphql+json"
       );
       deepStrictEqual(await response.json(), {
         errors: [
           {
-            message: 'Message.',
+            message: "Message.",
             extensions: { a: true },
           },
         ],
@@ -122,7 +122,7 @@ export default (tests) => {
   });
 
   tests.add(
-    '`errorHandler` middleware handles an error after `ctx.response.body` was set.',
+    "`errorHandler` middleware handles an error after `ctx.response.body` was set.",
     async () => {
       let koaError;
 
@@ -131,11 +131,11 @@ export default (tests) => {
         .use((ctx) => {
           ctx.response.body = { data: {} };
 
-          const error = new Error('Message.');
+          const error = new Error("Message.");
           error.extensions = { a: true };
           throw error;
         })
-        .on('error', (error) => {
+        .on("error", (error) => {
           koaError = error;
         });
 
@@ -145,20 +145,20 @@ export default (tests) => {
         const response = await fetchGraphQL(port);
 
         ok(koaError instanceof Error);
-        strictEqual(koaError.name, 'Error');
-        strictEqual(koaError.message, 'Message.');
+        strictEqual(koaError.name, "Error");
+        strictEqual(koaError.message, "Message.");
         strictEqual(koaError.status, 500);
         strictEqual(koaError.expose, false);
         strictEqual(response.status, 500);
         strictEqual(
-          response.headers.get('Content-Type'),
-          'application/graphql+json'
+          response.headers.get("Content-Type"),
+          "application/graphql+json"
         );
         deepStrictEqual(await response.json(), {
           data: {},
           errors: [
             {
-              message: 'Internal Server Error',
+              message: "Internal Server Error",
               extensions: { a: true },
             },
           ],

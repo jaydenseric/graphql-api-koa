@@ -42,7 +42,7 @@ Additional custom Koa middleware can be used to customize the response.
 _How to import._
 
 > ```js
-> import errorHandler from 'graphql-api-koa/errorHandler.mjs';
+> import errorHandler from "graphql-api-koa/errorHandler.mjs";
 > ```
 
 ---
@@ -62,24 +62,24 @@ Creates Koa middleware to execute GraphQL. Use after the [`errorHandler`](#funct
 _How to import._
 
 > ```js
-> import execute from 'graphql-api-koa/execute.mjs';
+> import execute from "graphql-api-koa/execute.mjs";
 > ```
 
 _A basic GraphQL API._
 
 > ```js
-> import Koa from 'koa';
-> import bodyParser from 'koa-bodyparser';
-> import errorHandler from 'graphql-api-koa/errorHandler.mjs';
-> import execute from 'graphql-api-koa/execute.mjs';
-> import schema from './schema.mjs';
+> import Koa from "koa";
+> import bodyParser from "koa-bodyparser";
+> import errorHandler from "graphql-api-koa/errorHandler.mjs";
+> import execute from "graphql-api-koa/execute.mjs";
+> import schema from "./schema.mjs";
 >
 > const app = new Koa()
 >   .use(errorHandler())
 >   .use(
 >     bodyParser({
 >       extendTypes: {
->         json: 'application/graphql+json',
+>         json: "application/graphql+json",
 >       },
 >     })
 >   )
@@ -122,7 +122,7 @@ _An error thrown in a GraphQL resolver, exposed to the client._
 > Error thrown in the `User.email` resolver:
 >
 > ```js
-> const error = new Error('Unauthorized access to user data.');
+> const error = new Error("Unauthorized access to user data.");
 > error.expose = true;
 > ```
 >
@@ -174,9 +174,9 @@ _A client error thrown in Koa middleware._
 > Error constructed manually:
 >
 > ```js
-> const error = new Error('Rate limit exceeded.');
+> const error = new Error("Rate limit exceeded.");
 > error.extensions = {
->   code: 'RATE_LIMIT_EXCEEDED',
+>   code: "RATE_LIMIT_EXCEEDED",
 > };
 > error.status = 429;
 > ```
@@ -184,11 +184,11 @@ _A client error thrown in Koa middleware._
 > Error constructed using [`http-errors`](https://npm.im/http-errors):
 >
 > ```js
-> import createHttpError from 'http-errors';
+> import createHttpError from "http-errors";
 >
-> const error = createHttpError(429, 'Rate limit exceeded.', {
+> const error = createHttpError(429, "Rate limit exceeded.", {
 >   extensions: {
->     code: 'RATE_LIMIT_EXCEEDED',
+>     code: "RATE_LIMIT_EXCEEDED",
 >   },
 > });
 > ```
@@ -213,7 +213,7 @@ _A server error thrown in Koa middleware, not exposed to the client._
 > Error:
 >
 > ```js
-> const error = new Error('Database connection failed.');
+> const error = new Error("Database connection failed.");
 > ```
 >
 > Response has a 500 HTTP status code, with this payload:
@@ -233,7 +233,7 @@ _A server error thrown in Koa middleware, exposed to the client._
 > Error:
 >
 > ```js
-> const error = new Error('Service unavailable due to maintenance.');
+> const error = new Error("Service unavailable due to maintenance.");
 > error.status = 503;
 > error.expose = true;
 > ```
@@ -273,7 +273,7 @@ _A server error thrown in Koa middleware, exposed to the client._
 _[`execute`](#function-execute) middleware options that sets the schema once but populates the user in the GraphQL context from the Koa context each request._
 
 > ```js
-> import schema from './schema.mjs';
+> import schema from "./schema.mjs";
 >
 > const executeOptions = {
 >   schema,
