@@ -30,7 +30,6 @@
   "exports": {
     "./errorHandler.mjs": "./errorHandler.mjs",
     "./execute.mjs": "./execute.mjs",
-    "./package": "./package.json",
     "./package.json": "./package.json"
   },
   "engines": {
