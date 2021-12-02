@@ -97,7 +97,7 @@ A GraphQL resolver error may have these special properties for the [`errorHandle
 | Property | Type | Description |
 | :-- | :-- | :-- |
 | `message` | string | Error message. If the error `expose` property isn’t `true`, the message is replaced with `Internal Server Error` in the response payload `errors` array. |
-| `extensions` | object\<string, \*>? | A map of custom error data that is exposed to the client in the response payload `errors` array, regardless of the error `expose` or `status` properties. |
+| `extensions` | Record\<string, any>? | A map of custom error data that is exposed to the client in the response payload `errors` array, regardless of the error `expose` or `status` properties. |
 | `expose` | boolean? | Should the original error `message` be exposed to the client. |
 
 #### See
@@ -157,7 +157,7 @@ A Koa middleware error may have these special properties for the [`errorHandler`
 | Property | Type | Description |
 | :-- | :-- | :-- |
 | `message` | string | Error message. If the error `status` property >= 500 or the error `expose` property isn’t `true`, the message is replaced with `Internal Server Error` in the response payload `errors` array. |
-| `extensions` | object\<string, \*>? | A map of custom error data that is exposed to the client in the response payload `errors` array, regardless of the error `expose` or `status` properties. |
+| `extensions` | Record\<string, any>? | A map of custom error data that is exposed to the client in the response payload `errors` array, regardless of the error `expose` or `status` properties. |
 | `status` | number? | Determines the response HTTP status code. |
 | `expose` | boolean? | Should the original error `message` be exposed to the client. |
 
@@ -262,8 +262,8 @@ _A server error thrown in Koa middleware, exposed to the client._
 | :-- | :-- | :-- |
 | `schema` | GraphQLSchema | GraphQL schema. |
 | `validationRules` | Array\<Function>? | Validation rules for [GraphQL.js `validate`](https://graphql.org/graphql-js/validation/#validate), in addition to the default [GraphQL.js `specifiedRules`](https://graphql.org/graphql-js/validation/#specifiedrules). |
-| `rootValue` | \*? | Value passed to the first resolver. |
-| `contextValue` | \*? | Execution context (usually an object) passed to resolvers. |
+| `rootValue` | any? | Value passed to the first resolver. |
+| `contextValue` | any? | Execution context (usually an object) passed to resolvers. |
 | `fieldResolver` | Function? | Custom default field resolver. |
 | `execute` | Function? | Replacement for [GraphQL.js `execute`](https://graphql.org/graphql-js/execution/#execute). |
 | `override` | [ExecuteOptionsOverride](#type-executeoptionsoverride)? | Override any [`ExecuteOptions`](#type-executeoptions) (except `override`) per request. |

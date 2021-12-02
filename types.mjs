@@ -2,11 +2,9 @@
  * A GraphQL resolver error may have these special properties for the
  * [`errorHandler`]{@link errorHandler} Koa middleware to use to determine how
  * the error appears in the response payload `errors` array.
- * @kind typedef
- * @name ErrorGraphQLResolver
- * @type {object}
+ * @typedef {object} ErrorGraphQLResolver
  * @prop {string} message Error message. If the error `expose` property isn’t `true`, the message is replaced with `Internal Server Error` in the response payload `errors` array.
- * @prop {object<string, *>} [extensions] A map of custom error data that is exposed to the client in the response payload `errors` array, regardless of the error `expose` or `status` properties.
+ * @prop {Record<string, any>} [extensions] A map of custom error data that is exposed to the client in the response payload `errors` array, regardless of the error `expose` or `status` properties.
  * @prop {boolean} [expose] Should the original error `message` be exposed to the client.
  * @see [GraphQL spec for errors](https://spec.graphql.org/June2018/#sec-Errors).
  * @example <caption>An error thrown in a GraphQL resolver, exposed to the client.</caption>
@@ -54,11 +52,9 @@
  * [`errorHandler`]{@link errorHandler} Koa middleware to use to determine how
  * the error appears in the response payload `errors` array and the response
  * HTTP status code.
- * @kind typedef
- * @name ErrorKoaMiddleware
- * @type {object}
+ * @typedef {object} ErrorKoaMiddleware
  * @prop {string} message Error message. If the error `status` property >= 500 or the error `expose` property isn’t `true`, the message is replaced with `Internal Server Error` in the response payload `errors` array.
- * @prop {object<string, *>} [extensions] A map of custom error data that is exposed to the client in the response payload `errors` array, regardless of the error `expose` or `status` properties.
+ * @prop {Record<string, any>} [extensions] A map of custom error data that is exposed to the client in the response payload `errors` array, regardless of the error `expose` or `status` properties.
  * @prop {number} [status] Determines the response HTTP status code.
  * @prop {boolean} [expose] Should the original error `message` be exposed to the client.
  * @see [GraphQL spec for errors](https://spec.graphql.org/June2018/#sec-Errors).
@@ -143,13 +139,11 @@
 
 /**
  * [`execute`]{@link execute} Koa middleware options.
- * @kind typedef
- * @name ExecuteOptions
- * @type {object}
+ * @typedef {object} ExecuteOptions
  * @prop {GraphQLSchema} schema GraphQL schema.
  * @prop {Array<Function>} [validationRules] Validation rules for [GraphQL.js `validate`](https://graphql.org/graphql-js/validation/#validate), in addition to the default [GraphQL.js `specifiedRules`](https://graphql.org/graphql-js/validation/#specifiedrules).
- * @prop {*} [rootValue] Value passed to the first resolver.
- * @prop {*} [contextValue] Execution context (usually an object) passed to resolvers.
+ * @prop {any} [rootValue] Value passed to the first resolver.
+ * @prop {any} [contextValue] Execution context (usually an object) passed to resolvers.
  * @prop {Function} [fieldResolver] Custom default field resolver.
  * @prop {Function} [execute] Replacement for [GraphQL.js `execute`](https://graphql.org/graphql-js/execution/#execute).
  * @prop {ExecuteOptionsOverride} [override] Override any [`ExecuteOptions`]{@link ExecuteOptions} (except `override`) per request.
@@ -171,9 +165,7 @@
 /**
  * Overrides any [`ExecuteOptions`]{@link ExecuteOptions} (except `override`)
  * per request.
- * @kind typedef
- * @name ExecuteOptionsOverride
- * @type {Function}
+ * @callback ExecuteOptionsOverride
  * @param {object} context Koa context.
  * @returns {object} [`execute`]{@link execute} middleware options subset.
  * @example <caption>An [`execute`]{@link execute} middleware options override that populates the user in the GraphQL context from the Koa request context.</caption>
