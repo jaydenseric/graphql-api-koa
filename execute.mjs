@@ -7,9 +7,9 @@ import {
 } from 'graphql';
 import createHttpError from 'http-errors';
 import isObject from 'isobject';
-import checkGraphQLSchema from '../private/checkGraphQLSchema.mjs';
-import checkGraphQLValidationRules from '../private/checkGraphQLValidationRules.mjs';
-import checkOptions from '../private/checkOptions.mjs';
+import checkGraphQLSchema from './checkGraphQLSchema.mjs';
+import checkGraphQLValidationRules from './checkGraphQLValidationRules.mjs';
+import checkOptions from './checkOptions.mjs';
 
 /**
  * List of [`ExecuteOptions`]{@link ExecuteOptions} keys allowed for static
@@ -51,14 +51,14 @@ const ALLOWED_EXECUTE_OPTIONS_OVERRIDE = ALLOWED_EXECUTE_OPTIONS_STATIC.filter(
  * @returns {Function} Koa middleware.
  * @example <caption>How to import.</caption>
  * ```js
- * import execute from 'graphql-api-koa/public/execute.mjs';
+ * import execute from 'graphql-api-koa/execute.mjs';
  * ```
  * @example <caption>A basic GraphQL API.</caption>
  * ```js
  * import Koa from 'koa';
  * import bodyParser from 'koa-bodyparser';
- * import errorHandler from 'graphql-api-koa/public/errorHandler.mjs';
- * import execute from 'graphql-api-koa/public/execute.mjs';
+ * import errorHandler from 'graphql-api-koa/errorHandler.mjs';
+ * import execute from 'graphql-api-koa/execute.mjs';
  * import schema from './schema.mjs';
  *
  * const app = new Koa()

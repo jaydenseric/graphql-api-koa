@@ -42,7 +42,7 @@ Additional custom Koa middleware can be used to customize the response.
 _How to import._
 
 > ```js
-> import errorHandler from 'graphql-api-koa/public/errorHandler.mjs';
+> import errorHandler from 'graphql-api-koa/errorHandler.mjs';
 > ```
 
 ---
@@ -62,7 +62,7 @@ Creates Koa middleware to execute GraphQL. Use after the [`errorHandler`](#funct
 _How to import._
 
 > ```js
-> import execute from 'graphql-api-koa/public/execute.mjs';
+> import execute from 'graphql-api-koa/execute.mjs';
 > ```
 
 _A basic GraphQL API._
@@ -70,8 +70,8 @@ _A basic GraphQL API._
 > ```js
 > import Koa from 'koa';
 > import bodyParser from 'koa-bodyparser';
-> import errorHandler from 'graphql-api-koa/public/errorHandler.mjs';
-> import execute from 'graphql-api-koa/public/execute.mjs';
+> import errorHandler from 'graphql-api-koa/errorHandler.mjs';
+> import execute from 'graphql-api-koa/execute.mjs';
 > import schema from './schema.mjs';
 >
 > const app = new Koa()

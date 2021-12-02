@@ -9,10 +9,10 @@ import {
 } from 'graphql';
 import Koa from 'koa';
 import bodyParser from 'koa-bodyparser';
-import errorHandler from '../../public/errorHandler.mjs';
-import execute from '../../public/execute.mjs';
-import fetchGraphQL from '../fetchGraphQL.mjs';
-import listen from '../listen.mjs';
+import errorHandler from './errorHandler.mjs';
+import execute from './execute.mjs';
+import fetchGraphQL from './test/fetchGraphQL.mjs';
+import listen from './test/listen.mjs';
 
 const schema = new GraphQLSchema({
   query: new GraphQLObjectType({

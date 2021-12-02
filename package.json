@@ -20,12 +20,16 @@
     "mjs"
   ],
   "files": [
-    "private",
-    "public"
+    "checkGraphQLSchema.mjs",
+    "checkGraphQLValidationRules.mjs",
+    "checkOptions.mjs",
+    "errorHandler.mjs",
+    "execute.mjs"
   ],
   "sideEffects": false,
   "exports": {
-    "./public/*": "./public/*",
+    "./errorHandler.mjs": "./errorHandler.mjs",
+    "./execute.mjs": "./execute.mjs",
     "./package": "./package.json",
     "./package.json": "./package.json"
   },
@@ -62,7 +66,7 @@
     "test:eslint": "eslint .",
     "test:prettier": "prettier -c .",
     "test:jsdoc": "jsdoc-md -c",
-    "test:api": "coverage-node test/index.mjs",
+    "test:api": "coverage-node test.mjs",
     "prepublishOnly": "npm test"
   }
 }

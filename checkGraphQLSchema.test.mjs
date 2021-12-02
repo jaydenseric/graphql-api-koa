@@ -5,7 +5,7 @@ import {
   GraphQLSchema,
   GraphQLString,
 } from 'graphql';
-import checkGraphQLSchema from '../../private/checkGraphQLSchema.mjs';
+import checkGraphQLSchema from './checkGraphQLSchema.mjs';
 
 export default (tests) => {
   tests.add('`checkGraphQLSchema` with a valid GraphQL schema.', () => {

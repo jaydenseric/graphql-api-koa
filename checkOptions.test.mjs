@@ -1,5 +1,5 @@
 import { doesNotThrow, throws } from 'assert';
-import checkOptions from '../../private/checkOptions.mjs';
+import checkOptions from './checkOptions.mjs';
 
 export default (tests) => {
   tests.add('`checkOptions` with valid options.', () => {
