@@ -6,7 +6,7 @@
 
 [GraphQL](https://graphql.org) execution and error handling middleware written from scratch for [Koa](https://koajs.com).
 
-## Setup
+## Installation
 
 To install [`graphql-api-koa`](https://npm.im/graphql-api-koa) and the [`graphql`](https://npm.im/graphql) peer dependency with [npm](https://npmjs.com/get-npm), run:
 
