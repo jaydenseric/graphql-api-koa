@@ -49,11 +49,7 @@ const ALLOWED_EXECUTE_OPTIONS_OVERRIDE = ALLOWED_EXECUTE_OPTIONS_STATIC.filter(
  * @name execute
  * @param {ExecuteOptions} options Options.
  * @returns {Function} Koa middleware.
- * @example <caption>Ways to `import`.</caption>
- * ```js
- * import { execute } from 'graphql-api-koa';
- * ```
- *
+ * @example <caption>How to import.</caption>
  * ```js
  * import execute from 'graphql-api-koa/public/execute.mjs';
  * ```
@@ -61,7 +57,8 @@ const ALLOWED_EXECUTE_OPTIONS_OVERRIDE = ALLOWED_EXECUTE_OPTIONS_STATIC.filter(
  * ```js
  * import Koa from 'koa';
  * import bodyParser from 'koa-bodyparser';
- * import { errorHandler, execute } from 'graphql-api-koa';
+ * import errorHandler from 'graphql-api-koa/public/errorHandler.mjs';
+ * import execute from 'graphql-api-koa/public/execute.mjs';
  * import schema from './schema.mjs';
  *
  * const app = new Koa()

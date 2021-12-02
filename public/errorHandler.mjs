@@ -16,11 +16,7 @@ import createHttpError from 'http-errors';
  * @kind function
  * @name errorHandler
  * @returns {Function} Koa middleware.
- * @example <caption>Ways to `import`.</caption>
- * ```js
- * import { errorHandler } from 'graphql-api-koa';
- * ```
- *
+ * @example <caption>How to import.</caption>
  * ```js
  * import errorHandler from 'graphql-api-koa/public/errorHandler.mjs';
  * ```

@@ -1,6 +1,3 @@
-export { default as errorHandler } from './errorHandler.mjs';
-export { default as execute } from './execute.mjs';
-
 /**
  * A GraphQL resolver error may have these special properties for the
  * [`errorHandler`]{@link errorHandler} Koa middleware to use to determine how

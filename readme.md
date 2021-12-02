@@ -39,12 +39,8 @@ Additional custom Koa middleware can be used to customize the response.
 
 #### Examples
 
-_Ways to `import`._
+_How to import._
 
-> ```js
-> import { errorHandler } from 'graphql-api-koa';
-> ```
->
 > ```js
 > import errorHandler from 'graphql-api-koa/public/errorHandler.mjs';
 > ```
@@ -63,12 +59,8 @@ Creates Koa middleware to execute GraphQL. Use after the [`errorHandler`](#funct
 
 #### Examples
 
-_Ways to `import`._
+_How to import._
 
-> ```js
-> import { execute } from 'graphql-api-koa';
-> ```
->
 > ```js
 > import execute from 'graphql-api-koa/public/execute.mjs';
 > ```
@@ -78,7 +70,8 @@ _A basic GraphQL API._
 > ```js
 > import Koa from 'koa';
 > import bodyParser from 'koa-bodyparser';
-> import { errorHandler, execute } from 'graphql-api-koa';
+> import errorHandler from 'graphql-api-koa/public/errorHandler.mjs';
+> import execute from 'graphql-api-koa/public/execute.mjs';
 > import schema from './schema.mjs';
 >
 > const app = new Koa()
