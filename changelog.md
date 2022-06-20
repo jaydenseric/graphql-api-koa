@@ -19,6 +19,7 @@
 - Configured Prettier option `singleQuote` to the default, `false`.
 - Use more TypeScript friendly JSDoc types.
 - Documentation tweaks.
+- Added a `license.md` MIT License file.
 
 ## 8.0.0
 
