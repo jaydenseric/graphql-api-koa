@@ -4,7 +4,7 @@
 
 ### Major
 
-- Updated Node.js support to `^12.22.0 || ^14.17.0 || >= 16.0.0`.
+- Updated Node.js support to `^14.17.0 || ^16.0.0 || >= 18.0.0`.
 - Updated dev dependencies, some of which require newer Node.js versions than previously supported.
 - Public modules are now individually listed in the package `files` and `exports` fields.
 - Removed `./package` from the package `exports` field; the full `package.json` filename must be used in a `require` path.
@@ -15,6 +15,10 @@
 
 - Updated dependencies.
 - Simplified package scripts.
+- Updated GitHub Actions CI config:
+  - Run tests with Node.js v14, v16, v18.
+  - Updated `actions/checkout` to v3.
+  - Updated `actions/setup-node` to v3.
 - Reorganized the test file structure.
 - Configured Prettier option `singleQuote` to the default, `false`.
 - Use more TypeScript friendly JSDoc types.
