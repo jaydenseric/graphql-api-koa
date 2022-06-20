@@ -39,7 +39,7 @@
     "graphql": "^16.0.0"
   },
   "dependencies": {
-    "http-errors": "^1.8.1",
+    "http-errors": "^2.0.0",
     "isobject": "^4.0.0"
   },
   "devDependencies": {
