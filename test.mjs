@@ -1,4 +1,5 @@
 import TestDirector from "test-director";
+
 import testCheckGraphQLSchema from "./checkGraphQLSchema.test.mjs";
 import testCheckGraphQLValidationRules from "./checkGraphQLValidationRules.test.mjs";
 import testCheckOptions from "./checkOptions.test.mjs";

@@ -1,14 +1,15 @@
 import { deepStrictEqual, ok, strictEqual, throws } from "assert";
 import {
+  execute as graphqlExecute,
   GraphQLError,
   GraphQLNonNull,
   GraphQLObjectType,
   GraphQLSchema,
   GraphQLString,
-  execute as graphqlExecute,
 } from "graphql";
 import Koa from "koa";
 import bodyParser from "koa-bodyparser";
+
 import errorHandler from "./errorHandler.mjs";
 import execute from "./execute.mjs";
 import fetchGraphQL from "./test/fetchGraphQL.mjs";

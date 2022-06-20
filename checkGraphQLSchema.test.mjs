@@ -5,6 +5,7 @@ import {
   GraphQLSchema,
   GraphQLString,
 } from "graphql";
+
 import checkGraphQLSchema from "./checkGraphQLSchema.mjs";
 
 export default (tests) => {

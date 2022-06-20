@@ -1,12 +1,13 @@
 import {
-  Source,
   execute as graphqlExecute,
   parse,
+  Source,
   specifiedRules,
   validate,
 } from "graphql";
 import createHttpError from "http-errors";
 import isObject from "isobject";
+
 import checkGraphQLSchema from "./checkGraphQLSchema.mjs";
 import checkGraphQLValidationRules from "./checkGraphQLValidationRules.mjs";
 import checkOptions from "./checkOptions.mjs";

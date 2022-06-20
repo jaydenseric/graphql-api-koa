@@ -1,4 +1,5 @@
 import { doesNotThrow, throws } from "assert";
+
 import checkOptions from "./checkOptions.mjs";
 
 export default (tests) => {

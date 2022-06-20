@@ -1,5 +1,6 @@
 import { doesNotThrow, throws } from "assert";
 import { specifiedRules } from "graphql";
+
 import checkGraphQLValidationRules from "./checkGraphQLValidationRules.mjs";
 
 export default (tests) => {

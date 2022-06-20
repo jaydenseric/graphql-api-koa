@@ -45,12 +45,7 @@
   "devDependencies": {
     "coverage-node": "^6.1.0",
     "eslint": "^8.18.0",
-    "eslint-config-env": "^23.0.2",
-    "eslint-config-prettier": "^8.5.0",
-    "eslint-plugin-import": "^2.26.0",
-    "eslint-plugin-jsdoc": "^37.9.7",
-    "eslint-plugin-node": "^11.1.0",
-    "eslint-plugin-prettier": "^4.0.0",
+    "eslint-plugin-simple-import-sort": "^7.0.0",
     "graphql": "^16.5.0",
     "jsdoc-md": "^11.0.2",
     "koa": "^2.13.4",
