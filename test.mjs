@@ -1,3 +1,5 @@
+// @ts-check
+
 import TestDirector from "test-director";
 
 import testCheckGraphQLSchema from "./checkGraphQLSchema.test.mjs";
@@ -5,6 +7,7 @@ import testCheckGraphQLValidationRules from "./checkGraphQLValidationRules.test.
 import testCheckOptions from "./checkOptions.test.mjs";
 import testErrorHandler from "./errorHandler.test.mjs";
 import testExecute from "./execute.test.mjs";
+import testGraphQLAggregateError from "./GraphQLAggregateError.test.mjs";
 
 const tests = new TestDirector();
 
@@ -13,5 +16,6 @@ testCheckGraphQLValidationRules(tests);
 testCheckOptions(tests);
 testErrorHandler(tests);
 testExecute(tests);
+testGraphQLAggregateError(tests);
 
 tests.run();

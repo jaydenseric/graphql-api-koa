@@ -1,3 +1,5 @@
+// @ts-check
+
 import {
   execute as graphqlExecute,
   parse,
@@ -6,55 +8,48 @@ import {
   validate,
 } from "graphql";
 import createHttpError from "http-errors";
-import isObject from "isobject";
 
 import checkGraphQLSchema from "./checkGraphQLSchema.mjs";
 import checkGraphQLValidationRules from "./checkGraphQLValidationRules.mjs";
 import checkOptions from "./checkOptions.mjs";
+import GraphQLAggregateError from "./GraphQLAggregateError.mjs";
 
 /**
- * List of [`ExecuteOptions`]{@link ExecuteOptions} keys allowed for static
+ * List of {@linkcode ExecuteOptions} keys allowed for per request override
  * config, for validation purposes.
- * @kind constant
- * @name ALLOWED_EXECUTE_OPTIONS_STATIC
- * @type {Array<string>}
- * @ignore
  */
-const ALLOWED_EXECUTE_OPTIONS_STATIC = [
+const ALLOWED_EXECUTE_OPTIONS_OVERRIDE = /** @type {const} */ ([
   "schema",
   "validationRules",
   "rootValue",
   "contextValue",
   "fieldResolver",
   "execute",
-  "override",
-];
+]);
 
 /**
- * List of [`ExecuteOptions`]{@link ExecuteOptions} keys allowed for per request
- * override config, for validation purposes.
- * @kind constant
- * @name ALLOWED_EXECUTE_OPTIONS_OVERRIDE
- * @type {Array<string>}
- * @ignore
+ * List of {@linkcode ExecuteOptions} keys allowed for static config, for
+ * validation purposes.
  */
-const ALLOWED_EXECUTE_OPTIONS_OVERRIDE = ALLOWED_EXECUTE_OPTIONS_STATIC.filter(
-  (option) => option !== "override"
-);
+const ALLOWED_EXECUTE_OPTIONS_STATIC = /** @type {const} */ ([
+  ...ALLOWED_EXECUTE_OPTIONS_OVERRIDE,
+  "override",
+]);
 
 /**
- * Creates Koa middleware to execute GraphQL. Use after the
- * [`errorHandler`]{@link errorHandler} and
+ * Creates Koa middleware to execute GraphQL. Use after the `errorHandler` and
  * [body parser](https://npm.im/koa-bodyparser) middleware.
- * @kind function
- * @name execute
- * @param {ExecuteOptions} options Options.
- * @returns {Function} Koa middleware.
- * @example <caption>How to import.</caption>
- * ```js
- * import execute from "graphql-api-koa/execute.mjs";
- * ```
- * @example <caption>A basic GraphQL API.</caption>
+ * @template [KoaContextState=import("koa").DefaultState]
+ * @template [KoaContext=import("koa").DefaultContext]
+ * @param {ExecuteOptions & {
+ *   override?: (
+ *     context: import("koa").ParameterizedContext<KoaContextState, KoaContext>
+ *   ) => Partial<ExecuteOptions> | Promise<Partial<ExecuteOptions>>,
+ * }} options Options.
+ * @returns Koa middleware.
+ * @example
+ * A basic GraphQL API:
+ *
  * ```js
  * import Koa from "koa";
  * import bodyParser from "koa-bodyparser";
@@ -72,6 +67,33 @@ const ALLOWED_EXECUTE_OPTIONS_OVERRIDE = ALLOWED_EXECUTE_OPTIONS_STATIC.filter(
  *     })
  *   )
  *   .use(execute({ schema }));
+ * ```
+ * @example
+ * {@linkcode execute} middleware options that sets the schema once but
+ * populates the user in the GraphQL context from the Koa context each request:
+ *
+ * ```js
+ * import schema from "./schema.mjs";
+ *
+ * const executeOptions = {
+ *   schema,
+ *   override: (ctx) => ({
+ *     contextValue: {
+ *       user: ctx.state.user,
+ *     },
+ *   }),
+ * };
+ * ```
+ * @example
+ * An {@linkcode execute} middleware options override that populates the user in
+ * the GraphQL context from the Koa context:
+ *
+ * ```js
+ * const executeOptionsOverride = (ctx) => ({
+ *   contextValue: {
+ *     user: ctx.state.user,
+ *   },
+ * });
  * ```
  */
 export default function execute(options) {
@@ -113,11 +135,28 @@ export default function execute(options) {
       "GraphQL execute middleware `override` option must be a function."
     );
 
-  return async (ctx, next) => {
+  /**
+   * Koa middleware to execute GraphQL.
+   * @param {import("koa").ParameterizedContext<KoaContextState, KoaContext> & {
+   *   request: {
+   *     body: {
+   *       [key: string]: unknown,
+   *     },
+   *   },
+   * }} ctx Koa context. The `ctx.request.body` property is conventionally added
+   *   by Koa body parser middleware such as
+   *   [`koa-bodyparser`](https://npm.im/koa-bodyparser).
+   * @param {() => Promise<unknown>} next
+   */
+  async function executeMiddleware(ctx, next) {
     if (typeof ctx.request.body === "undefined")
       throw createHttpError(500, "Request body missing.");
 
-    if (!isObject(ctx.request.body))
+    if (
+      typeof ctx.request.body !== "object" ||
+      ctx.request.body == null ||
+      Array.isArray(ctx.request.body)
+    )
       throw createHttpError(400, "Request body must be a JSON object.");
 
     if (!("query" in ctx.request.body))
@@ -129,23 +168,64 @@ export default function execute(options) {
         "GraphQL operation field `query` must be a string."
       );
 
-    if (
-      "variables" in ctx.request.body &&
-      !isObject(ctx.request.body.variables)
-    )
-      throw createHttpError(
-        400,
-        "Request body JSON `variables` field must be an object."
-      );
+    /**
+     * GraphQL operation variable values.
+     * @type {{ [key: string]: unknown } | undefined}
+     */
+    let variableValues;
 
+    if (
+      ctx.request.body.variables != undefined &&
+      ctx.request.body.variables != null
+    ) {
+      if (
+        typeof ctx.request.body.variables === "object" &&
+        !Array.isArray(ctx.request.body.variables)
+      )
+        variableValues = /** @type {{ [key: string]: unknown }} */ (
+          ctx.request.body.variables
+        );
+      else
+        throw createHttpError(
+          400,
+          "Request body JSON `variables` field must be an object."
+        );
+    }
+
+    /**
+     * GraphQL operation name.
+     * @type {string | undefined}
+     */
+    let operationName;
+
+    if (
+      ctx.request.body.operationName != undefined &&
+      ctx.request.body.operationName != null
+    ) {
+      if (typeof ctx.request.body.operationName === "string")
+        operationName = ctx.request.body.operationName;
+      else
+        throw createHttpError(
+          400,
+          "Request body JSON `operationName` field must be a string."
+        );
+    }
+
+    /**
+     * Parsed GraphQL operation query.
+     * @type {import("graphql").DocumentNode}
+     */
     let document;
 
     try {
       document = parse(new Source(ctx.request.body.query));
     } catch (error) {
-      throw createHttpError(400, "GraphQL query syntax errors.", {
-        graphqlErrors: [error],
-      });
+      throw new GraphQLAggregateError(
+        [/** @type {import("graphql").GraphQLError} */ (error)],
+        "GraphQL query syntax errors.",
+        400,
+        true
+      );
     }
 
     let overrideOptions;
@@ -200,9 +280,12 @@ export default function execute(options) {
     ]);
 
     if (queryValidationErrors.length)
-      throw createHttpError(400, "GraphQL query validation errors.", {
-        graphqlErrors: queryValidationErrors,
-      });
+      throw new GraphQLAggregateError(
+        queryValidationErrors,
+        "GraphQL query validation errors.",
+        400,
+        true
+      );
 
     const { data, errors } = await requestOptions.execute({
       schema: requestOptions.schema,
@@ -210,30 +293,50 @@ export default function execute(options) {
       contextValue: requestOptions.contextValue,
       fieldResolver: requestOptions.fieldResolver,
       document,
-      variableValues: ctx.request.body.variables,
-      operationName: ctx.request.body.operationName,
+      variableValues,
+      operationName,
     });
 
-    if (data) ctx.response.body = { data };
+    if (data)
+      ctx.response.body =
+        /** @type {import("./errorHandler.mjs").GraphQLResponseBody} */ ({
+          data,
+        });
 
     ctx.response.status = 200;
 
     if (errors) {
       // By convention GraphQL execution errors shouldn’t result in an error
-      // HTTP status code. `http-errors` can’t be used to create this error
-      // because it doesn’t allow a non-error 200 status, see:
-      // https://github.com/jshttp/http-errors/issues/50#issuecomment-395107925
-      const error = new Error("GraphQL execution errors.");
-      error.graphqlErrors = errors;
-      error.status = 200;
-      error.expose = true;
-
-      throw error;
+      // HTTP status code.
+      throw new GraphQLAggregateError(
+        errors,
+        "GraphQL execution errors.",
+        200,
+        true
+      );
     }
 
     // Set the content-type.
     ctx.response.type = "application/graphql+json";
 
     await next();
-  };
+  }
+
+  return executeMiddleware;
 }
+
+/**
+ * {@linkcode execute} Koa middleware options.
+ * @typedef {object} ExecuteOptions
+ * @prop {import("graphql").GraphQLSchema} schema GraphQL schema.
+ * @prop {ReadonlyArray<import("graphql").ValidationRule>} [validationRules]
+ *   Validation rules for GraphQL.js {@linkcode validate}, in addition to the
+ *   default GraphQL.js {@linkcode specifiedRules}.
+ * @prop {any} [rootValue] Value passed to the first resolver.
+ * @prop {any} [contextValue] Execution context (usually an object) passed to
+ *   resolvers.
+ * @prop {import("graphql").GraphQLFieldResolver<any, any>} [fieldResolver]
+ *   Custom default field resolver.
+ * @prop {typeof graphqlExecute} [execute] Replacement for
+ *   [GraphQL.js `execute`](https://graphql.org/graphql-js/execution/#execute).
+ */

@@ -1,3 +1,5 @@
+// @ts-check
+
 import { doesNotThrow, throws } from "assert";
 import {
   GraphQLError,
@@ -7,7 +9,12 @@ import {
 } from "graphql";
 
 import checkGraphQLSchema from "./checkGraphQLSchema.mjs";
+import GraphQLAggregateError from "./GraphQLAggregateError.mjs";
 
+/**
+ * Adds `checkGraphQLSchema` tests.
+ * @param {import("test-director").default} tests Test director.
+ */
 export default (tests) => {
   tests.add("`checkGraphQLSchema` with a valid GraphQL schema.", () => {
     doesNotThrow(() =>
@@ -28,24 +35,34 @@ export default (tests) => {
   });
 
   tests.add("`checkGraphQLSchema` with a non GraphQL schema.", () => {
-    throws(() => checkGraphQLSchema(false, "Test"), {
-      name: "InternalServerError",
-      message: "Test GraphQL schema must be a `GraphQLSchema` instance.",
-      status: 500,
-      expose: false,
-    });
+    throws(
+      () =>
+        checkGraphQLSchema(
+          // @ts-expect-error Testing invalid.
+          false,
+          "Test"
+        ),
+      {
+        name: "InternalServerError",
+        message: "Test GraphQL schema must be a `GraphQLSchema` instance.",
+        status: 500,
+        expose: false,
+      }
+    );
   });
 
   tests.add(
     "`checkGraphQLSchema` with GraphQL schema validation errors.",
     () => {
-      throws(() => checkGraphQLSchema(new GraphQLSchema({}), "Test"), {
-        name: "InternalServerError",
-        message: "Test has GraphQL schema validation errors.",
-        status: 500,
-        expose: false,
-        graphqlErrors: [new GraphQLError("Query root type must be provided.")],
-      });
+      throws(
+        () => checkGraphQLSchema(new GraphQLSchema({}), "Test"),
+        new GraphQLAggregateError(
+          [new GraphQLError("Query root type must be provided.")],
+          "Test has GraphQL schema validation errors.",
+          500,
+          false
+        )
+      );
     }
   );
 };

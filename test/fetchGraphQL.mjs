@@ -1,13 +1,12 @@
+// @ts-check
+
 import fetch from "node-fetch";
 
 /**
- * Fetches GraphQL.
- * @kind function
- * @name fetchGraphQL
+ * Fetches GraphQL from a localhost port.
  * @param {number} port Localhost port.
- * @param {object} options Fetch options.
- * @returns {Promise<Response>} Fetch response.
- * @ignore
+ * @param {import("node-fetch").RequestInit} options Fetch options.
+ * @returns Fetch response.
  */
 export default function fetchGraphQL(port, options = {}) {
   return fetch(`http://localhost:${port}`, {

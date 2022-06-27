@@ -10,19 +10,27 @@
 - Removed `./package` from the package `exports` field; the full `package.json` filename must be used in a `require` path.
 - Removed the package main index module; deep imports must be used.
 - Shortened public module deep import paths, removing the `/public/`.
+- The `errorHandler` Koa middleware no longer exposes error `locations` and `path` properties within the GraphQL response body `errors` array for errors that aren’t GraphQL validation or execution errors.
+- Implemented TypeScript types via JSDoc comments.
 
 ### Patch
 
 - Updated dependencies.
+- Removed the [`isobject`](https://npm.im/isobject) dependency.
 - Simplified dev dependencies and config for ESLint.
+- Removed the [`jsdoc-md`](https://npm.im/jsdoc-md) dev dependency and the package `docs-update` and `docs-check` scripts, replacing the readme “API” section with a manually written “Exports” section.
+- Check TypeScript types via a new package `types` script.
 - Simplified package scripts.
 - Updated GitHub Actions CI config:
   - Run tests with Node.js v14, v16, v18.
   - Updated `actions/checkout` to v3.
   - Updated `actions/setup-node` to v3.
 - Reorganized the test file structure.
+- Improved tests and test helpers.
+- Updated the `execute` Koa middleware to throw an appropriate HTTP error when the GraphQL operation `operationName` is invalid.
+- Implemented a more reliable system based on a new `GraphQLAggregateError` class for throwing a GraphQL validation or execution aggregate error in the `execute` Koa middleware for special handling in the `errorHandler` Koa middleware.
+- Updated the `errorHandler` Koa middleware to overwrite an existing Koa context `response.body` if it’s not a suitable object when handling an error.
 - Configured Prettier option `singleQuote` to the default, `false`.
-- Use more TypeScript friendly JSDoc types.
 - Documentation tweaks.
 - Added a `license.md` MIT License file.
 

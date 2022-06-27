@@ -24,7 +24,8 @@
     "checkGraphQLValidationRules.mjs",
     "checkOptions.mjs",
     "errorHandler.mjs",
-    "execute.mjs"
+    "execute.mjs",
+    "GraphQLAggregateError.mjs"
   ],
   "sideEffects": false,
   "exports": {
@@ -39,28 +40,30 @@
     "graphql": "^16.0.0"
   },
   "dependencies": {
-    "http-errors": "^2.0.0",
-    "isobject": "^4.0.0"
+    "@types/http-errors": "^1.8.2",
+    "@types/koa": "^2.13.4",
+    "http-errors": "^2.0.0"
   },
   "devDependencies": {
+    "@types/koa-bodyparser": "^4.3.7",
+    "@types/node": "^18.0.0",
     "coverage-node": "^6.1.0",
     "eslint": "^8.18.0",
     "eslint-plugin-simple-import-sort": "^7.0.0",
     "graphql": "^16.5.0",
-    "jsdoc-md": "^11.0.2",
     "koa": "^2.13.4",
     "koa-bodyparser": "^4.3.0",
     "node-fetch": "^3.2.6",
     "prettier": "^2.7.1",
-    "test-director": "^8.0.2"
+    "test-director": "^8.0.2",
+    "typescript": "^4.7.4"
   },
   "scripts": {
-    "docs-update": "jsdoc-md",
-    "docs-check": "jsdoc-md -c",
     "eslint": "eslint .",
     "prettier": "prettier -c .",
+    "types": "tsc -p jsconfig.json",
     "tests": "coverage-node test.mjs",
-    "test": "npm run eslint && npm run prettier && npm run docs-check && npm run tests",
+    "test": "npm run eslint && npm run prettier && npm run types && npm run tests",
     "prepublishOnly": "npm test"
   }
 }

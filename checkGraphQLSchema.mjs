@@ -1,13 +1,14 @@
+// @ts-check
+
 import { GraphQLSchema, validateSchema } from "graphql";
 import createHttpError from "http-errors";
 
+import GraphQLAggregateError from "./GraphQLAggregateError.mjs";
+
 /**
  * Validates a GraphQL schema.
- * @kind function
- * @name checkGraphQLSchema
  * @param {GraphQLSchema} schema GraphQL schema.
  * @param {string} errorMessagePrefix Error message prefix.
- * @ignore
  */
 export default function checkGraphQLSchema(schema, errorMessagePrefix) {
   if (!(schema instanceof GraphQLSchema))
@@ -19,9 +20,10 @@ export default function checkGraphQLSchema(schema, errorMessagePrefix) {
   const schemaValidationErrors = validateSchema(schema);
 
   if (schemaValidationErrors.length)
-    throw createHttpError(
-      500,
+    throw new GraphQLAggregateError(
+      schemaValidationErrors,
       `${errorMessagePrefix} has GraphQL schema validation errors.`,
-      { graphqlErrors: schemaValidationErrors }
+      500,
+      false
     );
 }
