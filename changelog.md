@@ -27,6 +27,7 @@
   - Updated `actions/setup-node` to v3.
 - Reorganized the test file structure.
 - Improved tests and test helpers.
+- Stopped using deprecated `GraphQLError` constructor parameters in tests.
 - Updated the `execute` Koa middleware to throw an appropriate HTTP error when the GraphQL operation `operationName` is invalid.
 - Implemented a more reliable system based on a new `GraphQLAggregateError` class for throwing a GraphQL validation or execution aggregate error in the `execute` Koa middleware for special handling in the `errorHandler` Koa middleware.
 - Updated the `errorHandler` Koa middleware to overwrite an existing Koa context `response.body` if it’s not a suitable object when handling an error.

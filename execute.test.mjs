@@ -414,7 +414,9 @@ export default (tests) => {
           validationRules: [
             (context) => ({
               OperationDefinition(node) {
-                context.reportError(new GraphQLError(error1.message, [node]));
+                context.reportError(
+                  new GraphQLError(error1.message, { nodes: node })
+                );
               },
             }),
           ],
@@ -479,7 +481,9 @@ export default (tests) => {
             validationRules: [
               (context) => ({
                 OperationDefinition(node) {
-                  context.reportError(new GraphQLError("Message.", [node]));
+                  context.reportError(
+                    new GraphQLError("Message.", { nodes: node })
+                  );
                 },
               }),
             ],
@@ -488,7 +492,7 @@ export default (tests) => {
                 (context) => ({
                   OperationDefinition(node) {
                     context.reportError(
-                      new GraphQLError("Message overridden.", [node])
+                      new GraphQLError("Message overridden.", { nodes: node })
                     );
                   },
                 }),
