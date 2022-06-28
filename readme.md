@@ -14,7 +14,18 @@ To install [`graphql-api-koa`](https://npm.im/graphql-api-koa) and the [`graphql
 npm install graphql-api-koa graphql
 ```
 
+Setup the Koa middleware in this order:
+
+1. [`errorHandler`](./errorHandler.mjs), to catch errors from following middleware for a correctly formatted [GraphQL response](https://spec.graphql.org/October2021/#sec-Errors).
+2. A [GraphQL multipart request](https://github.com/jaydenseric/graphql-multipart-request-spec) processor like `graphqlUploadKoa` from [`graphql-upload`](https://npm.im/graphql-upload), to support file uploads (optional).
+3. A request body parser like [`koa-bodyparser`](https://npm.im/koa-bodyparser).
+4. [`execute`](./execute.mjs), to execute GraphQL.
+
 See the [`execute`](./execute.mjs) middleware examples to get started.
+
+## Requirements
+
+- [Node.js](https://nodejs.org): `^14.17.0 || ^16.0.0 || >= 18.0.0`
 
 ## Exports
 
