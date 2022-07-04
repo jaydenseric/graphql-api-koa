@@ -1,5 +1,11 @@
 # graphql-api-koa changelog
 
+## Next
+
+### Minor
+
+- Added the `GraphQLAggregateError.mjs` module to the package `exports` field.
+
 ## 9.0.0
 
 ### Major

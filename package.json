@@ -31,6 +31,7 @@
   "exports": {
     "./errorHandler.mjs": "./errorHandler.mjs",
     "./execute.mjs": "./execute.mjs",
+    "./GraphQLAggregateError.mjs": "./GraphQLAggregateError.mjs",
     "./package.json": "./package.json"
   },
   "engines": {

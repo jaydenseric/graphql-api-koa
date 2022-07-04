@@ -33,3 +33,4 @@ These ECMAScript modules are published to [npm](https://npmjs.com) and exported 
 
 - [`errorHandler.mjs`](./errorHandler.mjs)
 - [`execute.mjs`](./execute.mjs)
+- [`GraphQLAggregateError.mjs`](./GraphQLAggregateError.mjs)
