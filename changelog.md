@@ -1,5 +1,13 @@
 # graphql-api-koa changelog
 
+## Next
+
+### Patch
+
+- Readme improvements, including:
+  - Removed the badges.
+  - Added information about TypeScript config and [optimal JavaScript module design](https://jaydenseric.com/blog/optimal-javascript-module-design).
+
 ## 9.1.0
 
 ### Minor
