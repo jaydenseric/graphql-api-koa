@@ -1,7 +1,7 @@
 // @ts-check
 
-import { deepStrictEqual, ok, strictEqual, throws } from "assert";
 import { GraphQLError } from "graphql";
+import { deepStrictEqual, ok, strictEqual, throws } from "node:assert";
 
 import GraphQLAggregateError from "./GraphQLAggregateError.mjs";
 

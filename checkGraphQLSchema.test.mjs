@@ -1,12 +1,12 @@
 // @ts-check
 
-import { doesNotThrow, throws } from "assert";
 import {
   GraphQLError,
   GraphQLObjectType,
   GraphQLSchema,
   GraphQLString,
 } from "graphql";
+import { doesNotThrow, throws } from "node:assert";
 
 import checkGraphQLSchema from "./checkGraphQLSchema.mjs";
 import GraphQLAggregateError from "./GraphQLAggregateError.mjs";

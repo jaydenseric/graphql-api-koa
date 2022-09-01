@@ -1,6 +1,5 @@
 // @ts-check
 
-import { deepStrictEqual, ok, strictEqual, throws } from "assert";
 import {
   execute as graphqlExecute,
   GraphQLError,
@@ -9,9 +8,10 @@ import {
   GraphQLSchema,
   GraphQLString,
 } from "graphql";
-import { createServer } from "http";
 import Koa from "koa";
 import bodyParser from "koa-bodyparser";
+import { deepStrictEqual, ok, strictEqual, throws } from "node:assert";
+import { createServer } from "node:http";
 
 import errorHandler from "./errorHandler.mjs";
 import execute from "./execute.mjs";
