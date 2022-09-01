@@ -4,6 +4,7 @@
 
 ### Patch
 
+- Updated dependencies.
 - Use the `node:` URL scheme for Node.js builtin module imports in tests.
 - Readme improvements, including:
   - Removed the badges.

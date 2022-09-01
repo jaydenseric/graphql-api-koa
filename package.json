@@ -42,22 +42,22 @@
   },
   "dependencies": {
     "@types/http-errors": "^1.8.2",
-    "@types/koa": "^2.13.4",
+    "@types/koa": "^2.13.5",
     "http-errors": "^2.0.0"
   },
   "devDependencies": {
     "@types/koa-bodyparser": "^4.3.7",
-    "@types/node": "^18.0.0",
-    "coverage-node": "^6.1.0",
-    "eslint": "^8.18.0",
+    "@types/node": "^18.7.14",
+    "coverage-node": "^8.0.0",
+    "eslint": "^8.23.0",
     "eslint-plugin-simple-import-sort": "^7.0.0",
-    "graphql": "^16.5.0",
+    "graphql": "^16.6.0",
     "koa": "^2.13.4",
     "koa-bodyparser": "^4.3.0",
-    "node-fetch": "^3.2.6",
+    "node-fetch": "^3.2.10",
     "prettier": "^2.7.1",
-    "test-director": "^8.0.2",
-    "typescript": "^4.7.4"
+    "test-director": "^10.0.0",
+    "typescript": "^4.8.2"
   },
   "scripts": {
     "eslint": "eslint .",
