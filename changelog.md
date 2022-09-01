@@ -6,7 +6,7 @@
 
 - Updated dependencies.
 - Use the `node:` URL scheme for Node.js builtin module imports in tests.
-- Readme improvements, including:
+- Revamped the readme:
   - Removed the badges.
   - Added information about TypeScript config and [optimal JavaScript module design](https://jaydenseric.com/blog/optimal-javascript-module-design).
 
