@@ -42,17 +42,28 @@ export default class GraphQLAggregateError
 
     super(message);
 
+    /**
+     * Error name.
+     * @type {string}
+     */
     this.name = "GraphQLAggregateError";
 
-    /** GraphQL errors. */
+    /**
+     * GraphQL errors.
+     * @type {Array<GraphQLError>}
+     */
     this.errors = [...errors];
 
-    /** Determines the response HTTP status code. */
+    /**
+     * Determines the response HTTP status code.
+     * @type {number}
+     */
     this.status = status;
 
     /**
      * Should the {@linkcode GraphQLAggregateError.message message} be exposed
      * to the client.
+     * @type {boolean}
      */
     this.expose = expose;
   }
