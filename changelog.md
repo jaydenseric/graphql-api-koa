@@ -4,6 +4,7 @@
 
 ### Patch
 
+- Updated dependencies.
 - Fixed TypeScript types for the class `GraphQLAggregateError` properties that were unintentionally `any`.
 
 ## 9.1.1

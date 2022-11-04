@@ -1,7 +1,8 @@
 // @ts-check
 
-import { specifiedRules } from "graphql";
 import { doesNotThrow, throws } from "node:assert";
+
+import { specifiedRules } from "graphql";
 
 import checkGraphQLValidationRules from "./checkGraphQLValidationRules.mjs";
 

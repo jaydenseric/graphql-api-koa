@@ -1,9 +1,10 @@
 // @ts-check
 
-import createHttpError from "http-errors";
-import Koa from "koa";
 import { deepStrictEqual, ok, strictEqual } from "node:assert";
 import { createServer } from "node:http";
+
+import createHttpError from "http-errors";
+import Koa from "koa";
 
 import errorHandler from "./errorHandler.mjs";
 import fetchGraphQL from "./test/fetchGraphQL.mjs";

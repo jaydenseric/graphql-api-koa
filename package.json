@@ -41,23 +41,23 @@
     "graphql": "^16.0.0"
   },
   "dependencies": {
-    "@types/http-errors": "^1.8.2",
+    "@types/http-errors": "^2.0.1",
     "@types/koa": "^2.13.5",
     "http-errors": "^2.0.0"
   },
   "devDependencies": {
-    "@types/koa-bodyparser": "^4.3.7",
-    "@types/node": "^18.7.14",
+    "@types/koa-bodyparser": "^4.3.9",
+    "@types/node": "^18.11.9",
     "coverage-node": "^8.0.0",
-    "eslint": "^8.23.0",
-    "eslint-plugin-simple-import-sort": "^7.0.0",
+    "eslint": "^8.26.0",
+    "eslint-plugin-simple-import-sort": "^8.0.0",
     "graphql": "^16.6.0",
     "koa": "^2.13.4",
     "koa-bodyparser": "^4.3.0",
     "node-fetch": "^3.2.10",
     "prettier": "^2.7.1",
     "test-director": "^10.0.0",
-    "typescript": "^4.8.2"
+    "typescript": "^4.8.4"
   },
   "scripts": {
     "eslint": "eslint .",
