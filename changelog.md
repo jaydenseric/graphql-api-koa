@@ -1,6 +1,6 @@
 # graphql-api-koa changelog
 
-## Next
+## 9.1.2
 
 ### Patch
 
