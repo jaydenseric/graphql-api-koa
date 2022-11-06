@@ -292,7 +292,9 @@ export default (tests) => {
           execute({
             schema,
             // @ts-expect-error Testing invalid.
-            override: () => ({ schema: true }),
+            override: () => ({
+              schema: true,
+            }),
           })
         )
         .on("error", (error) => {
@@ -352,7 +354,9 @@ export default (tests) => {
         .use(
           execute({
             schema,
-            override: () => ({ schema: new GraphQLSchema({}) }),
+            override: () => ({
+              schema: new GraphQLSchema({}),
+            }),
           })
         )
         .on("error", (error) => {
@@ -605,7 +609,9 @@ export default (tests) => {
               }),
             }),
             rootValue: "rootValue",
-            override: (ctx) => ({ rootValue: ctx.state.test }),
+            override: (ctx) => ({
+              rootValue: ctx.state.test,
+            }),
           })
         );
 
@@ -751,7 +757,9 @@ export default (tests) => {
               }),
             }),
             contextValue: "contextValue",
-            override: async (ctx) => ({ contextValue: ctx.state.test }),
+            override: async (ctx) => ({
+              contextValue: ctx.state.test,
+            }),
           })
         );
 
@@ -951,7 +959,9 @@ export default (tests) => {
           execute({
             schema,
             // @ts-expect-error Testing invalid.
-            override: () => ({ execute: true }),
+            override: () => ({
+              execute: true,
+            }),
           })
         )
         .on("error", (error) => {

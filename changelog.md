@@ -9,6 +9,7 @@
 - Improved `execute` middleware related types:
   - The middleware no longer requires the Koa context to have a `request.body` type of `[key: string]: unknown`.
   - Option `override` now has a more accurate type for function argument 1 `context`.
+- Tweaked formatting in tests.
 
 ## 9.1.2
 
