@@ -46,10 +46,10 @@
     "http-errors": "^2.0.0"
   },
   "devDependencies": {
-    "@types/koa-bodyparser": "^4.3.9",
+    "@types/koa-bodyparser": "^4.3.10",
     "@types/node": "^18.11.9",
     "coverage-node": "^8.0.0",
-    "eslint": "^8.26.0",
+    "eslint": "^8.27.0",
     "eslint-plugin-simple-import-sort": "^8.0.0",
     "graphql": "^16.6.0",
     "koa": "^2.13.4",
