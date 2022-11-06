@@ -579,7 +579,12 @@ export default (tests) => {
   tests.add(
     "`execute` middleware option `rootValue` override using Koa ctx.",
     async () => {
-      const app = new Koa()
+      /** @typedef {{ test?: string }} KoaContextStateTest */
+
+      /** @type {Koa<KoaContextStateTest>} */
+      const app = new Koa();
+
+      app
         .use(errorHandler())
         .use(bodyParserMiddleware)
         .use(async (ctx, next) => {
@@ -587,7 +592,7 @@ export default (tests) => {
           await next();
         })
         .use(
-          execute({
+          /** @type {typeof execute<KoaContextStateTest>} */ (execute)({
             schema: new GraphQLSchema({
               query: new GraphQLObjectType({
                 name: "Query",
@@ -720,7 +725,12 @@ export default (tests) => {
   tests.add(
     "`execute` middleware option `contextValue` override using Koa ctx async.",
     async () => {
-      const app = new Koa()
+      /** @typedef {{ test?: string }} KoaContextStateTest */
+
+      /** @type {Koa<KoaContextStateTest>} */
+      const app = new Koa();
+
+      app
         .use(errorHandler())
         .use(bodyParserMiddleware)
         .use(async (ctx, next) => {
@@ -728,7 +738,7 @@ export default (tests) => {
           await next();
         })
         .use(
-          execute({
+          /** @type {typeof execute<KoaContextStateTest>} */ (execute)({
             schema: new GraphQLSchema({
               query: new GraphQLObjectType({
                 name: "Query",

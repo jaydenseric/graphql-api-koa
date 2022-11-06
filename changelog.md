@@ -5,6 +5,10 @@
 ### Patch
 
 - Updated dev dependencies.
+- Simplified the `execute` middleware using a new private function `assertKoaContextRequestGraphQL`.
+- Improved `execute` middleware related types:
+  - The middleware no longer requires the Koa context to have a `request.body` type of `[key: string]: unknown`.
+  - Option `override` now has a more accurate type for function argument 1 `context`.
 
 ## 9.1.2
 

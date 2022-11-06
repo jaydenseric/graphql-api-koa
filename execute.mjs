@@ -9,6 +9,7 @@ import {
 } from "graphql";
 import createHttpError from "http-errors";
 
+import assertKoaContextRequestGraphQL from "./assertKoaContextRequestGraphQL.mjs";
 import checkGraphQLSchema from "./checkGraphQLSchema.mjs";
 import checkGraphQLValidationRules from "./checkGraphQLValidationRules.mjs";
 import checkOptions from "./checkOptions.mjs";
@@ -43,7 +44,8 @@ const ALLOWED_EXECUTE_OPTIONS_STATIC = /** @type {const} */ ([
  * @template [KoaContext=import("koa").DefaultContext]
  * @param {ExecuteOptions & {
  *   override?: (
- *     context: import("koa").ParameterizedContext<KoaContextState, KoaContext>
+ *     context: import("./assertKoaContextRequestGraphQL.mjs")
+ *       .KoaContextRequestGraphQL<KoaContextState, KoaContext>
  *   ) => Partial<ExecuteOptions> | Promise<Partial<ExecuteOptions>>,
  * }} options Options.
  * @returns Koa middleware.
@@ -137,79 +139,16 @@ export default function execute(options) {
 
   /**
    * Koa middleware to execute GraphQL.
-   * @param {import("koa").ParameterizedContext<KoaContextState, KoaContext> & {
-   *   request: {
-   *     body: {
-   *       [key: string]: unknown,
-   *     },
-   *   },
-   * }} ctx Koa context. The `ctx.request.body` property is conventionally added
+   * @param {import("koa").ParameterizedContext<
+   *   KoaContextState,
+   *   KoaContext
+   * >} ctx Koa context. The `ctx.request.body` property is conventionally added
    *   by Koa body parser middleware such as
    *   [`koa-bodyparser`](https://npm.im/koa-bodyparser).
    * @param {() => Promise<unknown>} next
    */
   async function executeMiddleware(ctx, next) {
-    if (typeof ctx.request.body === "undefined")
-      throw createHttpError(500, "Request body missing.");
-
-    if (
-      typeof ctx.request.body !== "object" ||
-      ctx.request.body == null ||
-      Array.isArray(ctx.request.body)
-    )
-      throw createHttpError(400, "Request body must be a JSON object.");
-
-    if (!("query" in ctx.request.body))
-      throw createHttpError(400, "GraphQL operation field `query` missing.");
-
-    if (typeof ctx.request.body.query !== "string")
-      throw createHttpError(
-        400,
-        "GraphQL operation field `query` must be a string."
-      );
-
-    /**
-     * GraphQL operation variable values.
-     * @type {{ [key: string]: unknown } | undefined}
-     */
-    let variableValues;
-
-    if (
-      ctx.request.body.variables != undefined &&
-      ctx.request.body.variables != null
-    ) {
-      if (
-        typeof ctx.request.body.variables === "object" &&
-        !Array.isArray(ctx.request.body.variables)
-      )
-        variableValues = /** @type {{ [key: string]: unknown }} */ (
-          ctx.request.body.variables
-        );
-      else
-        throw createHttpError(
-          400,
-          "Request body JSON `variables` field must be an object."
-        );
-    }
-
-    /**
-     * GraphQL operation name.
-     * @type {string | undefined}
-     */
-    let operationName;
-
-    if (
-      ctx.request.body.operationName != undefined &&
-      ctx.request.body.operationName != null
-    ) {
-      if (typeof ctx.request.body.operationName === "string")
-        operationName = ctx.request.body.operationName;
-      else
-        throw createHttpError(
-          400,
-          "Request body JSON `operationName` field must be a string."
-        );
-    }
+    assertKoaContextRequestGraphQL(ctx);
 
     /**
      * Parsed GraphQL operation query.
@@ -293,8 +232,8 @@ export default function execute(options) {
       contextValue: requestOptions.contextValue,
       fieldResolver: requestOptions.fieldResolver,
       document,
-      variableValues,
-      operationName,
+      variableValues: ctx.request.body.variables,
+      operationName: ctx.request.body.operationName,
     });
 
     if (data)

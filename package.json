@@ -20,6 +20,7 @@
     "mjs"
   ],
   "files": [
+    "assertKoaContextRequestGraphQL.mjs",
     "checkGraphQLSchema.mjs",
     "checkGraphQLValidationRules.mjs",
     "checkOptions.mjs",
